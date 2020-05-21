@@ -1,6 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.banners;
 
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,25 +12,25 @@ public enum EBanners {
 	// TODO: Move banner name to lang files
 
 	// DONE: Add the cq-blank design to all!!
-	PIRATE_BANNER(EnumDyeColor.BLACK, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.SKULL }, new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.WHITE }, "Flag Of Piracy"),
-	WALKER_BANNER(EnumDyeColor.SILVER,
+	PIRATE_BANNER(DyeColor.BLACK, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.SKULL }, new DyeColor[] { DyeColor.WHITE, DyeColor.WHITE }, "Flag Of Piracy"),
+	WALKER_BANNER(DyeColor.LIGHT_GRAY,
 			new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.BRICKS, EBannerPatternsCQ.WITHER_SKULL_EYES.getPattern(), EBannerPatternsCQ.WITHER_SKULL.getPattern(), EBannerPatternsCQ.WITHER_SKULL.getPattern() },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.GRAY, EnumDyeColor.CYAN, EnumDyeColor.BLACK, EnumDyeColor.BLACK }, "Nightwatch"),
-	PIGMAN_BANNER(EnumDyeColor.RED, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), EBannerPatternsCQ.FIRE.getPattern() }, new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.YELLOW }, "Pigman"),
-	ENDERMEN_BANNER(EnumDyeColor.MAGENTA, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.TRIANGLE_BOTTOM, BannerPattern.TRIANGLE_TOP },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.BLACK, EnumDyeColor.BLACK }, "Enderman"),
-	ENDERMEN_BANNER2(EnumDyeColor.MAGENTA, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.SQUARE_TOP_RIGHT, BannerPattern.SQUARE_BOTTOM_LEFT },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.BLACK, EnumDyeColor.BLACK }, "Enderman"),
-	NPC_BANNER(EnumDyeColor.RED, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.FLOWER, BannerPattern.STRIPE_CENTER, EBannerPatternsCQ.EMERALD.getPattern() },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.YELLOW, EnumDyeColor.RED, EnumDyeColor.LIME }, "Merchants"),
-	SKELETON_BANNER(EnumDyeColor.BLACK, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.CROSS, EBannerPatternsCQ.BONES.getPattern() },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.RED, EnumDyeColor.WHITE }, "Undead Bones"),
-	// GREMLIN_BANNER(EnumDyeColor.SILVER, new BannerPattern[] { }, new EnumDyeColor[] { }),
-	// WINGS_OF_FREEDOM(EnumDyeColor.WHITE, new BannerPattern[] {BannerPattern.DIAGONAL_LEFT_MIRROR, BannerPattern.BRICKS, BannerPattern.TRIANGLE_TOP, BannerPattern.GRADIENT, BannerPattern.BORDER}, new EnumDyeColor[] {EnumDyeColor.BLUE,
-	// EnumDyeColor.SILVER, EnumDyeColor.SILVER, EnumDyeColor.SILVER, EnumDyeColor.SILVER}),
-	// GERMANY(EnumDyeColor.RED, new BannerPattern[] {BannerPattern.STRIPE_MIDDLE, BannerPattern.STRIPE_CENTER, BannerPattern.STRAIGHT_CROSS, BannerPattern.CIRCLE_MIDDLE, BannerPattern.STRAIGHT_CROSS}, new EnumDyeColor[]
-	// {EnumDyeColor.WHITE, EnumDyeColor.WHITE, EnumDyeColor.BLACK, EnumDyeColor.WHITE, EnumDyeColor.BLACK}, "Germany"),
-	ILLAGER_BANNER(EnumDyeColor.WHITE,
+			new DyeColor[] { DyeColor.WHITE, DyeColor.GRAY, DyeColor.CYAN, DyeColor.BLACK, DyeColor.BLACK }, "Nightwatch"),
+	PIGMAN_BANNER(DyeColor.RED, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), EBannerPatternsCQ.FIRE.getPattern() }, new DyeColor[] { DyeColor.WHITE, DyeColor.YELLOW }, "Pigman"),
+	ENDERMEN_BANNER(DyeColor.MAGENTA, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.TRIANGLE_BOTTOM, BannerPattern.TRIANGLE_TOP },
+			new DyeColor[] { DyeColor.WHITE, DyeColor.BLACK, DyeColor.BLACK }, "Enderman"),
+	ENDERMEN_BANNER2(DyeColor.MAGENTA, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.SQUARE_TOP_RIGHT, BannerPattern.SQUARE_BOTTOM_LEFT },
+			new DyeColor[] { DyeColor.WHITE, DyeColor.BLACK, DyeColor.BLACK }, "Enderman"),
+	NPC_BANNER(DyeColor.RED, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.FLOWER, BannerPattern.STRIPE_CENTER, EBannerPatternsCQ.EMERALD.getPattern() },
+			new DyeColor[] { DyeColor.WHITE, DyeColor.YELLOW, DyeColor.RED, DyeColor.LIME }, "Merchants"),
+	SKELETON_BANNER(DyeColor.BLACK, new BannerPattern[] { EBannerPatternsCQ.CQ_BLANK.getPattern(), BannerPattern.CROSS, EBannerPatternsCQ.BONES.getPattern() },
+			new DyeColor[] { DyeColor.WHITE, DyeColor.RED, DyeColor.WHITE }, "Undead Bones"),
+	// GREMLIN_BANNER(DyeColor.LIGHT_GRAY, new BannerPattern[] { }, new DyeColor[] { }),
+	// WINGS_OF_FREEDOM(DyeColor.WHITE, new BannerPattern[] {BannerPattern.DIAGONAL_LEFT_MIRROR, BannerPattern.BRICKS, BannerPattern.TRIANGLE_TOP, BannerPattern.GRADIENT, BannerPattern.BORDER}, new DyeColor[] {DyeColor.BLUE,
+	// DyeColor.LIGHT_GRAY, DyeColor.LIGHT_GRAY, DyeColor.LIGHT_GRAY, DyeColor.LIGHT_GRAY}),
+	// GERMANY(DyeColor.RED, new BannerPattern[] {BannerPattern.STRIPE_MIDDLE, BannerPattern.STRIPE_CENTER, BannerPattern.STRAIGHT_CROSS, BannerPattern.CIRCLE_MIDDLE, BannerPattern.STRAIGHT_CROSS}, new DyeColor[]
+	// {DyeColor.WHITE, DyeColor.WHITE, DyeColor.BLACK, DyeColor.WHITE, DyeColor.BLACK}, "Germany"),
+	ILLAGER_BANNER(DyeColor.WHITE,
 			new BannerPattern[] {
 					EBannerPatternsCQ.CQ_BLANK.getPattern(),
 					BannerPattern.RHOMBUS_MIDDLE,
@@ -39,9 +39,9 @@ public enum EBanners {
 					BannerPattern.BORDER,
 					BannerPattern.STRIPE_MIDDLE,
 					BannerPattern.HALF_HORIZONTAL },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.RED, EnumDyeColor.SILVER, EnumDyeColor.GRAY, EnumDyeColor.SILVER, EnumDyeColor.BLACK, EnumDyeColor.SILVER }, "Pillagers"),
+			new DyeColor[] { DyeColor.WHITE, DyeColor.RED, DyeColor.LIGHT_GRAY, DyeColor.GRAY, DyeColor.LIGHT_GRAY, DyeColor.BLACK, DyeColor.LIGHT_GRAY }, "Pillagers"),
 
-	WALKER_ORDO(EnumDyeColor.WHITE,
+	WALKER_ORDO(DyeColor.WHITE,
 			new BannerPattern[] {
 					EBannerPatternsCQ.CQ_BLANK.getPattern(),
 					EBannerPatternsCQ.WALKER_BORDER.getPattern(),
@@ -49,9 +49,9 @@ public enum EBanners {
 					EBannerPatternsCQ.WALKER_BACKGROUND.getPattern(),
 					EBannerPatternsCQ.WALKER_INNER_BORDER.getPattern(),
 					EBannerPatternsCQ.WALKER_SKULL.getPattern() },
-			new EnumDyeColor[] { EnumDyeColor.WHITE, EnumDyeColor.PURPLE, EnumDyeColor.PURPLE, EnumDyeColor.BLACK, EnumDyeColor.GRAY, EnumDyeColor.BLACK, }, "Abyss Walker Flag"),
+			new DyeColor[] { DyeColor.WHITE, DyeColor.PURPLE, DyeColor.PURPLE, DyeColor.BLACK, DyeColor.GRAY, DyeColor.BLACK, }, "Abyss Walker Flag"),
 	
-	GREMLIN_BANNER(EnumDyeColor.GRAY,
+	GREMLIN_BANNER(DyeColor.GRAY,
 			new BannerPattern[] {
 					EBannerPatternsCQ.CQ_BLANK.getPattern(),
 					BannerPattern.STRIPE_SMALL,
@@ -61,23 +61,23 @@ public enum EBanners {
 					BannerPattern.GRADIENT_UP,
 					BannerPattern.GRADIENT
 			},
-			new EnumDyeColor[] {
-					EnumDyeColor.WHITE,
-					EnumDyeColor.RED,
-					EnumDyeColor.GRAY,
-					EnumDyeColor.GRAY,
-					EnumDyeColor.WHITE,
-					EnumDyeColor.RED,
-					EnumDyeColor.BLACK
+			new DyeColor[] {
+					DyeColor.WHITE,
+					DyeColor.RED,
+					DyeColor.GRAY,
+					DyeColor.GRAY,
+					DyeColor.WHITE,
+					DyeColor.RED,
+					DyeColor.BLACK
 			}, "Gremlins"),
 	;
 
 	private BannerPattern[] patternList;
-	private EnumDyeColor[] colorList;
-	private EnumDyeColor mainColor;
+	private DyeColor[] colorList;
+	private DyeColor mainColor;
 	private String name;
 
-	private EBanners(EnumDyeColor mainColor, BannerPattern[] patterns, EnumDyeColor[] colors, String name) {
+	private EBanners(DyeColor mainColor, BannerPattern[] patterns, DyeColor[] colors, String name) {
 		this.mainColor = mainColor;
 		this.colorList = colors;
 		this.patternList = patterns;
@@ -90,7 +90,7 @@ public enum EBanners {
 
 		for (int i = 0; i < this.patternList.length; i++) {
 			BannerPattern currPatt = this.patternList[i];
-			EnumDyeColor currCol = this.colorList[i];
+			DyeColor currCol = this.colorList[i];
 
 			final CompoundNBT tag = new CompoundNBT();
 			tag.setString("Pattern", currPatt.getHashname());

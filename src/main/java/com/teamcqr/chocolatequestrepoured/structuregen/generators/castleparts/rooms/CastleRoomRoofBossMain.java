@@ -24,7 +24,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -246,7 +246,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				if (y == 6) {
 					return dungeon.getMainBlockState();
 				} else if (y == 2 || y == 3 || y == 4) {
-					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED);
+					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
 				} else if (y == 1) {
 					Direction windowBotFacing = (x == 0) ? Direction.WEST : Direction.EAST;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);
@@ -273,7 +273,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				if (y == 6) {
 					return dungeon.getMainBlockState();
 				} else if (y == 2 || y == 3 || y == 4) {
-					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED);
+					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
 				} else if (y == 1) {
 					Direction windowBotFacing = (z == 0) ? Direction.NORTH : Direction.SOUTH;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);

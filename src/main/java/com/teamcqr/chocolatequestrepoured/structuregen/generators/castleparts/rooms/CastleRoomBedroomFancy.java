@@ -9,11 +9,11 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 
 public class CastleRoomBedroomFancy extends CastleRoomGenericBase {
-	private EnumDyeColor carpetColor;
+	private DyeColor carpetColor;
 
 	public CastleRoomBedroomFancy(BlockPos startOffset, int sideLength, int height, int floor) {
 		super(startOffset, sideLength, height, floor);
@@ -29,7 +29,7 @@ public class CastleRoomBedroomFancy extends CastleRoomGenericBase {
 		this.decoSelector.registerEdgeDecor(RoomDecorTypes.FIREPLACE, 2);
 		this.decoSelector.registerEdgeDecor(RoomDecorTypes.BED, 3);
 
-		List<EnumDyeColor> possibleColors = Arrays.asList(EnumDyeColor.values());
+		List<DyeColor> possibleColors = Arrays.asList(DyeColor.values());
 		Collections.shuffle(possibleColors);
 		this.carpetColor = possibleColors.get(0);
 	}
