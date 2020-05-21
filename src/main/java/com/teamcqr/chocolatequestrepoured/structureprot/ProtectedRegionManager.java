@@ -34,7 +34,7 @@ public class ProtectedRegionManager {
 	public ProtectedRegionManager(World world) {
 		this.world = world;
 		if (world != null) {
-			int dim = world.provider.getDimension();
+			int dim = world.getDimension().getType().getId();
 			if (dim == 0) {
 				this.folder = new File(world.getSaveHandler().getWorldDirectory(), "data/CQR/protected_regions");
 			} else {

@@ -88,14 +88,14 @@ public class CQStructure {
 		} else {
 			CQStructurePart structure = new CQStructurePart();
 			structure.takeBlocksFromWorld(worldIn, startPos1, this.size, false, ignoreEntities);
-			list.add(new AbstractMap.SimpleEntry<>(BlockPos.ORIGIN, structure));
+			list.add(new AbstractMap.SimpleEntry<>(BlockPos.ZERO, structure));
 		}
 		this.structures.add(list);
 
 		List<Map.Entry<BlockPos, CQStructurePart>> list1 = new ArrayList<>();
 		CQStructurePart structure = new CQStructurePart();
 		structure.takeBlocksFromWorld(worldIn, startPos1, this.size, true, ignoreEntities);
-		list1.add(new AbstractMap.SimpleEntry<>(BlockPos.ORIGIN, structure));
+		list1.add(new AbstractMap.SimpleEntry<>(BlockPos.ZERO, structure));
 		this.structures.add(list1);
 	}
 
@@ -219,16 +219,16 @@ public class CQStructure {
 		}
 
 		this.author = compound.getString("author");
-		this.size = NBTUtil.getPosFromTag(compound.getCompoundTag("size"));
+		this.size = NBTUtil.getPosFromTag(compound.getCompound("size"));
 		this.structures.clear();
 
 		// compatibility with older version for now
 		if (compound.getString("cqr_file_version").equals("1.0.0")) {
-			ListNBT nbtTagList = compound.getTagList("parts", 10);
-			List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList.tagCount());
-			for (int i = 0; i < nbtTagList.tagCount(); i++) {
-				CompoundNBT partCompound = nbtTagList.getCompoundTagAt(i);
-				BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompoundTag("offset"));
+			ListNBT nbtTagList = compound.getList("parts", 10);
+			List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList.size());
+			for (int i = 0; i < nbtTagList.size(); i++) {
+				CompoundNBT partCompound = nbtTagList.getCompound(i);
+				BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompound("offset"));
 				CQStructurePart structurePart = new CQStructurePart();
 
 				structurePart.read(partCompound);
@@ -236,13 +236,13 @@ public class CQStructure {
 			}
 			this.structures.add(list);
 		} else {
-			ListNBT nbtTagList = compound.getTagList("parts", 9);
-			for (int i = 0; i < nbtTagList.tagCount(); i++) {
+			ListNBT nbtTagList = compound.getList("parts", 9);
+			for (int i = 0; i < nbtTagList.size(); i++) {
 				ListNBT nbtTagList1 = (ListNBT) nbtTagList.get(i);
-				List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList1.tagCount());
-				for (int j = 0; j < nbtTagList1.tagCount(); j++) {
-					CompoundNBT partCompound = nbtTagList1.getCompoundTagAt(j);
-					BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompoundTag("offset"));
+				List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList1.size());
+				for (int j = 0; j < nbtTagList1.size(); j++) {
+					CompoundNBT partCompound = nbtTagList1.getCompound(j);
+					BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompound("offset"));
 					CQStructurePart structurePart = new CQStructurePart();
 
 					structurePart.read(partCompound);

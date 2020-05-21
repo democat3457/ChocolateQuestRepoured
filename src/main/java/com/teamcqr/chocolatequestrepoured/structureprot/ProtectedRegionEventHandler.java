@@ -13,11 +13,13 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -93,7 +95,7 @@ public class ProtectedRegionEventHandler {
 		}
 
 		World world = event.getWorld();
-		PlayerEntity player = event.getPlayerEntity();
+		PlayerEntity player = event.getPlayer();
 		BlockPos pos = event.getPos();
 		BlockState state = world.getBlockState(pos);
 		ProtectedRegionManager manager = ProtectedRegionManager.getInstance(world);
@@ -126,12 +128,12 @@ public class ProtectedRegionEventHandler {
 		}
 
 		World world = event.getWorld();
-		PlayerEntity player = event.getPlayerEntity();
+		PlayerEntity player = event.getPlayer();
 		BlockPos pos = event.getPos();
 		ItemStack stack = event.getItemStack();
 		ProtectedRegionManager manager = ProtectedRegionManager.getInstance(world);
 
-		if (player.isCreative() || stack.isEmpty() || !(stack.getItem() instanceof ItemBlock) || PLACEABLE_BLOCK_WHITELIST.contains(((ItemBlock) stack.getItem()).getBlock())) {
+		if (player.isCreative() || stack.isEmpty() || !(stack.getItem() instanceof BlockItem) || PLACEABLE_BLOCK_WHITELIST.contains(((BlockItem) stack.getItem()).getBlock())) {
 			return;
 		}
 
@@ -153,7 +155,7 @@ public class ProtectedRegionEventHandler {
 
 		World world = event.getWorld();
 		Explosion explosion = event.getExplosion();
-		boolean isTNT = ProtectedRegionEventHandler.getExploder(explosion) instanceof EntityTNTPrimed;
+		boolean isTNT = ProtectedRegionEventHandler.getExploder(explosion) instanceof TNTEntity;
 		ProtectedRegionManager manager = ProtectedRegionManager.getInstance(world);
 
 		if (manager != null) {
