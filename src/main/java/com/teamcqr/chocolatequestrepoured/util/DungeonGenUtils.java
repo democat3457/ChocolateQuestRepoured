@@ -11,8 +11,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.DungeonRegistry;
 import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonBase;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntityBanner;
+import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -37,7 +38,7 @@ public class DungeonGenUtils {
 	}
 
 	public static boolean isInsideSphere(BlockPos pos, BlockPos center, int radius) {
-		if (Math.abs(center.getDistance(pos.getX(), pos.getY(), pos.getZ())) < radius) {
+		if (Math.abs(center.distanceSq(pos)) < (radius * radius)) {
 			return true;
 		}
 		return false;
@@ -45,10 +46,10 @@ public class DungeonGenUtils {
 
 	public static int getHighestYAt(Chunk chunk, int x, int z, boolean countWaterAsAir) {
 		int y = 255;
-		Block block = chunk.getBlockState(x, y, z).getBlock();
-		while (Block.isEqualTo(block, Blocks.AIR) || (countWaterAsAir && (Block.isEqualTo(block, Blocks.WATER) || Block.isEqualTo(block, Blocks.FLOWING_WATER)))) {
+		Block block = chunk.getBlockState(new BlockPos(x, y, z)).getBlock();
+		while (block == Blocks.AIR || (countWaterAsAir && (block == Blocks.WATER || block == Blocks.LAVA))) {
 			y--;
-			block = chunk.getBlockState(x, y, z).getBlock();
+			block = chunk.getBlockState(new BlockPos(x, y, z)).getBlock();
 		}
 
 		return y;
@@ -88,7 +89,7 @@ public class DungeonGenUtils {
 		return b instanceof BlockExporterChest;
 	}
 
-	public static boolean isCQBanner(TileEntityBanner banner) {
+	public static boolean isCQBanner(BannerTileEntity banner) {
 		return BannerHelper.isCQBanner(banner);
 	}
 
@@ -98,7 +99,7 @@ public class DungeonGenUtils {
 			return false;
 		}
 		// Check if the world is the overworld
-		if (world.provider.getDimension() != 0) {
+		if (!world.dimension.isSurfaceWorld()) {
 			return false;
 		}
 		// Check the coordinates
@@ -113,9 +114,9 @@ public class DungeonGenUtils {
 	}
 
 	public static boolean isFarAwayEnoughFromSpawn(World world, int chunkX, int chunkZ) {
-		Chunk spawnChunk = world.getChunkFromBlockCoords(world.getSpawnPoint());
-		int x = chunkX - spawnChunk.x;
-		int z = chunkZ - spawnChunk.z;
+		Chunk spawnChunk = world.getChunkAt(world.getSpawnPoint());
+		int x = chunkX - spawnChunk.getPos().x;
+		int z = chunkZ - spawnChunk.getPos().z;
 		return Math.sqrt(x * x + z * z) >= CQRConfig.general.dungeonSpawnDistance;
 	}
 
@@ -135,8 +136,8 @@ public class DungeonGenUtils {
 		Set<DungeonBase> dungeons = new HashSet<DungeonBase>();
 
 		for (DungeonBase dungeon : DungeonRegistry.getInstance().getCoordinateSpecificDungeons()) {
-			Chunk chunk = world.getChunkFromBlockCoords(dungeon.getLockedPos());
-			if (chunk.x == chunkX && chunk.z == chunkZ && dungeon.isDimensionAllowed(world.provider.getDimension())) {
+			Chunk chunk = world.getChunkAt(dungeon.getLockedPos());
+			if (chunk.getPos().x == chunkX && chunk.getPos().z == chunkZ && dungeon.isDimensionAllowed(world.getDimension().getType().getId())) {
 				dungeons.add(dungeon);
 			}
 		}
