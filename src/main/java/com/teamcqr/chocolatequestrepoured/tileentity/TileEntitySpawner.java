@@ -18,7 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -143,7 +143,7 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 			nbt.removeTag("UUIDLeast");
 			nbt.removeTag("UUIDMost");
 			nbt.removeTag("Pos");
-			NBTTagList passengers = nbt.getTagList("Passengers", 10);
+			ListNBT passengers = nbt.getTagList("Passengers", 10);
 			for (NBTBase passenger : passengers) {
 				((CompoundNBT) passenger).removeTag("UUIDLeast");
 				((CompoundNBT) passenger).removeTag("UUIDMost");
@@ -181,7 +181,7 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 
 			this.world.spawnEntity(entity);
 
-			NBTTagList list = nbt.getTagList("Passengers", 10);
+			ListNBT list = nbt.getTagList("Passengers", 10);
 			if (!list.hasNoTags()) {
 				Entity rider = this.spawnEntityFromNBT(list.getCompoundTagAt(0));
 				rider.startRiding(entity);

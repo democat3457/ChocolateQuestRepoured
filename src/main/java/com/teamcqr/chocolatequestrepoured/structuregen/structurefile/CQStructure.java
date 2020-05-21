@@ -22,7 +22,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.StructurePart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -194,9 +194,9 @@ public class CQStructure {
 		compound.setString("author", this.author);
 		compound.setTag("size", NBTUtil.createPosTag(this.size));
 
-		NBTTagList nbtTagList = new NBTTagList();
+		ListNBT nbtTagList = new ListNBT();
 		for (List<Entry<BlockPos, CQStructurePart>> list : this.structures) {
-			NBTTagList nbtTagList1 = new NBTTagList();
+			ListNBT nbtTagList1 = new ListNBT();
 			for (Entry<BlockPos, CQStructurePart> entry : list) {
 				BlockPos offset = entry.getKey();
 				CQStructurePart structurePart = entry.getValue();
@@ -224,7 +224,7 @@ public class CQStructure {
 
 		// compatibility with older version for now
 		if (compound.getString("cqr_file_version").equals("1.0.0")) {
-			NBTTagList nbtTagList = compound.getTagList("parts", 10);
+			ListNBT nbtTagList = compound.getTagList("parts", 10);
 			List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList.tagCount());
 			for (int i = 0; i < nbtTagList.tagCount(); i++) {
 				CompoundNBT partCompound = nbtTagList.getCompoundTagAt(i);
@@ -236,9 +236,9 @@ public class CQStructure {
 			}
 			this.structures.add(list);
 		} else {
-			NBTTagList nbtTagList = compound.getTagList("parts", 9);
+			ListNBT nbtTagList = compound.getTagList("parts", 9);
 			for (int i = 0; i < nbtTagList.tagCount(); i++) {
-				NBTTagList nbtTagList1 = (NBTTagList) nbtTagList.get(i);
+				ListNBT nbtTagList1 = (ListNBT) nbtTagList.get(i);
 				List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList1.tagCount());
 				for (int j = 0; j < nbtTagList1.tagCount(); j++) {
 					CompoundNBT partCompound = nbtTagList1.getCompoundTagAt(j);

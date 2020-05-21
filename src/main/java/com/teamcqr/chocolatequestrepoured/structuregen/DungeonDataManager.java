@@ -16,7 +16,7 @@ import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
@@ -130,10 +130,10 @@ public class DungeonDataManager {
 				e.printStackTrace();
 			}
 			CompoundNBT root = new CompoundNBT();
-			NBTTagList dungeonNames = FileIOUtil.getOrCreateTagList(root, "dungeons", Constants.NBT.TAG_STRING);
+			ListNBT dungeonNames = FileIOUtil.getOrCreateTagList(root, "dungeons", Constants.NBT.TAG_STRING);
 			for(Map.Entry<String, Set<BlockPos>> data : this.dungeonData.entrySet()) {
 				if(!data.getValue().isEmpty()) {
-					NBTTagList locs = FileIOUtil.getOrCreateTagList(root, "dun-" + data.getKey(), Constants.NBT.TAG_COMPOUND);
+					ListNBT locs = FileIOUtil.getOrCreateTagList(root, "dun-" + data.getKey(), Constants.NBT.TAG_COMPOUND);
 					for(BlockPos loc : data.getValue()) {
 						locs.appendTag(NBTUtil.createPosTag(loc));
 					}
@@ -147,7 +147,7 @@ public class DungeonDataManager {
 	
 	public void readData() {
 		CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(file);
-		NBTTagList dungeons = FileIOUtil.getOrCreateTagList(root, "dungeons", Constants.NBT.TAG_STRING);
+		ListNBT dungeons = FileIOUtil.getOrCreateTagList(root, "dungeons", Constants.NBT.TAG_STRING);
 		dungeons.forEach(new Consumer<NBTBase>() {
 
 			@Override
@@ -156,7 +156,7 @@ public class DungeonDataManager {
 					NBTTagString tag = (NBTTagString) t;
 					String s = tag.getString();
 					Set<BlockPos> poss = dungeonData.getOrDefault(s, new HashSet<>());
-					NBTTagList data = FileIOUtil.getOrCreateTagList(root, "dun-" + s, Constants.NBT.TAG_COMPOUND);
+					ListNBT data = FileIOUtil.getOrCreateTagList(root, "dun-" + s, Constants.NBT.TAG_COMPOUND);
 					data.forEach(new Consumer<NBTBase>() {
 						public void accept(NBTBase t1) {
 							if(t1 instanceof CompoundNBT) {

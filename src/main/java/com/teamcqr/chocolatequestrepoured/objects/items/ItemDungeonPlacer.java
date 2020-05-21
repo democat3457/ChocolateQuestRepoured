@@ -19,7 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -60,7 +60,7 @@ public class ItemDungeonPlacer extends Item {
 					CompoundNBT compound = new CompoundNBT();
 					compound.setString("dungeonName", fakeDungeon.getDungeonName());
 					compound.setInteger("iconID", iconID);
-					NBTTagList dependencies = new NBTTagList();
+					ListNBT dependencies = new ListNBT();
 					for (String dependency : fakeDungeon.getDependencies()) {
 						dependencies.appendTag(new NBTTagString(dependency));
 					}

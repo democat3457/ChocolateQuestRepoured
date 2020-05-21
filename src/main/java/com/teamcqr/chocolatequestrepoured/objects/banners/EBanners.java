@@ -1,10 +1,10 @@
 package com.teamcqr.chocolatequestrepoured.objects.banners;
 
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemBanner;
+import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.BannerPattern;
 
 public enum EBanners {
@@ -86,21 +86,21 @@ public enum EBanners {
 
 	public ItemStack getBanner() {
 		// System.out.println("Creating banner item for banner: " + this.toString());
-		final NBTTagList patternList = new NBTTagList();
+		final ListNBT patternList = new ListNBT();
 
 		for (int i = 0; i < this.patternList.length; i++) {
 			BannerPattern currPatt = this.patternList[i];
 			DyeColor currCol = this.colorList[i];
 
 			final CompoundNBT tag = new CompoundNBT();
-			tag.setString("Pattern", currPatt.getHashname());
-			tag.setInteger("Color", currCol.getDyeDamage());
+			tag.putString("Pattern", currPatt.getHashname());
+			tag.putInt("Color", currCol.getColorValue());
 
-			patternList.appendTag(tag);
+			patternList.add(tag);
 		}
 
-		ItemStack item = ItemBanner.makeBanner(this.mainColor, patternList);
-		item = item.setStackDisplayName(this.name);
+		ItemStack item = BannerItem.makeBanner(this.mainColor, patternList);
+		item = item.setDisplayName(this.name);
 		return item;
 	}
 

@@ -53,7 +53,7 @@ import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.common.util.Constants;
@@ -369,7 +369,7 @@ public class FactionRegistry {
 				public void run() {
 					final UUID uuid = event.player.getUniqueID();
 					CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
-					NBTTagList repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
+					ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
 					if (!repuDataList.hasNoTags()) {
 						while(FactionRegistry.this.uuidsBeingLoaded.contains(uuid)) {
 							//Wait until the uuid isnt active	
@@ -419,7 +419,7 @@ public class FactionRegistry {
 						FactionRegistry.this.uuidsBeingLoaded.add(uuid);
 						try {
 							CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
-							NBTTagList repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
+							ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
 							for (int i = 0; i < repuDataList.tagCount(); i++) {
 								CompoundNBT tag = repuDataList.getCompoundTagAt(i);
 								if (mapping.containsKey(tag.getString("factionName"))) {

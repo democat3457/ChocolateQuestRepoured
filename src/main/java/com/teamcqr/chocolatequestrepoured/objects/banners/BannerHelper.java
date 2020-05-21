@@ -8,7 +8,6 @@ import com.teamcqr.chocolatequestrepoured.util.ReflectionHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.BannerTileEntity;
-import net.minecraft.tileentity.TileEntityBanner;
 
 public class BannerHelper {
 
@@ -24,7 +23,8 @@ public class BannerHelper {
 	}
 
 	public static boolean isCQBanner(BannerTileEntity bannerTile) {
-		List<BannerPattern> patterns = ReflectionHelper.getPrivateValue(BannerTileEntity.class, bannerTile, 4);
+		@SuppressWarnings("unchecked")
+		List<BannerPattern> patterns = (List<BannerPattern>) ReflectionHelper.reflectGetFieldValue(bannerTile, BannerTileEntity.class.getFields()[4]);
 		if (patterns != null && !patterns.isEmpty()) {
 			for (EBannerPatternsCQ cqPattern : EBannerPatternsCQ.values()) {
 				if (patterns.contains(cqPattern.getPattern())) {

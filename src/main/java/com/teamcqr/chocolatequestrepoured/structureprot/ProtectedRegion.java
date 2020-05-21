@@ -11,7 +11,7 @@ import com.teamcqr.chocolatequestrepoured.network.packets.toClient.SPacketSyncPr
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -59,12 +59,12 @@ public class ProtectedRegion {
 		compound.setBoolean("preventEntitySpawning", this.preventEntitySpawning);
 		compound.setBoolean("ignoreNoBossOrNexus", this.ignoreNoBossOrNexus);
 		compound.setBoolean("isGenerating", this.isGenerating);
-		NBTTagList nbtTagList1 = new NBTTagList();
+		ListNBT nbtTagList1 = new ListNBT();
 		for (UUID entityUuid : this.entityDependencies) {
 			nbtTagList1.appendTag(NBTUtil.createUUIDTag(entityUuid));
 		}
 		compound.setTag("entityDependencies", nbtTagList1);
-		NBTTagList nbtTagList2 = new NBTTagList();
+		ListNBT nbtTagList2 = new ListNBT();
 		for (BlockPos pos : this.blockDependencies) {
 			nbtTagList1.appendTag(NBTUtil.createPosTag(pos));
 		}
@@ -85,12 +85,12 @@ public class ProtectedRegion {
 		this.ignoreNoBossOrNexus = compound.getBoolean("ignoreNoBossOrNexus");
 		this.isGenerating = compound.getBoolean("isGenerating");
 		this.entityDependencies.clear();
-		NBTTagList nbtTagList1 = compound.getTagList("entityDependencies", Constants.NBT.TAG_COMPOUND);
+		ListNBT nbtTagList1 = compound.getTagList("entityDependencies", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < nbtTagList1.tagCount(); i++) {
 			this.entityDependencies.add(NBTUtil.getUUIDFromTag(nbtTagList1.getCompoundTagAt(i)));
 		}
 		this.blockDependencies.clear();
-		NBTTagList nbtTagList2 = compound.getTagList("blockDependencies", Constants.NBT.TAG_COMPOUND);
+		ListNBT nbtTagList2 = compound.getTagList("blockDependencies", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < nbtTagList2.tagCount(); i++) {
 			this.blockDependencies.add(NBTUtil.getPosFromTag(nbtTagList2.getCompoundTagAt(i)));
 		}

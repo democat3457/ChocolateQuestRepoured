@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -57,7 +57,7 @@ public class ItemSoulBottle extends Item {
 					entityTag.removeTag("UUIDLeast");
 					entityTag.removeTag("UUIDMost");
 					entityTag.removeTag("Pos");
-					NBTTagList passengers = entityTag.getTagList("Passengers", 10);
+					ListNBT passengers = entityTag.getTagList("Passengers", 10);
 					for (NBTBase passenger : passengers) {
 						((CompoundNBT) passenger).removeTag("UUIDLeast");
 						((CompoundNBT) passenger).removeTag("UUIDMost");
@@ -111,7 +111,7 @@ public class ItemSoulBottle extends Item {
 				tag.removeTag("UUIDLeast");
 				tag.removeTag("UUIDMost");
 				tag.removeTag("Pos");
-				NBTTagList passengers = tag.getTagList("Passengers", 10);
+				ListNBT passengers = tag.getTagList("Passengers", 10);
 				for (NBTBase passenger : passengers) {
 					((CompoundNBT) passenger).removeTag("UUIDLeast");
 					((CompoundNBT) passenger).removeTag("UUIDMost");
@@ -122,7 +122,7 @@ public class ItemSoulBottle extends Item {
 			entity.setPosition(x, y, z);
 			worldIn.spawnEntity(entity);
 
-			NBTTagList list = tag.getTagList("Passengers", 10);
+			ListNBT list = tag.getTagList("Passengers", 10);
 			if (!list.hasNoTags()) {
 				Entity rider = this.createEntityFromNBT(list.getCompoundTagAt(0), worldIn, x, y, z);
 				rider.startRiding(entity);

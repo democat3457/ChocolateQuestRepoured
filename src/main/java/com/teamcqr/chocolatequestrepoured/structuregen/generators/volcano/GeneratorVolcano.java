@@ -392,13 +392,13 @@ public class GeneratorVolcano implements IDungeonGenerator {
 			settingsCompound.setShort("SpawnCount", (short) 3);
 			
 			
-			NBTTagList spawnPotentials = new NBTTagList();
+			ListNBT spawnPotentials = new ListNBT();
 			Entity entity = mobFactory.getGearedEntityByFloor(floor, world);
 			CompoundNBT ent = SpawnerFactory.createSpawnerNBTFromEntity(entity);
 			ent.removeTag("UUIDLeast");
 			ent.removeTag("UUIDMost");
 			ent.removeTag("Pos");
-			NBTTagList passengers = ent.getTagList("Passengers", 10);
+			ListNBT passengers = ent.getTagList("Passengers", 10);
 			for (NBTBase passenger : passengers) {
 				((CompoundNBT) passenger).removeTag("UUIDLeast");
 				((CompoundNBT) passenger).removeTag("UUIDMost");

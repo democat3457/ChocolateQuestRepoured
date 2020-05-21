@@ -71,7 +71,7 @@ import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -360,7 +360,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			CompoundNBT pathTag = new CompoundNBT();
 			pathTag.setBoolean("isLoop", this.pathIsLoop);
 			pathTag.setInteger("currentPathPoint", this.currentTargetPoint);
-			NBTTagList nbtTagList = new NBTTagList();
+			ListNBT nbtTagList = new ListNBT();
 			for (int i = 0; i < this.pathPoints.length; i++) {
 				nbtTagList.appendTag(NBTUtil.createPosTag(this.pathPoints[i]));
 			}
@@ -399,7 +399,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			CompoundNBT pathTag = compound.getCompoundTag("pathingAI");
 			this.pathIsLoop = pathTag.getBoolean("isLoop");
 			this.currentTargetPoint = pathTag.getInteger("currentPathPoint") -1;
-			NBTTagList nbtTagList = pathTag.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
+			ListNBT nbtTagList = pathTag.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
 			this.pathPoints = new BlockPos[nbtTagList.tagCount()];
 			for (int i = 0; i < nbtTagList.tagCount(); i++) {
 				this.pathPoints[i] = NBTUtil.getPosFromTag(nbtTagList.getCompoundTagAt(i));

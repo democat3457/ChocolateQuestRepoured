@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
 
@@ -118,8 +118,8 @@ public class FileIOUtil {
 		return file;
 	}
 
-	public static NBTTagList getOrCreateTagList(CompoundNBT rootTag, String key, int listType) {
-		NBTTagList structureList = new NBTTagList();
+	public static ListNBT getOrCreateTagList(CompoundNBT rootTag, String key, int listType) {
+		ListNBT structureList = new ListNBT();
 		if (!rootTag.hasKey(key, Constants.NBT.TAG_LIST)) {
 			if (rootTag.hasKey(key)) {
 				rootTag.removeTag(key);

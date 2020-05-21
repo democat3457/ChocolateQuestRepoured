@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerEntityMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.Direction;
@@ -138,9 +138,9 @@ public class ItemPathTool extends Item {
 			compound = new CompoundNBT();
 			stack.setTagCompound(compound);
 		}
-		NBTTagList nbtTagList;
+		ListNBT nbtTagList;
 		if (!compound.hasKey("pathPoints", Constants.NBT.TAG_LIST)) {
-			nbtTagList = new NBTTagList();
+			nbtTagList = new ListNBT();
 			compound.setTag("pathPoints", nbtTagList);
 		} else {
 			nbtTagList = compound.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
@@ -162,10 +162,10 @@ public class ItemPathTool extends Item {
 			compound = new CompoundNBT();
 			stack.setTagCompound(compound);
 		}
-		NBTTagList nbtTagList;
+		ListNBT nbtTagList;
 		if (!compound.hasKey("pathPoints", Constants.NBT.TAG_LIST)) {
-			nbtTagList = new NBTTagList();
-			compound.setTag("pathPoints", new NBTTagList());
+			nbtTagList = new ListNBT();
+			compound.setTag("pathPoints", new ListNBT());
 		} else {
 			nbtTagList = compound.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
 		}
@@ -179,7 +179,7 @@ public class ItemPathTool extends Item {
 		if (compound == null || !compound.hasKey("pathPoints", Constants.NBT.TAG_LIST)) {
 			return new BlockPos[0];
 		}
-		NBTTagList nbtTagList = compound.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
+		ListNBT nbtTagList = compound.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
 		BlockPos[] pathPoints = new BlockPos[nbtTagList.tagCount()];
 		for (int i = 0; i < nbtTagList.tagCount(); i++) {
 			pathPoints[i] = NBTUtil.getPosFromTag(nbtTagList.getCompoundTagAt(i));

@@ -5,7 +5,7 @@ import java.util.Map;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,7 +15,7 @@ public class CapabilityCooldownHandlerStorage implements IStorage<CapabilityCool
 
 	@Override
 	public NBTBase writeNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, Direction side) {
-		NBTTagList nbtTagList = new NBTTagList();
+		ListNBT nbtTagList = new ListNBT();
 
 		for (Map.Entry<Item, Integer> entry : instance.getItemCooldownMap().entrySet()) {
 			CompoundNBT compound = new CompoundNBT();
@@ -30,8 +30,8 @@ public class CapabilityCooldownHandlerStorage implements IStorage<CapabilityCool
 
 	@Override
 	public void readNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, Direction side, NBTBase nbt) {
-		if (nbt instanceof NBTTagList) {
-			NBTTagList nbtTagList = (NBTTagList) nbt;
+		if (nbt instanceof ListNBT) {
+			ListNBT nbtTagList = (ListNBT) nbt;
 
 			for (int i = 0; i < nbtTagList.tagCount(); i++) {
 				CompoundNBT compound = nbtTagList.getCompoundTagAt(i);

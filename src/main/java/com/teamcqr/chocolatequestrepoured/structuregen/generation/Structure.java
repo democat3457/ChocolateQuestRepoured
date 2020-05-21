@@ -14,7 +14,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -85,9 +85,9 @@ public class Structure {
 		CompoundNBT compound = new CompoundNBT();
 
 		compound.setTag("uuid", NBTUtil.createUUIDTag(this.uuid));
-		NBTTagList nbtTagList1 = new NBTTagList();
+		ListNBT nbtTagList1 = new ListNBT();
 		for (List<? extends IStructure> partList : this.list) {
-			NBTTagList nbtTagList2 = new NBTTagList();
+			ListNBT nbtTagList2 = new ListNBT();
 			for (IStructure istructure : partList) {
 				nbtTagList2.appendTag(istructure.writeToNBT());
 			}
@@ -105,9 +105,9 @@ public class Structure {
 	public void readFromNBT(CompoundNBT compound) {
 		this.uuid = NBTUtil.getUUIDFromTag(compound.getCompoundTag("uuid"));
 		this.list.clear();
-		NBTTagList nbtTagList1 = compound.getTagList("list", 9);
+		ListNBT nbtTagList1 = compound.getTagList("list", 9);
 		for (int i = 0; i < nbtTagList1.tagCount(); i++) {
-			NBTTagList nbtTagList2 = (NBTTagList) nbtTagList1.get(i);
+			ListNBT nbtTagList2 = (ListNBT) nbtTagList1.get(i);
 			List<IStructure> partList = new ArrayList<>(nbtTagList2.tagCount());
 			for (int j = 0; j < nbtTagList2.tagCount(); j++) {
 				IStructure part = this.createFromNBT(nbtTagList2.getCompoundTagAt(j));

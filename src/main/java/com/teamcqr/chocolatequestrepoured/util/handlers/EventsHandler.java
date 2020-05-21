@@ -24,7 +24,7 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -128,7 +128,7 @@ public class EventsHandler {
 		CompoundNBT tag = entity.getEntityData();
 
 		if (tag.hasKey("Items")) {
-			NBTTagList itemList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+			ListNBT itemList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
 			if (itemList == null) {
 				return;

@@ -15,7 +15,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
@@ -76,7 +76,7 @@ public abstract class SpawnerFactory {
 		if (multiUseSpawner) {
 			TileEntityMobSpawner tileEntityMobSpawner = (TileEntityMobSpawner) tileEntity;
 			CompoundNBT compound = tileEntityMobSpawner.writeToNBT(new CompoundNBT());
-			NBTTagList spawnPotentials = new NBTTagList();
+			ListNBT spawnPotentials = new ListNBT();
 
 			// Store entity ids into NBT tag
 			for (int i = 0; i < entities.length; i++) {
@@ -86,7 +86,7 @@ public abstract class SpawnerFactory {
 						entities[i].removeTag("UUIDLeast");
 						entities[i].removeTag("UUIDMost");
 						entities[i].removeTag("Pos");
-						NBTTagList passengers = entities[i].getTagList("Passengers", 10);
+						ListNBT passengers = entities[i].getTagList("Passengers", 10);
 						for (NBTBase passenger : passengers) {
 							((CompoundNBT) passenger).removeTag("UUIDLeast");
 							((CompoundNBT) passenger).removeTag("UUIDMost");
@@ -253,7 +253,7 @@ public abstract class SpawnerFactory {
 		entityCompound.removeTag("UUIDLeast");
 		entityCompound.removeTag("UUIDMost");
 		entityCompound.removeTag("Pos");
-		NBTTagList passengerList = entityCompound.getTagList("Passengers", 10);
+		ListNBT passengerList = entityCompound.getTagList("Passengers", 10);
 		for (NBTBase passengerTag : passengerList) {
 			((CompoundNBT) passengerTag).removeTag("UUIDLeast");
 			((CompoundNBT) passengerTag).removeTag("UUIDMost");

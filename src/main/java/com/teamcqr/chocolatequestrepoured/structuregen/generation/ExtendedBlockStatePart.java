@@ -14,7 +14,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockPlacingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -96,7 +96,7 @@ public class ExtendedBlockStatePart implements IStructure {
 		compound.setTag("pos", NBTUtil.createPosTag(this.pos));
 		compound.setTag("size", NBTUtil.createPosTag(this.size));
 
-		NBTTagList nbtTagList = new NBTTagList();
+		ListNBT nbtTagList = new ListNBT();
 		for (int x = 0; x < this.size.getX(); x++) {
 			for (int y = 0; y < this.size.getY(); y++) {
 				for (int z = 0; z < this.size.getZ(); z++) {
@@ -129,7 +129,7 @@ public class ExtendedBlockStatePart implements IStructure {
 		this.size = NBTUtil.getPosFromTag(compound.getCompoundTag("size"));
 		this.extendedstates = new ExtendedBlockState[this.size.getX()][this.size.getY()][this.size.getZ()];
 
-		NBTTagList nbtTagList = compound.getTagList("blocks", 10);
+		ListNBT nbtTagList = compound.getTagList("blocks", 10);
 		for (int x = 0; x < this.size.getX(); x++) {
 			for (int y = 0; y < this.size.getY(); y++) {
 				for (int z = 0; z < this.size.getZ(); z++) {

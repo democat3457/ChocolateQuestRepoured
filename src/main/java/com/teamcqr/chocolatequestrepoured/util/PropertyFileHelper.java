@@ -8,6 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.teamcqr.chocolatequestrepoured.CQRMain;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 

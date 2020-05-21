@@ -19,7 +19,7 @@ import net.minecraft.entity.player.PlayerEntityMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.Hand;
@@ -48,7 +48,7 @@ public class ItemBadge extends Item {
 					((WorldServer) player.world).spawnParticle((PlayerEntityMP) player, EnumParticleTypes.SPELL_WITCH, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
 				} else {
 					IItemHandler capability = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-					NBTTagList itemList = new NBTTagList();
+					ListNBT itemList = new ListNBT();
 					for (int i = 0; i < capability.getSlots(); i++) {
 						ItemStack stack1 = capability.getStackInSlot(i);
 						CompoundNBT slotTag = new CompoundNBT();

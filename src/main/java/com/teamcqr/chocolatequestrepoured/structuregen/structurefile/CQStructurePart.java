@@ -37,7 +37,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBanner;
@@ -299,7 +299,7 @@ public class CQStructurePart extends Template {
 				CompoundNBT nbttagcompound = template$entityinfo.entityData;
 				Vec3d vec3d = transformedVec3d(template$entityinfo.pos, mirrorIn, rotationIn);
 				Vec3d vec3d1 = vec3d.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
-				NBTTagList nbttaglist = new NBTTagList();
+				ListNBT nbttaglist = new ListNBT();
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.x));
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.y));
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.z));
@@ -433,27 +433,27 @@ public class CQStructurePart extends Template {
 
 		tag.removeTag("author");
 
-		NBTTagList bannerTagList = new NBTTagList();
+		ListNBT bannerTagList = new ListNBT();
 		for (BlockPos pos : this.banners) {
 			bannerTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		NBTTagList spawnerTagList = new NBTTagList();
+		ListNBT spawnerTagList = new ListNBT();
 		for (BlockPos pos : this.spawners) {
 			spawnerTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		NBTTagList chestTagList = new NBTTagList();
+		ListNBT chestTagList = new ListNBT();
 		for (LootChestInfo lootChestInfo : this.chests) {
 			chestTagList.appendTag(lootChestInfo.getAsNBTTag());
 		}
 
-		NBTTagList forceFieldNexusTagList = new NBTTagList();
+		ListNBT forceFieldNexusTagList = new ListNBT();
 		for (BlockPos pos : this.forceFieldCores) {
 			forceFieldNexusTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		NBTTagList bossTagList = new NBTTagList();
+		ListNBT bossTagList = new ListNBT();
 		for (BlockPos pos : this.bosses) {
 			bossTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
@@ -477,31 +477,31 @@ public class CQStructurePart extends Template {
 		this.forceFieldCores.clear();
 		this.bosses.clear();
 
-		NBTTagList bannerTagList = compound.getTagList("banners", 10);
+		ListNBT bannerTagList = compound.getTagList("banners", 10);
 		for (int i = 0; i < bannerTagList.tagCount(); i++) {
 			CompoundNBT tag = bannerTagList.getCompoundTagAt(i);
 			this.banners.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		NBTTagList spawnerTagList = compound.getTagList("spawners", 10);
+		ListNBT spawnerTagList = compound.getTagList("spawners", 10);
 		for (int i = 0; i < spawnerTagList.tagCount(); i++) {
 			CompoundNBT tag = spawnerTagList.getCompoundTagAt(i);
 			this.spawners.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		NBTTagList chestTagList = compound.getTagList("chests", 10);
+		ListNBT chestTagList = compound.getTagList("chests", 10);
 		for (int i = 0; i < chestTagList.tagCount(); i++) {
 			CompoundNBT tag = chestTagList.getCompoundTagAt(i);
 			this.chests.add(new LootChestInfo(tag));
 		}
 
-		NBTTagList coresTagList = compound.getTagList("forcefieldcores", 10);
+		ListNBT coresTagList = compound.getTagList("forcefieldcores", 10);
 		for (int i = 0; i < coresTagList.tagCount(); i++) {
 			CompoundNBT tag = coresTagList.getCompoundTagAt(i);
 			this.forceFieldCores.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		NBTTagList bossTagList = compound.getTagList("bosses", 10);
+		ListNBT bossTagList = compound.getTagList("bosses", 10);
 		for (int i = 0; i < bossTagList.tagCount(); i++) {
 			CompoundNBT tag = bossTagList.getCompoundTagAt(i);
 			this.bosses.add(NBTUtil.getPosFromTag(tag));
