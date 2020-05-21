@@ -1,0 +1,1190 @@
+package com.teamcqr.chocolatequestrepoured.objects.entity.bases;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import com.teamcqr.chocolatequestrepoured.CQRMain;
+import com.teamcqr.chocolatequestrepoured.capability.extraitemhandler.CapabilityExtraItemHandler;
+import com.teamcqr.chocolatequestrepoured.capability.extraitemhandler.CapabilityExtraItemHandlerProvider;
+import com.teamcqr.chocolatequestrepoured.client.init.ESpeechBubble;
+import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerCQRSpeechbubble;
+import com.teamcqr.chocolatequestrepoured.factions.CQRFaction;
+import com.teamcqr.chocolatequestrepoured.factions.EDefaultFaction;
+import com.teamcqr.chocolatequestrepoured.factions.FactionRegistry;
+import com.teamcqr.chocolatequestrepoured.init.ModItems;
+import com.teamcqr.chocolatequestrepoured.init.ModSounds;
+import com.teamcqr.chocolatequestrepoured.network.packets.toClient.ItemStackSyncPacket;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ECQREntityArmPoses;
+import com.teamcqr.chocolatequestrepoured.objects.entity.EntityEquipmentExtraSlot;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIAttack;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIAttackRanged;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIBackstab;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIFireFighter;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIFollowAttackTarget;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIFollowPath;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIHealingPotion;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIIdleSit;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIMoveToHome;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIMoveToLeader;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAIPotionThrower;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAISearchMount;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAITameAndLeashPet;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.EntityAITorchIgniter;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells.EntityAISpellHandler;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells.IEntityAISpellAnimatedVanilla;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.target.EntityAICQRNearestAttackTarget;
+import com.teamcqr.chocolatequestrepoured.objects.entity.ai.target.EntityAIHurtByTarget;
+import com.teamcqr.chocolatequestrepoured.objects.factories.SpawnerFactory;
+import com.teamcqr.chocolatequestrepoured.objects.items.ItemBadge;
+import com.teamcqr.chocolatequestrepoured.objects.items.ItemPotionHealing;
+import com.teamcqr.chocolatequestrepoured.objects.items.ItemShieldDummy;
+import com.teamcqr.chocolatequestrepoured.objects.items.staves.ItemStaffHealing;
+import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
+import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
+import com.teamcqr.chocolatequestrepoured.util.ItemUtil;
+import com.teamcqr.chocolatequestrepoured.util.Reference;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIOpenDoor;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemShield;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+
+public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, IEntityAdditionalSpawnData {
+
+	protected BlockPos homePosition = null;
+	protected UUID leaderUUID;
+	protected LivingEntity leader = null;
+	protected boolean holdingPotion;
+	protected ResourceLocation lootTable;
+	protected byte usedPotions = (byte) 0;
+	protected double healthScale = 1D;
+	public ItemStack prevPotion;
+	public boolean prevSneaking;
+	public boolean prevSitting;
+	protected float sizeScaling = 1.0F;
+	protected int lastTimeSeenAttackTarget;
+	protected Vec3d lastPosAttackTarget;
+	protected EntityAISpellHandler spellHandler;
+
+	private CQRFaction factionInstance;
+	private String factionName;
+	private CQRFaction defaultFactionInstance;
+
+	protected int lastTimeHitByAxeWhileBlocking = 0;
+	protected boolean wasRecentlyHitByAxe = false;
+	protected boolean armorActive = false;
+	protected int magicArmorCooldown = 300;
+
+	// Pathing AI stuff
+	protected BlockPos[] pathPoints = new BlockPos[] {};
+	protected boolean pathIsLoop = false;
+	protected int currentTargetPoint = 0;
+
+	// Sync with client
+	protected static final DataParameter<Boolean> IS_SITTING = EntityDataManager.<Boolean>createKey(AbstractEntityCQR.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<String> ARM_POSE = EntityDataManager.<String>createKey(AbstractEntityCQR.class, DataSerializers.STRING);
+	protected static final DataParameter<Boolean> TALKING = EntityDataManager.<Boolean>createKey(AbstractEntityCQR.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Integer> TEXTURE_INDEX = EntityDataManager.<Integer>createKey(AbstractEntityCQR.class, DataSerializers.VARINT);
+	protected static final DataParameter<Boolean> MAGIC_ARMOR_ACTIVE = EntityDataManager.<Boolean>createKey(AbstractEntityCQR.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Integer> SPELL_INFORMATION = EntityDataManager.<Integer>createKey(AbstractEntityCQR.class, DataSerializers.VARINT);
+
+	public int deathTicks = 0;
+	public static float MAX_DEATH_TICKS = 200.0F;
+
+	// Client only
+	@SideOnly(Side.CLIENT)
+	protected int currentSpeechBubbleID;
+
+	public AbstractEntityCQR(World worldIn) {
+		super(worldIn);
+		if (worldIn.isRemote) {
+			this.currentSpeechBubbleID = this.getRNG().nextInt(ESpeechBubble.values().length);
+		}
+		this.experienceValue = 5;
+		this.setSize(this.getDefaultWidth(), this.getDefaultHeight());
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+
+		this.dataManager.register(IS_SITTING, false);
+		this.dataManager.register(ARM_POSE, ECQREntityArmPoses.NONE.toString());
+		this.dataManager.register(TALKING, false);
+		this.dataManager.register(TEXTURE_INDEX, this.getRNG().nextInt(this.getTextureCount()));
+		this.dataManager.register(MAGIC_ARMOR_ACTIVE, false);
+		this.dataManager.register(SPELL_INFORMATION, 0);
+	}
+
+	@Override
+	protected boolean canDespawn() {
+		return !CQRConfig.general.mobsFromCQSpawnerDontDespawn;
+	}
+
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getBaseHealth());
+	}
+
+	@Override
+	protected PathNavigate createNavigator(World worldIn) {
+		PathNavigate navigator = new PathNavigateGround(this, worldIn) {
+			@Override
+			public float getPathSearchRange() {
+				return 256.0F;
+			}
+		};
+		((PathNavigateGround) navigator).setEnterDoors(this.canOpenDoors());
+		((PathNavigateGround) navigator).setBreakDoors(this.canOpenDoors());
+		return navigator;
+	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		return this.attackEntityFrom(source, amount, false);
+	}
+
+	public boolean attackEntityFrom(DamageSource source, float amount, boolean sentFromPart) {
+		// Start IceAndFire compatibility
+		if (CQRConfig.advanced.enableSpecialFeatures && source.getTrueSource() != null) {
+			ResourceLocation resLoc = EntityList.getKey(source.getTrueSource());
+			if (resLoc != null && resLoc.getNamespace().equalsIgnoreCase("iceandfire")) {
+				amount *= 0.5F;
+			}
+		}
+		// End IceAndFire compatibility
+
+		if (this.world.getWorldInfo().isHardcore()) {
+			amount *= 0.7F;
+		} else {
+			Difficulty difficulty = this.world.getDifficulty();
+			if (difficulty == Difficulty.HARD) {
+				amount *= 0.8F;
+			} else if (difficulty == Difficulty.NORMAL) {
+				amount *= 0.9F;
+			}
+		}
+
+		if (CQRConfig.mobs.blockCancelledByAxe && !this.world.isRemote && amount > 0.0F && this.canBlockDamageSource(source) && source.getImmediateSource() instanceof LivingEntity && !(source.getImmediateSource() instanceof PlayerEntity) && ((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof AxeItem) {
+			this.lastTimeHitByAxeWhileBlocking = this.ticksExisted;
+		}
+
+		if (super.attackEntityFrom(source, amount)) {
+			if (CQRConfig.mobs.armorShattersOnMobs) {
+				this.handleArmorBreaking();
+			}
+			
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean canBlockDamageSource(DamageSource damageSourceIn) {
+		if (!damageSourceIn.isUnblockable() && this.isActiveItemStackBlocking()) {
+			Vec3d vec3d = damageSourceIn.getDamageLocation();
+
+			if (vec3d != null) {
+				Vec3d vec3d1 = this.getLook(1.0F);
+				Vec3d vec3d2 = vec3d.subtractReverse(getPositionVector()).normalize();
+				vec3d2 = new Vec3d(vec3d2.x, 0.0D, vec3d2.z);
+
+				if (vec3d2.dotProduct(vec3d1) < 0.0D) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onDeath(DamageSource cause) {
+		if (this.isHoldingPotion()) {
+			this.swapWeaponAndPotionSlotItemStacks();
+		}
+
+		super.onDeath(cause);
+
+		this.updateReputationOnDeath(cause);
+	}
+
+	@Override
+	protected void initEntityAI() {
+		this.spellHandler = this.createSpellHandler();
+		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(1, new EntityAIOpenDoor(this, true) {
+			@Override
+			public boolean shouldExecute() {
+				return AbstractEntityCQR.this.canOpenDoors() && super.shouldExecute();
+			}
+		});
+
+		this.tasks.addTask(10, new EntityAIHealingPotion(this));
+		this.tasks.addTask(11, this.spellHandler);
+		this.tasks.addTask(12, new EntityAIAttackRanged(this));
+		this.tasks.addTask(12, new EntityAIPotionThrower(this));
+		this.tasks.addTask(13, new EntityAIBackstab(this));
+		this.tasks.addTask(14, new EntityAIAttack(this));
+
+		this.tasks.addTask(20, new EntityAIFollowAttackTarget(this));
+		this.tasks.addTask(21, new EntityAIFireFighter(this));
+		this.tasks.addTask(22, new EntityAITorchIgniter(this));
+		this.tasks.addTask(23, new EntityAITameAndLeashPet(this));
+		this.tasks.addTask(24, new EntityAISearchMount(this));
+
+		this.tasks.addTask(30, new EntityAIMoveToLeader(this));
+		this.tasks.addTask(31, new EntityAIFollowPath(this));
+		this.tasks.addTask(32, new EntityAIMoveToHome(this));
+		this.tasks.addTask(33, new EntityAIIdleSit(this));
+
+		this.targetTasks.addTask(0, new EntityAICQRNearestAttackTarget(this));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this));
+	}
+
+	@Override
+	@Nullable
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		this.setHealingPotions(CQRConfig.mobs.defaultHealingPotionCount);
+		this.setItemStackToExtraSlot(EntityEquipmentExtraSlot.BADGE, new ItemStack(ModItems.BADGE));
+		for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+			this.setDropChance(slot, 0.04F);
+		}
+		return livingdata;
+	}
+
+	@Override
+	protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
+		double modalValue = CQRConfig.mobs.dropDurabilityModalValue;
+		double standardDeviation = CQRConfig.mobs.dropDurabilityStandardDeviation;
+		double min = Math.min(CQRConfig.mobs.dropDurabilityMinimum, modalValue);
+		double max = Math.max(CQRConfig.mobs.dropDurabilityMaximum, modalValue);
+
+		for (EquipmentSlotType entityequipmentslot : EquipmentSlotType.values()) {
+			ItemStack itemstack = this.getItemStackFromSlot(entityequipmentslot);
+			double d0 = (double) this.getDropChance(entityequipmentslot);
+			boolean flag = d0 > 1.0D;
+
+			if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack) && (wasRecentlyHit || flag) && (double) (this.rand.nextFloat() - (float) lootingModifier * 0.01F) < d0) {
+				if (!flag && itemstack.isItemStackDamageable()) {
+					double durability = modalValue + MathHelper.clamp(this.rand.nextGaussian() * standardDeviation, min - modalValue, max - modalValue);
+					itemstack.setItemDamage((int) ((double) itemstack.getMaxDamage() * (1.0D - durability)));
+				}
+
+				this.entityDropItem(itemstack, 0.0F);
+			}
+		}
+	}
+
+	@Override
+	public void writeEntityToNBT(CompoundNBT compound) {
+		super.writeEntityToNBT(compound);
+
+		if (this.homePosition != null) {
+			compound.putTag("home", NBTUtil.createPosTag(this.homePosition));
+		}
+
+		if (this.leaderUUID != null) {
+			compound.putTag("leader", NBTUtil.createUUIDTag(this.leaderUUID));
+		}
+		if (this.factionName != null && !this.factionName.equalsIgnoreCase(this.getDefaultFaction().name())) {
+			compound.putString("factionOverride", this.factionName);
+		}
+		compound.setInteger("textureIndex", this.dataManager.get(TEXTURE_INDEX));
+		compound.setByte("usedHealingPotions", this.usedPotions);
+		compound.setFloat("sizeScaling", this.sizeScaling);
+		compound.setBoolean("isSitting", this.dataManager.get(IS_SITTING));
+		compound.setBoolean("holdingPotion", this.holdingPotion);
+		compound.setDouble("healthScale", this.healthScale);
+
+		if (this.pathPoints.length > 0) {
+			CompoundNBT pathTag = new CompoundNBT();
+			pathTag.setBoolean("isLoop", this.pathIsLoop);
+			pathTag.setInteger("currentPathPoint", this.currentTargetPoint);
+			NBTTagList nbtTagList = new NBTTagList();
+			for (int i = 0; i < this.pathPoints.length; i++) {
+				nbtTagList.appendTag(NBTUtil.createPosTag(this.pathPoints[i]));
+			}
+			pathTag.setTag("pathPoints", nbtTagList);
+			compound.setTag("pathingAI", pathTag);
+		}
+	}
+
+	@Override
+	public void readEntityFromNBT(CompoundNBT compound) {
+		super.readEntityFromNBT(compound);
+
+		if (compound.hasKey("home")) {
+			this.homePosition = NBTUtil.getPosFromTag(compound.getCompoundTag("home"));
+		}
+
+		if (compound.hasKey("leader")) {
+			this.leaderUUID = NBTUtil.getUUIDFromTag(compound.getCompoundTag("leader"));
+		}
+
+		if (compound.hasKey("factionOverride")) {
+			this.setFaction(compound.getString("factionOverride"));
+		}
+
+		this.dataManager.set(TEXTURE_INDEX, compound.getInteger("textureIndex"));
+		this.usedPotions = compound.getByte("usedHealingPotions");
+		this.sizeScaling = compound.hasKey("sizeScaling") ? compound.getFloat("sizeScaling") : 1.0F;
+		this.dataManager.set(IS_SITTING, compound.getBoolean("isSitting"));
+		this.holdingPotion = compound.getBoolean("holdingPotion");
+		this.healthScale = compound.getDouble("healthScale");
+		if (this.healthScale <= 1.0D) {
+			this.healthScale = 1.0D;
+		}
+
+		if (compound.hasKey("pathingAI", Constants.NBT.TAG_COMPOUND)) {
+			CompoundNBT pathTag = compound.getCompoundTag("pathingAI");
+			this.pathIsLoop = pathTag.getBoolean("isLoop");
+			this.currentTargetPoint = pathTag.getInteger("currentPathPoint") -1;
+			NBTTagList nbtTagList = pathTag.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
+			this.pathPoints = new BlockPos[nbtTagList.tagCount()];
+			for (int i = 0; i < nbtTagList.tagCount(); i++) {
+				this.pathPoints[i] = NBTUtil.getPosFromTag(nbtTagList.getCompoundTagAt(i));
+			}
+		}
+	}
+
+	@Override
+	protected boolean processInteract(PlayerEntity player, Hand hand) {
+		if (player.isCreative() && !player.isSneaking()) {
+			if (!this.world.isRemote) {
+				ItemStack stack = player.getHeldItem(hand);
+
+				if (stack.getItem() instanceof ItemArmor) {
+					EquipmentSlotType slot = getSlotForItemStack(stack);
+
+					player.setHeldItem(hand, this.getItemStackFromSlot(slot));
+					this.setItemStackToSlot(slot, stack);
+					return true;
+				}
+
+				if (stack.getItem() instanceof ItemSword) {
+					player.setHeldItem(hand, this.getHeldItemMainhand());
+					this.setHeldItem(Hand.MAIN_HAND, stack);
+					return true;
+				}
+
+				if (stack.getItem() instanceof ItemShield) {
+					player.setHeldItem(hand, this.getHeldItemOffhand());
+					this.setHeldItem(Hand.OFF_HAND, stack);
+					return true;
+				}
+
+				if (!this.getLookController().getIsLooking() && !this.hasPath()) {
+					double x1 = player.posX - this.posX;
+					double z1 = player.posZ - this.posZ;
+					float yaw = (float) Math.toDegrees(Math.atan2(-x1, z1));
+					this.rotationYaw = yaw;
+					this.rotationYawHead = yaw;
+					this.renderYawOffset = yaw;
+				}
+				player.openGui(CQRMain.INSTANCE, Reference.CQR_ENTITY_GUI_ID, this.world, this.getEntityId(), 0, 0);
+			}
+			return true;
+		}
+		if (this.hasLeader() && this.getLeader() == player && !player.isSneaking()) {
+			if (!this.world.isRemote) {
+				player.openGui(CQRMain.INSTANCE, Reference.CQR_ENTITY_GUI_ID, this.world, this.getEntityId(), 0, 0);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected abstract ResourceLocation getLootTable();
+
+	@Override
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
+		ResourceLocation resourcelocation = this.getLootTable();
+		if (resourcelocation != null) {
+			LootTable lootTable = this.world.getLootTableManager().getLootTableFromLocation(resourcelocation);
+			LootContext.Builder lootContextBuilder = new LootContext.Builder((WorldServer) this.world).withLootedEntity(this).withDamageSource(source);
+			if (wasRecentlyHit && this.attackingPlayer != null) {
+				lootContextBuilder = lootContextBuilder.withPlayer(this.attackingPlayer).withLuck(this.attackingPlayer.getLuck());
+			}
+
+			for (ItemStack itemstack : lootTable.generateLootForPools(this.rand, lootContextBuilder.build())) {
+				this.entityDropItem(itemstack, 0.0F);
+			}
+		}
+
+		ItemStack badge = this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.BADGE);
+		if (badge.getItem() instanceof ItemBadge) {
+			IItemHandler capability = badge.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			for (int i = 0; i < capability.getSlots(); i++) {
+				this.entityDropItem(capability.getStackInSlot(i), 0.0F);
+			}
+		}
+		this.dropEquipment(wasRecentlyHit, lootingModifier);
+	}
+
+	@Override
+	public void onUpdate() {
+		LivingEntity attackTarget = this.getAttackTarget();
+		if (attackTarget != null) {
+			if (this.isInSightRange(attackTarget) && this.getEntitySenses().canSee(attackTarget)) {
+				this.lastTimeSeenAttackTarget = this.ticksExisted;
+			}
+			this.lastPosAttackTarget = attackTarget.getPositionVector();
+		}
+
+		super.onUpdate();
+
+		if (!this.world.isRemote && this.isMagicArmorActive()) {
+			this.updateCooldownForMagicArmor();
+		}
+		if (!this.world.isRemote && !this.isNonBoss() && this.world.getDifficulty() == Difficulty.PEACEFUL) {
+			SpawnerFactory.placeSpawner(new Entity[] { this }, false, null, this.world, this.getPosition());
+			this.setDead();
+		}
+
+		ItemStack stack = this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.POTION);
+		if (!this.world.isRemote && stack != this.prevPotion) {
+			CQRMain.NETWORK.sendToAll(new ItemStackSyncPacket(this.getEntityId(), EntityEquipmentExtraSlot.POTION.getIndex(), stack));
+		}
+		this.prevPotion = stack;
+
+		if (this.isSneaking() && !this.prevSneaking) {
+			this.resize(1.0F, 0.8F);
+		} else if (!this.isSneaking() && this.prevSneaking) {
+			this.resize(1.0F, 1.25F);
+		}
+		if (this.isSitting() && !this.prevSitting) {
+			this.resize(1.0F, 0.75F);
+		} else if (!this.isSitting() && this.prevSitting) {
+			this.resize(1.0F, 4.0F / 3.0F);
+		}
+		this.prevSneaking = this.isSneaking();
+		this.prevSitting = this.isSitting();
+
+		if (!this.world.isRemote) {
+			int spellInformation = 0;
+			if (this.spellHandler != null) {
+				if (this.spellHandler.isSpellCharging()) {
+					spellInformation = spellInformation | 1 << 26;
+				}
+				if (this.spellHandler.isSpellCasting()) {
+					spellInformation = spellInformation | 1 << 25;
+				}
+				if (this.spellHandler.getActiveSpell() instanceof IEntityAISpellAnimatedVanilla) {
+					IEntityAISpellAnimatedVanilla spell = (IEntityAISpellAnimatedVanilla) this.spellHandler.getActiveSpell();
+					spellInformation = spellInformation | 1 << 24;
+					spellInformation = spellInformation | ((int) (spell.getRed() * 255.0D) & 255) << 16;
+					spellInformation = spellInformation | ((int) (spell.getGreen() * 255.0D) & 255) << 8;
+					spellInformation = spellInformation | (int) (spell.getBlue() * 255.0D) & 255;
+				}
+			}
+			this.dataManager.set(SPELL_INFORMATION, spellInformation);
+		} else {
+			if (this.isSpellAnimated()) {
+				int spellColor = this.dataManager.get(SPELL_INFORMATION);
+				double red = (double) ((spellColor >> 16) & 255) / 255.0D;
+				double green = (double) ((spellColor >> 8) & 255) / 255.0D;
+				double blue = (double) (spellColor & 255) / 255.0D;
+				float f = this.renderYawOffset * 0.017453292F + MathHelper.cos((float) this.ticksExisted * 0.6662F) * 0.25F;
+				float f1 = MathHelper.cos(f);
+				float f2 = MathHelper.sin(f);
+				this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (double) f1 * (double) this.width, this.posY + (double) this.height, this.posZ + (double) f2 * (double) this.width, red, green, blue);
+				this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX - (double) f1 * (double) this.width, this.posY + (double) this.height, this.posZ - (double) f2 * (double) this.width, red, green, blue);
+			}
+			if (this.isChatting() && this.ticksExisted % LayerCQRSpeechbubble.CHANGE_BUBBLE_INTERVAL == 0) {
+				this.chooseNewRandomSpeechBubble();
+			}
+		}
+	}
+
+	@Override
+	public SoundCategory getSoundCategory() {
+		return SoundCategory.HOSTILE;
+	}
+
+	@Override
+	public void onLivingUpdate() {
+		this.updateArmSwingProgress();
+		super.onLivingUpdate();
+	}
+
+	@Override
+	protected SoundEvent getSwimSound() {
+		return SoundEvents.ENTITY_HOSTILE_SWIM;
+	}
+
+	@Override
+	protected SoundEvent getSplashSound() {
+		return SoundEvents.ENTITY_HOSTILE_SPLASH;
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundEvents.ENTITY_HOSTILE_HURT;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return SoundEvents.ENTITY_HOSTILE_DEATH;
+	}
+
+	@Override
+	protected SoundEvent getFallSound(int heightIn) {
+		return heightIn > 4 ? SoundEvents.ENTITY_HOSTILE_BIG_FALL : SoundEvents.ENTITY_HOSTILE_SMALL_FALL;
+	}
+
+	@Override
+	public boolean attackEntityAsMob(Entity entityIn) {
+		if (this.getHeldItemMainhand().getItem() instanceof ItemStaffHealing) {
+			if (entityIn instanceof LivingEntity) {
+				if (!this.world.isRemote) {
+					((LivingEntity) entityIn).heal(ItemStaffHealing.HEAL_AMOUNT_ENTITIES);
+					entityIn.setFire(0);
+					((WorldServer) this.world).spawnParticle(EnumParticleTypes.HEART, entityIn.posX, entityIn.posY + entityIn.height * 0.5D, entityIn.posZ, 4, 0.25D, 0.25D, 0.25D, 0.0D);
+					this.world.playSound(null, entityIn.posX, entityIn.posY + entityIn.height * 0.5D, entityIn.posZ, ModSounds.MAGIC, SoundCategory.MASTER, 0.6F, 0.6F + this.rand.nextFloat() * 0.2F);
+				}
+				return true;
+			}
+			return false;
+		}
+		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+		int i = 0;
+
+		if (entityIn instanceof LivingEntity) {
+			f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entityIn).getCreatureAttribute());
+			i += EnchantmentHelper.getKnockbackModifier(this);
+		}
+		// Start IceAndFire compatibility
+		if (CQRConfig.advanced.enableSpecialFeatures) {
+			ResourceLocation resLoc = EntityList.getKey(entityIn);
+			if (resLoc != null && resLoc.getNamespace().equalsIgnoreCase("iceandfire")) {
+				f *= 2.0F;
+			}
+		}
+		// End IceAndFire compatibility
+		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+
+		if (flag) {
+			if (i > 0 && entityIn instanceof LivingEntity) {
+				((LivingEntity) entityIn).knockBack(this, (float) i * 0.5F, (double) MathHelper.sin(this.rotationYaw * 0.017453292F), (double) (-MathHelper.cos(this.rotationYaw * 0.017453292F)));
+				this.motionX *= 0.6D;
+				this.motionZ *= 0.6D;
+			}
+
+			int j = EnchantmentHelper.getFireAspectModifier(this);
+
+			if (j > 0) {
+				entityIn.setFire(j * 4);
+			}
+
+			if (entityIn instanceof PlayerEntity) {
+				PlayerEntity entityplayer = (PlayerEntity) entityIn;
+				ItemStack itemstack = this.getHeldItemMainhand();
+				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack() : ItemStack.EMPTY;
+
+				if (!itemstack.isEmpty() && !itemstack1.isEmpty() && itemstack.getItem().canDisableShield(itemstack, itemstack1, entityplayer, this) && itemstack1.getItem().isShield(itemstack1, entityplayer)) {
+					float f1 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
+
+					if (this.rand.nextFloat() < f1) {
+						entityplayer.getCooldownTracker().setCooldown(itemstack1.getItem(), 100);
+						this.world.setEntityState(entityplayer, (byte) 30);
+					}
+				}
+			}
+
+			this.applyEnchantments(this, entityIn);
+		}
+
+		return flag;
+	}
+
+	@Override
+	protected boolean canDropLoot() {
+		return true;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		buffer.writeFloat(this.getSizeVariation());
+		buffer.writeDouble(this.getHealthScale());
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.HEAD));
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.CHEST));
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.LEGS));
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.FEET));
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.MAINHAND));
+		buffer.writeFloat(this.getDropChance(EquipmentSlotType.OFFHAND));
+		ByteBufUtils.writeItemStack(buffer, this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.POTION));
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData) {
+		this.setSizeVariation(additionalData.readFloat());
+		this.setHealthScale(additionalData.readDouble());
+		this.setDropChance(EquipmentSlotType.HEAD, additionalData.readFloat());
+		this.setDropChance(EquipmentSlotType.CHEST, additionalData.readFloat());
+		this.setDropChance(EquipmentSlotType.LEGS, additionalData.readFloat());
+		this.setDropChance(EquipmentSlotType.FEET, additionalData.readFloat());
+		this.setDropChance(EquipmentSlotType.MAINHAND, additionalData.readFloat());
+		this.setDropChance(EquipmentSlotType.OFFHAND, additionalData.readFloat());
+		this.setItemStackToExtraSlot(EntityEquipmentExtraSlot.POTION, ByteBufUtils.readItemStack(additionalData));
+	}
+
+	// Chocolate Quest Repoured
+	public LivingEntity getLeader() {
+		if (this.leaderUUID != null) {
+			if (this.leader != null) {
+				if (this.leader.isEntityAlive()) {
+					return this.leader;
+				}
+				this.leader = null;
+				this.leaderUUID = null;
+			} else {
+				for (Entity entity : this.world.loadedEntityList) {
+					if (entity instanceof LivingEntity && this.leaderUUID.equals(entity.getUniqueID()) && entity.isEntityAlive()) {
+						this.leader = (LivingEntity) entity;
+						return (LivingEntity) entity;
+					}
+				}
+			}
+		} else {
+			this.leader = null;
+		}
+		return null;
+	}
+
+	public void setLeader(LivingEntity leader) {
+		if (leader != null && leader.isEntityAlive()) {
+			if (this.dimension == leader.dimension) {
+				this.leader = leader;
+			}
+			this.leaderUUID = leader.getUniqueID();
+		}
+	}
+
+	public boolean hasLeader() {
+		return this.getLeader() != null;
+	}
+
+	public BlockPos getHomePositionCQR() {
+		return this.homePosition;
+	}
+
+	public void setHomePositionCQR(BlockPos homePosition) {
+		this.homePosition = homePosition;
+	}
+
+	public boolean hasHomePositionCQR() {
+		return this.getHomePositionCQR() != null;
+	}
+
+	public abstract float getBaseHealth();
+
+	public float calculateBaseHealth(double x, double z, float health) {
+		BlockPos spawn = this.world.getSpawnPoint();
+		x -= (double) spawn.getX();
+		z -= (double) spawn.getZ();
+		float distance = (float) Math.sqrt(x * x + z * z);
+
+		health *= 1.0F + 0.1F * (int) (distance / CQRConfig.mobs.distanceDivisor);
+		health *= this.healthScale;
+
+		return (float) (int) health;
+	}
+
+	public void setBaseHealth(BlockPos pos, float health) {
+		health = this.calculateBaseHealth(pos.getX(), pos.getZ(), health);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+		this.setHealth(health);
+	}
+
+	public void handleArmorBreaking() {
+		if (!this.world.isRemote && this.usedPotions + 1 > this.getHealingPotions()) {
+			boolean armorBroke = false;
+			float hpPrcntg = this.getHealth() / this.getMaxHealth();
+
+			// below 80% health -> remove boobs
+			if (hpPrcntg <= 0.8F) {
+				if (!this.getItemStackFromSlot(EquipmentSlotType.FEET).isEmpty()) {
+					this.setItemStackToSlot(EquipmentSlotType.FEET, ItemStack.EMPTY);
+					armorBroke = true;
+				}
+
+				// below 60% health -> remove helmet
+				if (hpPrcntg <= 0.6F) {
+					if (!this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty()) {
+						this.setItemStackToSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
+						armorBroke = true;
+					}
+
+					// below 40% health -> remove leggings
+					if (hpPrcntg <= 0.4F) {
+						if (!this.getItemStackFromSlot(EquipmentSlotType.LEGS).isEmpty()) {
+							this.setItemStackToSlot(EquipmentSlotType.LEGS, ItemStack.EMPTY);
+							armorBroke = true;
+						}
+
+						// below 20% health -> remove chestplate
+						if (hpPrcntg <= 0.2F) {
+							if (!this.getItemStackFromSlot(EquipmentSlotType.CHEST).isEmpty()) {
+								this.setItemStackToSlot(EquipmentSlotType.CHEST, ItemStack.EMPTY);
+								armorBroke = true;
+							}
+						}
+					}
+				}
+			}
+
+			if (armorBroke) {
+				this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 1.75F, 0.8F);
+			}
+		}
+	}
+
+	public int getHealingPotions() {
+		ItemStack stack = this.getHeldItemPotion();
+		if (stack.getItem() instanceof ItemPotionHealing) {
+			return stack.getCount();
+		}
+		return 0;
+	}
+
+	public void setHealingPotions(int amount) {
+		ItemStack stack = new ItemStack(ModItems.POTION_HEALING, amount);
+		if (this.holdingPotion) {
+			this.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
+		} else {
+			this.setItemStackToExtraSlot(EntityEquipmentExtraSlot.POTION, stack);
+		}
+	}
+
+	public ItemStack getItemStackFromExtraSlot(EntityEquipmentExtraSlot slot) {
+		CapabilityExtraItemHandler capability = this.getCapability(CapabilityExtraItemHandlerProvider.EXTRA_ITEM_HANDLER, null);
+		return capability.getStackInSlot(slot.getIndex());
+	}
+
+	public void setItemStackToExtraSlot(EntityEquipmentExtraSlot slot, ItemStack stack) {
+		CapabilityExtraItemHandler capability = this.getCapability(CapabilityExtraItemHandlerProvider.EXTRA_ITEM_HANDLER, null);
+		capability.setStackInSlot(slot.getIndex(), stack);
+	}
+
+	public void swapWeaponAndPotionSlotItemStacks() {
+		ItemStack stack1 = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+		ItemStack stack2 = this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.POTION);
+		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack2);
+		this.setItemStackToExtraSlot(EntityEquipmentExtraSlot.POTION, stack1);
+		this.holdingPotion = !this.holdingPotion;
+	}
+
+	public boolean isHoldingPotion() {
+		return this.holdingPotion;
+	}
+
+	public abstract EDefaultFaction getDefaultFaction();
+
+	public CQRFaction getDefaultFactionInstance() {
+		if (this.defaultFactionInstance == null) {
+			this.defaultFactionInstance = FactionRegistry.instance().getFactionInstance(this.getDefaultFaction().name());
+		}
+		return this.defaultFactionInstance;
+	}
+
+	@Nullable
+	public CQRFaction getFaction() {
+		if (this.hasLeader()) {
+			return FactionRegistry.instance().getFactionOf(this.getLeader());
+		}
+		if (this.factionInstance == null && this.factionName != null && !this.factionName.isEmpty()) {
+			this.factionInstance = FactionRegistry.instance().getFactionInstance(this.factionName);
+		}
+		if (this.factionInstance != null) {
+			return this.factionInstance;
+		}
+		return this.getDefaultFactionInstance();
+	}
+
+	public void setFaction(String newFac) {
+		this.factionInstance = null;
+		this.factionName = newFac;
+	}
+
+	public boolean hasFaction() {
+		return this.getFaction() != null;
+	}
+
+	public void updateReputationOnDeath(DamageSource cause) {
+		if (cause.getTrueSource() instanceof PlayerEntity && this.hasFaction()) {
+			PlayerEntity player = (PlayerEntity) cause.getTrueSource();
+			int range = CQRConfig.mobs.factionUpdateRadius;
+			double x1 = player.posX - range;
+			double y1 = player.posY - range;
+			double z1 = player.posZ - range;
+			double x2 = player.posX + range;
+			double y2 = player.posY + range;
+			double z2 = player.posZ + range;
+			AxisAlignedBB aabb = new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
+
+			List<CQRFaction> checkedFactions = new ArrayList<>();
+			for (AbstractEntityCQR cqrentity : this.world.getEntitiesWithinAABB(AbstractEntityCQR.class, aabb)) {
+				if (cqrentity.hasFaction() && !checkedFactions.contains(cqrentity.getFaction()) && (cqrentity.canEntityBeSeen(this) || cqrentity.canEntityBeSeen(player))) {
+					CQRFaction faction = cqrentity.getFaction();
+					if (this.getFaction().equals(faction)) {
+						// DONE decrement the players repu on this entity's faction
+						faction.decrementReputation(player, faction.getRepuMemberKill());
+					} else if (this.getFaction().isEnemy(faction)) {
+						// DONE increment the players repu at CQREntity's faction
+						faction.incrementReputation(player, faction.getRepuEnemyKill());
+					} else if (this.getFaction().isAlly(faction)) {
+						// DONE decrement the players repu on CQREntity's faction
+						faction.decrementReputation(player, faction.getRepuAllyKill());
+					}
+					checkedFactions.add(faction);
+				}
+			}
+		}
+	}
+
+	public void onSpawnFromCQRSpawnerInDungeon(PlacementSettings placementSettings, EDungeonMobType mobType) {
+		this.setHomePositionCQR(this.getPosition());
+		this.setBaseHealth(this.getPosition(), this.getBaseHealth());
+
+		// Recalculate path points
+		if (this.pathPoints.length > 0) {
+			for (int i = 0; i < this.pathPoints.length; i++) {
+				this.pathPoints[i] = Template.transformedBlockPos(placementSettings, this.pathPoints[i]);
+			}
+		}
+
+		// Replace shield
+		for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+			ItemStack stack = this.getItemStackFromSlot(slot);
+			Item item = stack.getItem();
+			if (item instanceof ItemShieldDummy) {
+				this.setItemStackToSlot(slot, mobType.getShieldItem().copy());
+			}
+		}
+	}
+
+	public boolean hasCape() {
+		return false;
+	}
+
+	public ResourceLocation getResourceLocationOfCape() {
+		return null;
+	}
+
+	public void setSizeVariation(float size) {
+		this.resize(size / this.sizeScaling, size / this.sizeScaling);
+		this.sizeScaling = size;
+	}
+
+	public float getSizeVariation() {
+		return this.sizeScaling;
+	}
+
+	public void setSitting(boolean sitting) {
+		this.dataManager.set(IS_SITTING, sitting);
+	}
+
+	public boolean isSitting() {
+		return this.dataManager.get(IS_SITTING);
+	}
+
+	public void setChatting(boolean chatting) {
+		this.dataManager.set(TALKING, chatting);
+	}
+
+	public boolean isChatting() {
+		return this.dataManager.get(TALKING);
+	}
+
+	public void setArmPose(ECQREntityArmPoses pose) {
+		this.dataManager.set(ARM_POSE, pose.toString());
+	}
+
+	public ECQREntityArmPoses getArmPose() {
+		return ECQREntityArmPoses.valueOf(this.dataManager.get(ARM_POSE));
+	}
+
+	public boolean isLeader() {
+		// TODO: Implement team building
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public ESpeechBubble getCurrentSpeechBubble() {
+		return ESpeechBubble.values()[this.currentSpeechBubbleID];
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void chooseNewRandomSpeechBubble() {
+		this.currentSpeechBubbleID = this.rand.nextInt(ESpeechBubble.values().length);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getTextureIndex() {
+		return this.dataManager.get(TEXTURE_INDEX);
+	}
+
+	public int getTextureCount() {
+		return 1;
+	}
+
+	public double getAttackReach(LivingEntity target) {
+		return this.width + target.width + 0.25D;
+	}
+
+	public boolean isInAttackReach(LivingEntity target) {
+		Vec3d vec1 = new Vec3d(this.posX, MathHelper.clamp(target.posY, this.posY, this.posY + this.height), this.posZ);
+		Vec3d vec2 = new Vec3d(target.posX, MathHelper.clamp(this.posY, target.posY, target.posY + target.height), target.posZ);
+		double d = this.getAttackReach(target);
+		return vec1.squareDistanceTo(vec2) <= d * d;
+	}
+
+	public boolean canOpenDoors() {
+		return true;
+	}
+
+	public boolean canPutOutFire() {
+		return true;
+	}
+
+	public boolean canIgniteTorch() {
+		return true;
+	}
+
+	public boolean canTameEntity() {
+		return true;
+	}
+
+	public boolean canMountEntity() {
+		return true;
+	}
+
+	public boolean isEntityInFieldOfView(LivingEntity target) {
+		double x = target.posX - this.posX;
+		double z = target.posZ - this.posZ;
+		double d = Math.toDegrees(Math.atan2(-x, z));
+		if (!ItemUtil.compareRotations(this.rotationYawHead, d, 80.0D)) {
+			return false;
+		}
+		double y = target.posY + target.getEyeHeight() - this.posY - this.getEyeHeight();
+		double xz = Math.sqrt(x * x + z * z);
+		double d1 = Math.toDegrees(Math.atan2(y, xz));
+		return ItemUtil.compareRotations(this.rotationPitch, d1, 50.0D);
+	}
+
+	public void setHealthScale(double healthScale) {
+		this.healthScale = healthScale;
+	}
+
+	public double getHealthScale() {
+		return this.healthScale;
+	}
+
+	public float getDropChance(EquipmentSlotType slot) {
+		switch (slot.getSlotType()) {
+		case HAND:
+			return this.inventoryHandsDropChances[slot.getIndex()];
+		case ARMOR:
+			return this.inventoryArmorDropChances[slot.getIndex()];
+		default:
+			return 0.0F;
+		}
+	}
+
+	public boolean isInSightRange(Entity target) {
+		double sightRange = 32.0D;
+		sightRange *= 0.6D + 0.4D * (double) this.world.getLight(new BlockPos(target)) / 15.0D;
+		sightRange *= this.isPotionActive(MobEffects.BLINDNESS) ? 0.5D : 1.0D;
+		return this.getDistance(target) <= sightRange;
+	}
+
+	public ItemStack getHeldItemWeapon() {
+		return this.isHoldingPotion() ? this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.POTION) : this.getHeldItemMainhand();
+	}
+
+	public ItemStack getHeldItemPotion() {
+		return this.isHoldingPotion() ? this.getHeldItemMainhand() : this.getItemStackFromExtraSlot(EntityEquipmentExtraSlot.POTION);
+	}
+
+	public boolean isMagicArmorActive() {
+		if (!this.world.isRemote) {
+			return this.armorActive;
+		}
+		return this.dataManager.get(MAGIC_ARMOR_ACTIVE);
+	}
+
+	public void setMagicArmorActive(boolean val) {
+		if (val != this.armorActive) {
+			this.armorActive = val;
+			this.setEntityInvulnerable(this.armorActive);
+			this.dataManager.set(MAGIC_ARMOR_ACTIVE, val);
+		}
+	}
+
+	protected void updateCooldownForMagicArmor() {
+		this.magicArmorCooldown--;
+		if (this.magicArmorCooldown <= 0) {
+			this.setMagicArmorActive(false);
+		}
+	}
+
+	public void setMagicArmorCooldown(int val) {
+		this.magicArmorCooldown = val;
+		this.setMagicArmorActive(true);
+	}
+
+	public float getDefaultWidth() {
+		return 0.6F;
+	}
+
+	public float getDefaultHeight() {
+		return 1.95F;
+	}
+
+	public void resize(float widthScale, float heightSacle) {
+		this.setSize(this.width * widthScale, this.height * heightSacle);
+		if (this.stepHeight * heightSacle >= 1.0) {
+			this.stepHeight *= heightSacle;
+		}
+	}
+
+	public BlockPos[] getGuardPathPoints() {
+		return this.pathPoints;
+	}
+
+	public boolean isGuardPathLoop() {
+		return this.pathIsLoop;
+	}
+
+	public int getCurrentGuardPathTargetPoint() {
+		return this.currentTargetPoint;
+	}
+
+	public void setCurrentGuardPathTargetPoint(int value) {
+		this.currentTargetPoint = value;
+	}
+
+	public void addPathPoint(BlockPos position) {
+		if (this.getHomePositionCQR() == null) {
+			this.setHomePositionCQR(position);
+		}
+		BlockPos[] newPosArr = new BlockPos[this.pathPoints.length + 1];
+		for (int i = 0; i < this.pathPoints.length; i++) {
+			newPosArr[i] = this.pathPoints[i];
+		}
+		position = position.subtract(this.getHomePositionCQR());
+		newPosArr[this.pathPoints.length] = position;
+		this.pathPoints = newPosArr;
+	}
+
+	public void clearPathPoints() {
+		this.pathPoints = new BlockPos[] {};
+	}
+
+	public void setPath(final BlockPos[] path) {
+		if (path.length <= 0) {
+			this.pathPoints = new BlockPos[] {};
+		}
+		this.pathPoints = new BlockPos[path.length];
+		for (int i = 0; i < path.length; i++) {
+			if (this.getHomePositionCQR() == null) {
+				this.setHomePositionCQR(path[i]);
+			}
+			this.pathPoints[i] = path[i].subtract(this.getHomePositionCQR());
+		}
+	}
+
+	public int getLastTimeSeenAttackTarget() {
+		return this.lastTimeSeenAttackTarget;
+	}
+
+	public Vec3d getLastPosAttackTarget() {
+		return this.lastPosAttackTarget;
+	}
+
+	public EntityAISpellHandler createSpellHandler() {
+		return new EntityAISpellHandler(this, 200);
+	}
+
+	public boolean isSpellCharging() {
+		return (this.dataManager.get(SPELL_INFORMATION) >> 26 & 1) == 1;
+	}
+
+	public boolean isSpellCasting() {
+		return (this.dataManager.get(SPELL_INFORMATION) >> 25 & 1) == 1;
+	}
+
+	public boolean isSpellAnimated() {
+		return (this.dataManager.get(SPELL_INFORMATION) >> 24 & 1) == 1;
+	}
+
+	public void setLastTimeHitByAxeWhileBlocking(int tick) {
+		this.lastTimeHitByAxeWhileBlocking = tick;
+	}
+
+	public int getLastTimeHitByAxeWhileBlocking() {
+		return this.lastTimeHitByAxeWhileBlocking;
+	}
+
+}
