@@ -1,6 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "cqrepoured:items/armor/heavy/iron/leggings_heavy_iron"
-    }
-}
