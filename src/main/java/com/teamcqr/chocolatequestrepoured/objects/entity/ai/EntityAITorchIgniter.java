@@ -7,7 +7,7 @@ import com.teamcqr.chocolatequestrepoured.objects.blocks.BlockUnlitTorch;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.block.BlockTorch;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -70,7 +70,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 	@Override
 	public void updateTask() {
 		if (this.entity.getDistanceSqToCenter(this.nearestTorch) <= REACH_DISTANCE_SQ) {
-			IBlockState state = this.entity.world.getBlockState(this.nearestTorch);
+			BlockState state = this.entity.world.getBlockState(this.nearestTorch);
 			if (state.getBlock() == ModBlocks.UNLIT_TORCH) {
 				BlockUnlitTorch.lightUp(this.entity.world, this.nearestTorch, state.getValue(BlockTorch.FACING));
 			}
@@ -99,7 +99,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 		Chunk chunk = null;
 		ExtendedBlockStorage extendedBlockStorage = Chunk.NULL_BLOCK_STORAGE;
 		if (isLoaded) {
-			chunk = world.getChunkFromChunkCoords(oldChunkX, oldChunkZ);
+			chunk = world.getChunkAt(oldChunkX, oldChunkZ);
 			extendedBlockStorage = chunk.getBlockStorageArray()[oldChunkY];
 		}
 		for (int x3 = x1; x3 <= x2; x3++) {
@@ -111,7 +111,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 				oldChunkZ = z1 >> 4;
 				isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z1));
 				if (isLoaded) {
-					chunk = world.getChunkFromChunkCoords(chunkX, z1 >> 4);
+					chunk = world.getChunkAt(chunkX, z1 >> 4);
 					extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 				}
 			}
@@ -125,7 +125,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 					oldChunkZ = chunkZ;
 					isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z3));
 					if (isLoaded) {
-						chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+						chunk = world.getChunkAt(chunkX, chunkZ);
 						extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 					}
 				}
@@ -140,7 +140,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 						}
 
 						if (extendedBlockStorage != Chunk.NULL_BLOCK_STORAGE) {
-							IBlockState state1 = extendedBlockStorage.get(x3 & 15, y3 & 15, z3 & 15);
+							BlockState state1 = extendedBlockStorage.get(x3 & 15, y3 & 15, z3 & 15);
 
 							if (state1.getBlock() == ModBlocks.UNLIT_TORCH) {
 								Vec3d vec3d1 = this.entity.getPositionEyes(1.0F);

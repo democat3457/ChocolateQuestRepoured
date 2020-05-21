@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -100,7 +100,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		for (int x = 0; x <= this.endX; x++) {
 			for (int y = 0; y < this.height; y++) {
 				for (int z = 0; z <= this.endZ; z++) {
-					IBlockState blockToBuild = this.getBlockToBuild(dungeon, x, y, z);
+					BlockState blockToBuild = this.getBlockToBuild(dungeon, x, y, z);
 
 					offset = DungeonGenUtils.rotateMatrixOffsetCW(new Vec3i(x, y, z), this.lenX, this.lenZ, this.numRotations);
 					genArray.addBlockState(this.origin.add(offset), blockToBuild, BlockStateGenArray.GenerationPhase.MAIN);
@@ -113,8 +113,8 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getBlockToBuild(DungeonCastle dungeon, int x, int y, int z) {
-		IBlockState blockToBuild = Blocks.AIR.getDefaultState();
+	private BlockState getBlockToBuild(DungeonCastle dungeon, int x, int y, int z) {
+		BlockState blockToBuild = Blocks.AIR.getDefaultState();
 
 		if (y == 0) {
 			blockToBuild = this.getFloorBlock(dungeon);
@@ -148,7 +148,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		return blockToBuild;
 	}
 
-	private IBlockState getLowerStair1Block(int x, int y, int z) {
+	private BlockState getLowerStair1Block(int x, int y, int z) {
 		if (y == this.lowerLandingMaxHeightIdx - (this.lowerStair1XEndIdx - x)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.EAST, this.numRotations);
 			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
@@ -159,7 +159,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getLowerStair2Block(int x, int y, int z) {
+	private BlockState getLowerStair2Block(int x, int y, int z) {
 		if (y == this.lowerLandingMaxHeightIdx - (x - this.lowerStair2XStartIdx)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.WEST, this.numRotations);
 			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
@@ -170,7 +170,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getLowerLandingBlock(int x, int y, int z) {
+	private BlockState getLowerLandingBlock(int x, int y, int z) {
 		if (y >= 1 && y <= this.lowerLandingMaxHeightIdx) {
 			return Blocks.STONEBRICK.getDefaultState();
 		} else {
@@ -178,7 +178,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getMidStairBlock(int x, int y, int z) {
+	private BlockState getMidStairBlock(int x, int y, int z) {
 		if (y == this.mainLandingMaxHeightIdx - (this.endZ - z - MAIN_LANDING_Z)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.SOUTH, this.numRotations);
 			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
@@ -189,7 +189,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getUpperStairBlock(int x, int y, int z) {
+	private BlockState getUpperStairBlock(int x, int y, int z) {
 		if (y == (this.maxHeightIdx - (z - TOP_LANDING_BUFFER_Z))) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
 			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
@@ -200,7 +200,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	public IBlockState getMainLandingBlock(int x, int y, int z) {
+	public BlockState getMainLandingBlock(int x, int y, int z) {
 		if (y >= 1 && y <= this.mainLandingMaxHeightIdx) {
 			return Blocks.STONEBRICK.getDefaultState();
 		} else {

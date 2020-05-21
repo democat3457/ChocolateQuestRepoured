@@ -1,7 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.util;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -15,10 +15,10 @@ public class SpiralStaircaseBuilder {
 
 	private BlockPos start;
 	private Direction firstSide;
-	private IBlockState platformBlockState;
-	private IBlockState stairBlockState;
+	private BlockState platformBlockState;
+	private BlockState stairBlockState;
 
-	public SpiralStaircaseBuilder(BlockPos pillarStart, Direction firstStairSide, IBlockState platformBlockState, IBlockState stairBlockState) {
+	public SpiralStaircaseBuilder(BlockPos pillarStart, Direction firstStairSide, BlockState platformBlockState, BlockState stairBlockState) {
 		this.start = pillarStart;
 		this.firstSide = firstStairSide;
 		this.platformBlockState = platformBlockState;
@@ -31,7 +31,7 @@ public class SpiralStaircaseBuilder {
 		return ((Math.abs(position.getX() - this.start.getX()) <= STAIR_WIDTH) && (Math.abs(position.getZ() - this.start.getZ()) <= STAIR_WIDTH) && (position.getY() >= this.start.getY()));
 	}
 
-	public IBlockState getBlock(BlockPos position) {
+	public BlockState getBlock(BlockPos position) {
 		Direction stairSide;
 		int startX = this.start.getX();
 		int startZ = this.start.getZ();

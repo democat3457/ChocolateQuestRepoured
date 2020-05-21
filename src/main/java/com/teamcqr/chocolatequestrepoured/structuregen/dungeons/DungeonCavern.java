@@ -19,16 +19,18 @@ import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 
 /**
  * Copyright (c) 29.04.2019
@@ -93,8 +95,8 @@ public class DungeonCavern extends DungeonBase {
 
 		this.airBlock = PropertyFileHelper.getBlockProperty(prop, "airblock", Blocks.AIR);
 		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTableList.CHESTS_ABANDONED_MINESHAFT,
-				LootTableList.CHESTS_NETHER_BRIDGE,
+				LootTables.CHESTS_ABANDONED_MINESHAFT,
+				LootTables.CHESTS_NETHER_BRIDGE,
 				ModLoottables.CHESTS_FOOD
 		});
 	}
@@ -111,7 +113,7 @@ public class DungeonCavern extends DungeonBase {
 		Map<GeneratorCavern, Integer> xMap = new HashMap<>();
 		Map<GeneratorCavern, Integer> zMap = new HashMap<>();
 
-		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+		Chunk chunk = world.getChunk(x >> 4, z >> 4);
 		int rooms = DungeonGenUtils.getIntBetweenBorders(this.minRooms, this.maxRooms, this.random);
 		int roomIndex = 1;
 
@@ -174,14 +176,14 @@ public class DungeonCavern extends DungeonBase {
 			BlockPos bossPos = new BlockPos(xMap.get(caves.get(bossCaveIndx)), y + 1, zMap.get(caves.get(bossCaveIndx)));
 
 			// BOSS CHEST
-			IBlockState state = Blocks.CHEST.getDefaultState();
-			TileEntityChest bossChest = (TileEntityChest) Blocks.CHEST.createTileEntity(world, state);
-			bossChest.setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.getSeed());
-			stateMap.put(bossPos.down(), new ExtendedBlockStatePart.ExtendedBlockState(state, bossChest.writeToNBT(new CompoundNBT())));
+			BlockState state = Blocks.CHEST.getDefaultState();
+			ChestTileEntity bossChest = (ChestTileEntity) Blocks.CHEST.createTileEntity(state, world);
+			bossChest.setLootTable(LootTables.CHESTS_END_CITY_TREASURE, world.getSeed());
+			stateMap.put(bossPos.down(), new ExtendedBlockStatePart.ExtendedBlockState(state, bossChest.write(new CompoundNBT())));
 
 			// BOSS SPAWNER
 			// DONE: spawn the boss
-			IBlockState state2 = ModBlocks.SPAWNER.getDefaultState();
+			BlockState state2 = ModBlocks.SPAWNER.getDefaultState();
 			TileEntitySpawner tileSpawner = (TileEntitySpawner) ModBlocks.SPAWNER.createTileEntity(world, state2);
 			tileSpawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(EntityList.createEntityByIDFromName(this.getBossMob(), world)));
 			stateMap.put(bossPos, new ExtendedBlockStatePart.ExtendedBlockState(state2, tileSpawner.writeToNBT(new CompoundNBT())));

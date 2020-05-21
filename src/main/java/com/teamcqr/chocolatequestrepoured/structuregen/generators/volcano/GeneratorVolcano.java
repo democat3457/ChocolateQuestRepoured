@@ -23,7 +23,7 @@ import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityChest;
@@ -352,7 +352,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 		for(BlockPos pos : this.spawnersNChestsOnPath) {
 			if(rdm.nextBoolean()) {
 				Block block = Blocks.CHEST;
-				IBlockState state = block.getDefaultState();
+				BlockState state = block.getDefaultState();
 				TileEntityChest chest = (TileEntityChest)block.createTileEntity(world, state);
 				
 				if (chest != null) {
@@ -378,7 +378,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 		GearedMobFactory mobFactory = new GearedMobFactory(this.spawnersNChestsOnPath.size(), dungeon.getRampMob(), rng);
 		for(BlockPos pos : this.spawnersNChestsOnPath) {
 			Block block = ModBlocks.SPAWNER;//Blocks.MOB_SPAWNER;
-			IBlockState state = block.getDefaultState();
+			BlockState state = block.getDefaultState();
 			//TileEntityMobSpawner spawner = (TileEntityMobSpawner)block.createTileEntity(world, state);
 			TileEntitySpawner spawner = (TileEntitySpawner)block.createTileEntity(world, state);
 			/*spawner.getSpawnerBaseLogic().setEntityId(dungeon.getRampMob());

@@ -7,7 +7,7 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.EntityUtil;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
@@ -140,7 +140,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 		double sin = -Math.sin(Math.toRadians(this.entity.rotationYaw));
 		double cos = Math.cos(Math.toRadians(this.entity.rotationYaw));
 		BlockPos pos = new BlockPos(this.entity.posX - sin, this.entity.posY - 0.001D, this.entity.posZ - cos);
-		IBlockState state = this.entity.world.getBlockState(pos);
+		BlockState state = this.entity.world.getBlockState(pos);
 		return state.isSideSolid(this.entity.world, pos, Direction.UP);
 	}
 

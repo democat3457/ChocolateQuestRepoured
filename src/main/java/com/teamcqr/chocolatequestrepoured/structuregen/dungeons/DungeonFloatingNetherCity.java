@@ -10,6 +10,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.World;
 
 /**
@@ -65,7 +66,7 @@ public class DungeonFloatingNetherCity extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		IDungeonGenerator generator = new GeneratorHangingCity(this);
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	// Generator: Radius of the island circle is the longer side (x or z) -1 of the structure to spawn!!

@@ -12,7 +12,7 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -166,7 +166,7 @@ public class Structure {
 				if (this.list.size() == 1) {
 					for (int x = this.minPos.getX() >> 4; x <= this.maxPos.getX() >> 4; x++) {
 						for (int z = this.minPos.getZ() >> 4; z <= this.maxPos.getZ() >> 4; z++) {
-							world.getChunkFromChunkCoords(x, z).generateSkylightMap();
+							world.getChunkAt(x, z).generateSkylightMap();
 						}
 					}
 				}
@@ -233,7 +233,7 @@ public class Structure {
 		int oldChunkX = startX >> 4;
 		int oldChunkY = startY >> 4;
 		int oldChunkZ = startZ >> 4;
-		Chunk chunk = this.world.getChunkFromChunkCoords(oldChunkX, oldChunkZ);
+		Chunk chunk = this.world.getChunkAt(oldChunkX, oldChunkZ);
 		ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[oldChunkY];
 		for (int x = startX; x <= endX; x++) {
 			int chunkX = x >> 4;
@@ -242,7 +242,7 @@ public class Structure {
 				oldChunkX = chunkX;
 				oldChunkY = startY >> 4;
 				oldChunkZ = startZ >> 4;
-				chunk = this.world.getChunkFromChunkCoords(chunkX, startZ >> 4);
+				chunk = this.world.getChunkAt(chunkX, startZ >> 4);
 				extendedBlockStorage = chunk.getBlockStorageArray()[startY >> 4];
 			}
 
@@ -253,12 +253,12 @@ public class Structure {
 					oldChunkX = chunkX;
 					oldChunkY = startY >> 4;
 					oldChunkZ = chunkZ;
-					chunk = this.world.getChunkFromChunkCoords(chunkX, chunkZ);
+					chunk = this.world.getChunkAt(chunkX, chunkZ);
 					extendedBlockStorage = chunk.getBlockStorageArray()[startY >> 4];
 				}
 
 				BlockPos.MutableBlockPos oldPos = new BlockPos.MutableBlockPos(x, startY == 0 ? 1 : startY - 1, z);
-				IBlockState oldState = chunk.getBlockState(oldPos);
+				BlockState oldState = chunk.getBlockState(oldPos);
 				for (int y = startY; y <= endY; y++) {
 					int chunkY = y >> 4;
 
@@ -268,7 +268,7 @@ public class Structure {
 					}
 
 					if (extendedBlockStorage != Chunk.NULL_BLOCK_STORAGE) {
-						IBlockState state = extendedBlockStorage.get(x & 15, y & 15, z & 15);
+						BlockState state = extendedBlockStorage.get(x & 15, y & 15, z & 15);
 
 						if (state.getBlock() instanceof BlockLiquid) {
 							state.neighborChanged(this.world, pos.setPos(x, y, z), oldState.getBlock(), oldPos);

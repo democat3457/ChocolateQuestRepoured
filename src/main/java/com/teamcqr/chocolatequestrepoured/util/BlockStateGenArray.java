@@ -10,7 +10,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockS
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.Direction;
@@ -48,7 +48,7 @@ public class BlockStateGenArray {
     public boolean addChestWithLootTable(World world, BlockPos pos, Direction facing, ResourceLocation lootTable, GenerationPhase phase) {
         if (lootTable != null) {
             Block chestBlock = Blocks.CHEST;
-            IBlockState state = Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, facing);
+            BlockState state = Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, facing);
             ChestTileEntity chest = (ChestTileEntity) chestBlock.createTileEntity(world, state);
             if (chest != null) {
                 ResourceLocation resLoc = null;
@@ -71,34 +71,34 @@ public class BlockStateGenArray {
         return false;
     }
 
-    public void addBlockStateMap(Map<BlockPos, IBlockState> map, GenerationPhase phase) {
+    public void addBlockStateMap(Map<BlockPos, BlockState> map, GenerationPhase phase) {
         for (BlockPos pos : map.keySet()) {
             addBlockState(pos, map.get(pos), phase);
         }
     }
 
-    public void forceAddBlockStateMap(Map<BlockPos, IBlockState> map, GenerationPhase phase) {
+    public void forceAddBlockStateMap(Map<BlockPos, BlockState> map, GenerationPhase phase) {
         for (BlockPos pos : map.keySet()) {
             forceAddBlockState(pos, map.get(pos), phase);
         }
     }
 
-    public boolean addBlockState(BlockPos pos, IBlockState blockState, GenerationPhase phase) {
+    public boolean addBlockState(BlockPos pos, BlockState blockState, GenerationPhase phase) {
         ExtendedBlockStatePart.ExtendedBlockState extState = new ExtendedBlockStatePart.ExtendedBlockState(blockState, new CompoundNBT());
         return addInternal(phase, pos, extState, false);
     }
 
-    public boolean forceAddBlockState(BlockPos pos, IBlockState blockState, GenerationPhase phase) {
+    public boolean forceAddBlockState(BlockPos pos, BlockState blockState, GenerationPhase phase) {
         ExtendedBlockStatePart.ExtendedBlockState extState = new ExtendedBlockStatePart.ExtendedBlockState(blockState, new CompoundNBT());
         return addInternal(phase, pos, extState, true);
     }
 
-    public boolean addBlockState(BlockPos pos, IBlockState blockState, CompoundNBT nbt, GenerationPhase phase) {
+    public boolean addBlockState(BlockPos pos, BlockState blockState, CompoundNBT nbt, GenerationPhase phase) {
         ExtendedBlockStatePart.ExtendedBlockState extState = new ExtendedBlockStatePart.ExtendedBlockState(blockState, nbt);
         return addInternal(phase, pos, extState, false);
     }
 
-    public boolean forceAddBlockState(BlockPos pos, IBlockState blockState, CompoundNBT nbt, GenerationPhase phase) {
+    public boolean forceAddBlockState(BlockPos pos, BlockState blockState, CompoundNBT nbt, GenerationPhase phase) {
         ExtendedBlockStatePart.ExtendedBlockState extState = new ExtendedBlockStatePart.ExtendedBlockState(blockState, nbt);
         return addInternal(phase, pos, extState, true);
     }

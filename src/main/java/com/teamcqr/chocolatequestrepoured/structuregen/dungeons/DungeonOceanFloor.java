@@ -26,11 +26,11 @@ public class DungeonOceanFloor extends DungeonSurface {
 	}
 
 	public void generate(World world, int x, int z) {
-		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+		Chunk chunk = world.getChunk(x >> 4, z >> 4);
 		int y = 0;
 		for (int ix = 0; ix < 16; ix++) {
 			for (int iz = 0; iz < 16; iz++) {
-				y += DungeonGenUtils.getYForPos(world, chunk.x * 16 + ix, chunk.z * 16 + iz, true);
+				y += DungeonGenUtils.getYForPos(world, chunk.getPos().x * 16 + ix, chunk.getPos().z * 16 + iz, true);
 			}
 		}
 		y /= 256;
@@ -53,7 +53,7 @@ public class DungeonOceanFloor extends DungeonSurface {
 			}
 
 			IDungeonGenerator generator = new GeneratorOceanFloor(this, structure, settings);
-			generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+			generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 		}
 	}
 

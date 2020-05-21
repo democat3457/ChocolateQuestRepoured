@@ -15,7 +15,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.Gen
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure;
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -159,7 +159,7 @@ public class StrongholdFloorOpen {
 		BlockPos p3 = this.roomGrid[0][this.sideLength - 1].add(-1, 0, 1).add(-dimX, -1, dimZ);
 		BlockPos p4 = this.roomGrid[0][0].add(-1, 0, -1).add(-dimX, -1, -dimZ);
 
-		IBlockState block = this.generator.getDungeon().getWallBlock().getDefaultState();
+		BlockState block = this.generator.getDungeon().getWallBlock().getDefaultState();
 		ExtendedBlockStatePart.ExtendedBlockState state = new ExtendedBlockStatePart.ExtendedBlockState(block, null);
 		int addY = 2 + this.generator.getDungeon().getRoomSizeY();
 

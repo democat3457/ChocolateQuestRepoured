@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.EntityEvokerFangs;
 import net.minecraft.util.SoundEvent;
@@ -54,7 +54,7 @@ public class EntityAIFangAttack extends AbstractEntityAISpell<AbstractEntityCQR>
 		while (true) {
 			if (!this.entity.world.isBlockNormalCube(blockpos, true) && this.entity.world.isBlockNormalCube(blockpos.down(), true)) {
 				if (!this.entity.world.isAirBlock(blockpos)) {
-					IBlockState iblockstate = this.entity.world.getBlockState(blockpos);
+					BlockState iblockstate = this.entity.world.getBlockState(blockpos);
 					AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.entity.world, blockpos);
 
 					if (axisalignedbb != null) {

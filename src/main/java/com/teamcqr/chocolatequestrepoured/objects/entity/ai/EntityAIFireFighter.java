@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvents;
@@ -101,7 +101,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 		Chunk chunk = null;
 		ExtendedBlockStorage extendedBlockStorage = Chunk.NULL_BLOCK_STORAGE;
 		if (isLoaded) {
-			chunk = world.getChunkFromChunkCoords(oldChunkX, oldChunkZ);
+			chunk = world.getChunkAt(oldChunkX, oldChunkZ);
 			extendedBlockStorage = chunk.getBlockStorageArray()[oldChunkY];
 		}
 		for (int x3 = x1; x3 <= x2; x3++) {
@@ -113,7 +113,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 				oldChunkZ = z1 >> 4;
 				isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z1));
 				if (isLoaded) {
-					chunk = world.getChunkFromChunkCoords(chunkX, z1 >> 4);
+					chunk = world.getChunkAt(chunkX, z1 >> 4);
 					extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 				}
 			}
@@ -127,13 +127,13 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 					oldChunkZ = chunkZ;
 					isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z3));
 					if (isLoaded) {
-						chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+						chunk = world.getChunkAt(chunkX, chunkZ);
 						extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 					}
 				}
 
 				if (isLoaded) {
-					IBlockState oldState = chunk.getBlockState(x3, y1 - 1, z3);
+					BlockState oldState = chunk.getBlockState(x3, y1 - 1, z3);
 					for (int y3 = y1; y3 <= y2; y3++) {
 						int chunkY = y3 >> 4;
 
@@ -143,7 +143,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 						}
 
 						if (extendedBlockStorage != Chunk.NULL_BLOCK_STORAGE) {
-							IBlockState state1 = extendedBlockStorage.get(x3 & 15, y3 & 15, z3 & 15);
+							BlockState state1 = extendedBlockStorage.get(x3 & 15, y3 & 15, z3 & 15);
 
 							if (state1.getBlock() == Blocks.FIRE && !oldState.getBlock().isFireSource(world, pos2.setPos(x3, y3 - 1, z3), Direction.UP)) {
 								Vec3d vec3d1 = this.entity.getPositionEyes(1.0F);

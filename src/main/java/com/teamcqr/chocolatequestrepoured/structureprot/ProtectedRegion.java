@@ -48,34 +48,34 @@ public class ProtectedRegion {
 
 	public CompoundNBT writeToNBT() {
 		CompoundNBT compound = new CompoundNBT();
-		compound.setTag("uuid", NBTUtil.createUUIDTag(this.uuid));
-		compound.setTag("startPos", NBTUtil.createPosTag(this.startPos));
-		compound.setTag("endPos", NBTUtil.createPosTag(this.endPos));
-		compound.setBoolean("preventBlockBreaking", this.preventBlockBreaking);
-		compound.setBoolean("preventBlockPlacing", this.preventBlockPlacing);
-		compound.setBoolean("preventExplosionsTNT", this.preventExplosionsTNT);
-		compound.setBoolean("preventExplosionsOther", this.preventExplosionsOther);
-		compound.setBoolean("preventFireSpreading", this.preventFireSpreading);
-		compound.setBoolean("preventEntitySpawning", this.preventEntitySpawning);
-		compound.setBoolean("ignoreNoBossOrNexus", this.ignoreNoBossOrNexus);
-		compound.setBoolean("isGenerating", this.isGenerating);
+		compound.put("uuid", NBTUtil.writeUniqueId(this.uuid));
+		compound.put("startPos", NBTUtil.writeBlockPos(this.startPos));
+		compound.put("endPos", NBTUtil.writeBlockPos(this.endPos));
+		compound.putBoolean("preventBlockBreaking", this.preventBlockBreaking);
+		compound.putBoolean("preventBlockPlacing", this.preventBlockPlacing);
+		compound.putBoolean("preventExplosionsTNT", this.preventExplosionsTNT);
+		compound.putBoolean("preventExplosionsOther", this.preventExplosionsOther);
+		compound.putBoolean("preventFireSpreading", this.preventFireSpreading);
+		compound.putBoolean("preventEntitySpawning", this.preventEntitySpawning);
+		compound.putBoolean("ignoreNoBossOrNexus", this.ignoreNoBossOrNexus);
+		compound.putBoolean("isGenerating", this.isGenerating);
 		ListNBT nbtTagList1 = new ListNBT();
 		for (UUID entityUuid : this.entityDependencies) {
-			nbtTagList1.appendTag(NBTUtil.createUUIDTag(entityUuid));
+			nbtTagList1.add(NBTUtil.writeUniqueId(entityUuid));
 		}
-		compound.setTag("entityDependencies", nbtTagList1);
+		compound.put("entityDependencies", nbtTagList1);
 		ListNBT nbtTagList2 = new ListNBT();
 		for (BlockPos pos : this.blockDependencies) {
-			nbtTagList1.appendTag(NBTUtil.createPosTag(pos));
+			nbtTagList1.add(NBTUtil.writeBlockPos(pos));
 		}
-		compound.setTag("blockDependencies", nbtTagList2);
+		compound.put("blockDependencies", nbtTagList2);
 		return compound;
 	}
 
 	public void readFromNBT(CompoundNBT compound) {
-		this.uuid = NBTUtil.getUUIDFromTag(compound.getCompoundTag("uuid"));
-		this.startPos = NBTUtil.getPosFromTag(compound.getCompoundTag("startPos"));
-		this.endPos = NBTUtil.getPosFromTag(compound.getCompoundTag("endPos"));
+		this.uuid = NBTUtil.readUniqueId(compound.getCompound("uuid"));
+		this.startPos = NBTUtil.readBlockPos(compound.getCompound("startPos"));
+		this.endPos = NBTUtil.readBlockPos(compound.getCompound("endPos"));
 		this.preventBlockBreaking = compound.getBoolean("preventBlockBreaking");
 		this.preventBlockPlacing = compound.getBoolean("preventBlockPlacing");
 		this.preventExplosionsTNT = compound.getBoolean("preventExplosionsTNT");
@@ -85,14 +85,14 @@ public class ProtectedRegion {
 		this.ignoreNoBossOrNexus = compound.getBoolean("ignoreNoBossOrNexus");
 		this.isGenerating = compound.getBoolean("isGenerating");
 		this.entityDependencies.clear();
-		ListNBT nbtTagList1 = compound.getTagList("entityDependencies", Constants.NBT.TAG_COMPOUND);
-		for (int i = 0; i < nbtTagList1.tagCount(); i++) {
-			this.entityDependencies.add(NBTUtil.getUUIDFromTag(nbtTagList1.getCompoundTagAt(i)));
+		ListNBT nbtTagList1 = compound.getList("entityDependencies", Constants.NBT.TAG_COMPOUND);
+		for (int i = 0; i < nbtTagList1.size(); i++) {
+			this.entityDependencies.add(NBTUtil.readUniqueId((CompoundNBT) nbtTagList1.get(i)));
 		}
 		this.blockDependencies.clear();
-		ListNBT nbtTagList2 = compound.getTagList("blockDependencies", Constants.NBT.TAG_COMPOUND);
-		for (int i = 0; i < nbtTagList2.tagCount(); i++) {
-			this.blockDependencies.add(NBTUtil.getPosFromTag(nbtTagList2.getCompoundTagAt(i)));
+		ListNBT nbtTagList2 = compound.getList("blockDependencies", Constants.NBT.TAG_COMPOUND);
+		for (int i = 0; i < nbtTagList2.size(); i++) {
+			this.blockDependencies.add(NBTUtil.readBlockPos((CompoundNBT) nbtTagList2.get(i)));
 		}
 	}
 

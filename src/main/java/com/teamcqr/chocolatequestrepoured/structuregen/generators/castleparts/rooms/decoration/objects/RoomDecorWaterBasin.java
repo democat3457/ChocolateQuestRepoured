@@ -4,7 +4,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStoneBrick;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 
 public class RoomDecorWaterBasin extends RoomDecorBlocksBase {
@@ -14,8 +14,8 @@ public class RoomDecorWaterBasin extends RoomDecorBlocksBase {
 
     @Override
     protected void makeSchematic() {
-        final IBlockState chiseledStone = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
-        final IBlockState stairs = Blocks.STONE_BRICK_STAIRS.getDefaultState();
+        final BlockState chiseledStone = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
+        final BlockState stairs = Blocks.STONE_BRICK_STAIRS.getDefaultState();
 
         this.schematic.add(new DecoBlockBase(0, 0, 0, chiseledStone, BlockStateGenArray.GenerationPhase.MAIN));
         this.schematic.add(new DecoBlockRotating(1, 0, 0, stairs, BlockStairs.FACING, Direction.SOUTH, BlockStateGenArray.GenerationPhase.MAIN));

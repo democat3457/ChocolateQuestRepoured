@@ -9,7 +9,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -47,7 +47,7 @@ public class RoomWallBuilder {
 
 	public void generate(BlockStateGenArray genArray, DungeonCastle dungeon) {
 		BlockPos pos;
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 
 		Direction iterDirection;
 		this.windowType = dungeon.getRandomWindowType();
@@ -67,7 +67,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	protected IBlockState getBlockToBuild(BlockPos pos, DungeonCastle dungeon) {
+	protected BlockState getBlockToBuild(BlockPos pos, DungeonCastle dungeon) {
 		if (this.options.hasWindow()) {
 			return this.getWindowBlock(pos, dungeon);
 		} else if (this.options.hasDoor()) {
@@ -77,7 +77,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	protected IBlockState getDoorBlock(BlockPos pos, DungeonCastle dungeon) {
+	protected BlockState getDoorBlock(BlockPos pos, DungeonCastle dungeon) {
 		switch (this.options.getDoor().getType()) {
 		case AIR:
 			return this.getBlockDoorAir(pos, dungeon);
@@ -99,8 +99,8 @@ public class RoomWallBuilder {
 		}
 	}
 
-	private IBlockState getBlockDoorAir(BlockPos pos, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getMainBlockState();
+	private BlockState getBlockDoorAir(BlockPos pos, DungeonCastle dungeon) {
+		BlockState blockToBuild = dungeon.getMainBlockState();
 		int y = pos.getY() - this.wallStart.getY();
 		int dist = this.getLengthPoint(pos);
 
@@ -115,8 +115,8 @@ public class RoomWallBuilder {
 		return blockToBuild;
 	}
 
-	private IBlockState getBlockDoorStairBorder(BlockPos pos, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getMainBlockState();
+	private BlockState getBlockDoorStairBorder(BlockPos pos, DungeonCastle dungeon) {
+		BlockState blockToBuild = dungeon.getMainBlockState();
 		final int y = pos.getY() - this.wallStart.getY();
 		final int dist = this.getLengthPoint(pos);
 		final int halfPoint = this.doorStart + (this.doorWidth / 2);
@@ -139,7 +139,7 @@ public class RoomWallBuilder {
 					stairFacing = (dist == halfPoint - 2) ? this.side.rotateYCCW() : this.side.rotateY();
 				}
 
-				IBlockState stairBase = dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
+				BlockState stairBase = dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
 
 				if (y == 1) {
 					blockToBuild = stairBase;
@@ -154,8 +154,8 @@ public class RoomWallBuilder {
 		return blockToBuild;
 	}
 
-	private IBlockState getBlockDoorFenceBorder(BlockPos pos, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getMainBlockState();
+	private BlockState getBlockDoorFenceBorder(BlockPos pos, DungeonCastle dungeon) {
+		BlockState blockToBuild = dungeon.getMainBlockState();
 		final int y = pos.getY() - this.wallStart.getY();
 		final int dist = this.getLengthPoint(pos);
 		final int halfPoint = this.doorStart + (this.doorWidth / 2);
@@ -177,8 +177,8 @@ public class RoomWallBuilder {
 		return blockToBuild;
 	}
 
-	private IBlockState getBlockDoorStandard(BlockPos pos, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getMainBlockState();
+	private BlockState getBlockDoorStandard(BlockPos pos, DungeonCastle dungeon) {
+		BlockState blockToBuild = dungeon.getMainBlockState();
 		final int y = pos.getY() - this.wallStart.getY();
 		final int dist = this.getLengthPoint(pos);
 		final int halfPoint = this.doorStart + (this.doorWidth / 2);
@@ -210,15 +210,15 @@ public class RoomWallBuilder {
 		return blockToBuild;
 	}
 
-	private IBlockState getBlockGrandEntry(BlockPos pos, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getMainBlockState();
+	private BlockState getBlockGrandEntry(BlockPos pos, DungeonCastle dungeon) {
+		BlockState blockToBuild = dungeon.getMainBlockState();
 
 		final int y = pos.getY() - this.wallStart.getY();
 		final int dist = this.getLengthPoint(pos);
 		final int halfPoint = this.doorStart + (this.doorWidth / 2);
 		final int distFromHalf = Math.abs(dist - halfPoint);
 
-		final IBlockState outlineBlock = dungeon.getFancyBlockState();
+		final BlockState outlineBlock = dungeon.getFancyBlockState();
 
 		if (this.withinDoorWidth(dist)) {
 			if (y == 0) {
@@ -255,7 +255,7 @@ public class RoomWallBuilder {
 		return blockToBuild;
 	}
 
-	protected IBlockState getWindowBlock(BlockPos pos, DungeonCastle dungeon) {
+	protected BlockState getWindowBlock(BlockPos pos, DungeonCastle dungeon) {
 		switch (this.windowType) {
 			case BASIC_GLASS:
 				return getBlockWindowBasicGlass(pos, dungeon);
@@ -269,7 +269,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	private IBlockState getBlockWindowBasicGlass(BlockPos pos, DungeonCastle dungeon) {
+	private BlockState getBlockWindowBasicGlass(BlockPos pos, DungeonCastle dungeon) {
 		int y = pos.getY() - this.wallStart.getY();
 		int dist = this.getLengthPoint(pos);
 
@@ -280,7 +280,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	private IBlockState getBlockWindowCrossGlass(BlockPos pos, DungeonCastle dungeon) {
+	private BlockState getBlockWindowCrossGlass(BlockPos pos, DungeonCastle dungeon) {
 		int y = pos.getY() - this.wallStart.getY();
 		int dist = this.getLengthPoint(pos);
 		int halfDist = this.length / 2;
@@ -294,7 +294,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	private IBlockState getBlockWindowSquareBars(BlockPos pos, DungeonCastle dungeon) {
+	private BlockState getBlockWindowSquareBars(BlockPos pos, DungeonCastle dungeon) {
 		int y = pos.getY() - this.wallStart.getY();
 		int dist = this.getLengthPoint(pos);
 		int halfDist = length / 2;
@@ -307,7 +307,7 @@ public class RoomWallBuilder {
 		}
 	}
 
-	private IBlockState getBlockWindowOpenSlit(BlockPos pos, DungeonCastle dungeon) {
+	private BlockState getBlockWindowOpenSlit(BlockPos pos, DungeonCastle dungeon) {
 		int y = pos.getY() - this.wallStart.getY();
 		int dist = this.getLengthPoint(pos);
 		int halfDist = length / 2;

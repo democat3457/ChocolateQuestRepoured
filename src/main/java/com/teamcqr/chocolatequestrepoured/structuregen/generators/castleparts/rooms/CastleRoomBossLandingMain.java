@@ -6,7 +6,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -70,7 +70,7 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 		for (int x = 0; x <= this.endX; x++) {
 			for (int y = 0; y < this.height; y++) {
 				for (int z = -1; z <= this.endZ; z++) {
-					IBlockState blockToBuild = this.getBlockToBuild(dungeon, x, y, z);
+					BlockState blockToBuild = this.getBlockToBuild(dungeon, x, y, z);
 
 					offset = DungeonGenUtils.rotateMatrixOffsetCW(new Vec3i(x, y, z), this.lenX, this.lenZ, this.numRotations);
 					genArray.addBlockState(this.origin.add(offset), blockToBuild, BlockStateGenArray.GenerationPhase.MAIN);
@@ -83,8 +83,8 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 		}
 	}
 
-	private IBlockState getBlockToBuild(DungeonCastle dungeon, int x, int y, int z) {
-		IBlockState blockToBuild = Blocks.AIR.getDefaultState();
+	private BlockState getBlockToBuild(DungeonCastle dungeon, int x, int y, int z) {
+		BlockState blockToBuild = Blocks.AIR.getDefaultState();
 
 		if (z == -1) {
 			if (x < this.connectingWallLength || x > this.endX - this.connectingWallLength || y == this.height - 1) {

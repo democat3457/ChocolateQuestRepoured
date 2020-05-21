@@ -1,6 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.tileentity;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -23,7 +23,7 @@ public class TileEntitySyncClient extends TileEntity {
 	}
 
 	private void notifyBlockUpdate() {
-		IBlockState state = this.getWorld().getBlockState(this.getPos());
+		BlockState state = this.getWorld().getBlockState(this.getPos());
 		this.getWorld().notifyBlockUpdate(this.getPos(), state, state, 3);
 	}
 

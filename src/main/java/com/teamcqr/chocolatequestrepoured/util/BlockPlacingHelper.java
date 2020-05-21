@@ -17,7 +17,7 @@ import com.teamcqr.chocolatequestrepoured.CQRMain;
 import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockStatePart;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +33,7 @@ import net.minecraftforge.common.util.BlockSnapshot;
 public class BlockPlacingHelper {
 
 	public static void setBlockStates(World world, BlockPos pos, Block[][][] blocks, int flags) {
-		List<Map.Entry<BlockPos, IBlockState>> map = new ArrayList<>();
+		List<Map.Entry<BlockPos, BlockState>> map = new ArrayList<>();
 		for (int x = 0; x < blocks.length; x++) {
 			for (int y = 0; y < blocks[x].length; y++) {
 				for (int z = 0; z < blocks[x][y].length; z++) {
@@ -46,8 +46,8 @@ public class BlockPlacingHelper {
 		BlockPlacingHelper.setBlockStates(world, map, flags, false);
 	}
 
-	public static void setBlockStates(World world, BlockPos pos, IBlockState[][][] blockstates, int flags) {
-		List<Map.Entry<BlockPos, IBlockState>> map = new ArrayList<>();
+	public static void setBlockStates(World world, BlockPos pos, BlockState[][][] blockstates, int flags) {
+		List<Map.Entry<BlockPos, BlockState>> map = new ArrayList<>();
 		for (int x = 0; x < blockstates.length; x++) {
 			for (int y = 0; y < blockstates[x].length; y++) {
 				for (int z = 0; z < blockstates[x][y].length; z++) {
@@ -61,7 +61,7 @@ public class BlockPlacingHelper {
 	}
 
 	public static void setBlockStates(World world, BlockPos pos, ExtendedBlockStatePart.ExtendedBlockState[][][] extendedstates, int flags) {
-		List<Map.Entry<BlockPos, IBlockState>> map = new ArrayList<>();
+		List<Map.Entry<BlockPos, BlockState>> map = new ArrayList<>();
 
 		for (int x = 0; x < extendedstates.length; x++) {
 			for (int y = 0; y < extendedstates[x].length; y++) {
@@ -97,11 +97,11 @@ public class BlockPlacingHelper {
 	}
 
 	public static void setBlockStates(World world, BlockPos pos, List<Template.BlockInfo> list, PlacementSettings placementSettings, int flags) {
-		List<Map.Entry<BlockPos, IBlockState>> map = new ArrayList<>();
+		List<Map.Entry<BlockPos, BlockState>> map = new ArrayList<>();
 
 		for (Template.BlockInfo blockInfo : list) {
 			BlockPos position = pos.add(Template.transformedBlockPos(placementSettings, blockInfo.pos));
-			IBlockState state = blockInfo.blockState.withMirror(placementSettings.getMirror()).withRotation(placementSettings.getRotation());
+			BlockState state = blockInfo.blockState.withMirror(placementSettings.getMirror()).withRotation(placementSettings.getRotation());
 			map.add(new AbstractMap.SimpleEntry(position, state));
 		}
 
@@ -124,7 +124,7 @@ public class BlockPlacingHelper {
 		}
 	}
 
-	public static void setBlockStates(World world, List<Map.Entry<BlockPos, IBlockState>> map, int flags, boolean updateLight) {
+	public static void setBlockStates(World world, List<Map.Entry<BlockPos, BlockState>> map, int flags, boolean updateLight) {
 		if (!world.isRemote && world.getWorldInfo().getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) {
 			return;
 		}
@@ -135,19 +135,19 @@ public class BlockPlacingHelper {
 		List<BlockPos> lightUpdates = new LinkedList<>();
 		List<BlockPlacingHelper.BlockUpdate> blockUpdates = new LinkedList<>();
 
-		for (Map.Entry<BlockPos, IBlockState> entry : map) {
+		for (Map.Entry<BlockPos, BlockState> entry : map) {
 			BlockPos pos = entry.getKey();
-			IBlockState newState = entry.getValue();
+			BlockState newState = entry.getValue();
 			if (world.isOutsideBuildHeight(pos)) {
 				continue;
 			}
 			pos = pos.toImmutable();
 			Chunk chunk = world.getChunkFromBlockCoords(pos);
-			IBlockState oldState = chunk.getBlockState(pos);
+			BlockState oldState = chunk.getBlockState(pos);
 			int oldLight = oldState.getLightValue(world, pos);
 			int oldOpacity = oldState.getLightOpacity(world, pos);
 
-			IBlockState iblockstate = setBlockState(world, chunk, pos, newState, updateLight, generateSkylightMap, relightBlock, propagateSkylightOcclusion);
+			BlockState iblockstate = setBlockState(world, chunk, pos, newState, updateLight, generateSkylightMap, relightBlock, propagateSkylightOcclusion);
 
 			if (iblockstate != null) {
 				if (updateLight && (newState.getLightOpacity(world, pos) != oldOpacity || newState.getLightValue(world, pos) != oldLight)) {
@@ -188,7 +188,7 @@ public class BlockPlacingHelper {
 	}
 
 	@Nullable
-	public static IBlockState setBlockState(World world, Chunk chunk, BlockPos pos, IBlockState state, boolean updateLight, Set<Chunk> generateSkylightMap, Set<BlockPos> relightBlock, List<BlockPos> propagateSkylightOcclusion) {
+	public static BlockState setBlockState(World world, Chunk chunk, BlockPos pos, BlockState state, boolean updateLight, Set<Chunk> generateSkylightMap, Set<BlockPos> relightBlock, List<BlockPos> propagateSkylightOcclusion) {
 		int i = pos.getX() & 15;
 		int j = pos.getY();
 		int k = pos.getZ() & 15;
@@ -200,7 +200,7 @@ public class BlockPlacingHelper {
 		}
 
 		int i1 = chunk.getHeightMap()[l];
-		IBlockState iblockstate = chunk.getBlockState(pos);
+		BlockState iblockstate = chunk.getBlockState(pos);
 
 		if (iblockstate == state) {
 			return null;
@@ -344,11 +344,11 @@ public class BlockPlacingHelper {
 		private World world;
 		private BlockPos pos;
 		private Chunk chunk;
-		private IBlockState iblockstate;
-		private IBlockState newState;
+		private BlockState iblockstate;
+		private BlockState newState;
 		private int flags;
 
-		public BlockUpdate(World world, BlockPos pos, Chunk chunk, IBlockState iblockstate, IBlockState newState, int flags) {
+		public BlockUpdate(World world, BlockPos pos, Chunk chunk, BlockState iblockstate, BlockState newState, int flags) {
 			this.world = world;
 			this.pos = pos;
 			this.chunk = chunk;

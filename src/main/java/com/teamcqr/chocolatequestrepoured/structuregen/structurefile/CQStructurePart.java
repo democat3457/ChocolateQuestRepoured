@@ -28,7 +28,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -81,7 +81,7 @@ public class CQStructurePart extends Template {
 
 			for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos1, blockpos2)) {
 				BlockPos blockpos3 = blockpos$mutableblockpos.subtract(blockpos1);
-				IBlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos);
+				BlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos);
 				Block block = iblockstate.getBlock();
 
 				if (block != Blocks.STRUCTURE_VOID && block != ModBlocks.NULL_BLOCK && takeSpecialBlocks == SPECIAL_BLOCKS.contains(block)) {

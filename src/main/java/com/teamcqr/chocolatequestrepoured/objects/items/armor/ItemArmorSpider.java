@@ -10,7 +10,7 @@ import com.teamcqr.chocolatequestrepoured.util.ItemUtil;
 
 import net.java.games.input.Keyboard;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -109,7 +109,7 @@ public class ItemArmorSpider extends ItemArmor {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -134,7 +134,7 @@ public class ItemArmorSpider extends ItemArmor {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -159,7 +159,7 @@ public class ItemArmorSpider extends ItemArmor {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -180,7 +180,7 @@ public class ItemArmorSpider extends ItemArmor {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {

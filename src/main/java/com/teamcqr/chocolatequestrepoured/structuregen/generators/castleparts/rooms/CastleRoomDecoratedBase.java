@@ -17,7 +17,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -144,7 +144,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
             Entity mobEntity = mobFactory.getGearedEntityByFloor(this.floor, world);
 
             Block spawnerBlock = ModBlocks.SPAWNER;
-            IBlockState state = spawnerBlock.getDefaultState();
+            BlockState state = spawnerBlock.getDefaultState();
             TileEntitySpawner spawner = (TileEntitySpawner)spawnerBlock.createTileEntity(world, state);
 
             if (spawner != null)

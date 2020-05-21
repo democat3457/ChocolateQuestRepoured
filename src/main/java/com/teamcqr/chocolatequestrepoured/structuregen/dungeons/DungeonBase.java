@@ -14,6 +14,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -131,11 +132,11 @@ public abstract class DungeonBase {
 	}
 
 	public void generate(World world, int x, int z) {
-		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+		Chunk chunk = world.getChunk(x >> 4, z >> 4);
 		int y = 0;
 		for (int ix = 0; ix < 16; ix++) {
 			for (int iz = 0; iz < 16; iz++) {
-				y += DungeonGenUtils.getYForPos(world, chunk.x * 16 + ix, chunk.z * 16 + iz, false);
+				y += DungeonGenUtils.getYForPos(world, chunk.getPos().x * 16 + ix, chunk.getPos().z * 16 + iz, false);
 			}
 		}
 		y /= 256;

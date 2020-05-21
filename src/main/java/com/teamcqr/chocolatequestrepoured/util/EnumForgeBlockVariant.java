@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.util;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 
 /**
  *  Copyright (c) 20.04.2020
@@ -34,16 +34,16 @@ public enum EnumForgeBlockVariant {
     QUARTZ_SLAB(Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.QUARTZ));
 
 
-    private final IBlockState blockState;
+    private final BlockState blockState;
     private final String nameSpaceID;
 
-    EnumForgeBlockVariant(IBlockState blockState) {
+    EnumForgeBlockVariant(BlockState blockState) {
         this.blockState = blockState;
         this.nameSpaceID = "minecraft:" + this.name().toLowerCase();
     }
 
     @Nullable
-    static IBlockState getVariantStateFromName(String name) {
+    static BlockState getVariantStateFromName(String name) {
         for (EnumForgeBlockVariant blockVariant : values()) {
             if (name.toLowerCase().equals(blockVariant.nameSpaceID)) {
                 return blockVariant.blockState;

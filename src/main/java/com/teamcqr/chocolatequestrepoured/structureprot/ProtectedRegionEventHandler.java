@@ -13,7 +13,7 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.PlayerEntity;
@@ -95,7 +95,7 @@ public class ProtectedRegionEventHandler {
 		World world = event.getWorld();
 		PlayerEntity player = event.getPlayerEntity();
 		BlockPos pos = event.getPos();
-		IBlockState state = world.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		ProtectedRegionManager manager = ProtectedRegionManager.getInstance(world);
 
 		if (player.isCreative() || BREAKABLE_BLOCK_WHITELIST.contains(state.getBlock())) {

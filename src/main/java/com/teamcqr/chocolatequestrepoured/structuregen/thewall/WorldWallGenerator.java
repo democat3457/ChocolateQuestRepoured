@@ -17,8 +17,7 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomePlains;
-import net.minecraft.world.biome.BiomeSnow;
+import net.minecraft.world.biome.PlainsBiome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -52,7 +51,7 @@ public class WorldWallGenerator implements IWorldGenerator {
 			List<List<? extends IStructure>> lists = new ArrayList<>();
 
 			Biome biome = world.getBiomeProvider().getBiome(new BlockPos(chunkX * 16 + 8, 0, chunkZ * 16 + 8));
-			if (biome instanceof BiomePlains || biome instanceof BiomeSnow) {
+			if (biome instanceof PlainsBiome) {
 				// Flag for the gate
 			}
 			IWallPart wallPart = null;
@@ -69,10 +68,10 @@ public class WorldWallGenerator implements IWorldGenerator {
 				railingPart = new WallPartRailingWall();
 			}
 			if (wallPart != null) {
-				wallPart.generateWall(chunkX, chunkZ, world, world.getChunkFromChunkCoords(chunkX, chunkZ), lists);
+				wallPart.generateWall(chunkX, chunkZ, world, world.getChunk(chunkX, chunkZ), lists);
 			}
 			if (railingPart != null) {
-				railingPart.generateWall(chunkX, chunkZ, world, world.getChunkFromChunkCoords(chunkX, chunkZ), lists);
+				railingPart.generateWall(chunkX, chunkZ, world, world.getChunk(chunkX, chunkZ), lists);
 			}
 
 			for (List<? extends IStructure> list : lists) {
@@ -93,7 +92,7 @@ public class WorldWallGenerator implements IWorldGenerator {
 		}
 		// Wall is enabled -> check farther
 		// Now check if the world is the overworld...
-		if (world.provider.getDimension() != 0) {
+		if (world.getDimension().getType().getId() != 0) {
 			return false;
 		}
 		// The world is the overworld....

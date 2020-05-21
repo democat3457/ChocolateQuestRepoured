@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 
 import java.util.Random;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
@@ -50,7 +50,7 @@ public class ProjectileFireWallPart extends ProjectileBase {
 	@Override
 	protected void onImpact(RayTraceResult result) {
 		if (result.typeOfHit == RayTraceResult.Type.BLOCK) {
-			IBlockState state = this.world.getBlockState(result.getBlockPos());
+			BlockState state = this.world.getBlockState(result.getBlockPos());
 
 			if (!state.getBlock().isPassable(this.world, result.getBlockPos())) {
 				this.world.newExplosion(this.thrower, result.getBlockPos().getX(), result.getBlockPos().getY(), result.getBlockPos().getZ(), 0.5F, true, false);

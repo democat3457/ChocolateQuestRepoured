@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockWoodSlab;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 
 public enum EnumMCWoodType {
     OAK(BlockPlanks.EnumType.OAK, Blocks.OAK_STAIRS, Blocks.OAK_FENCE, Blocks.OAK_DOOR),
@@ -27,23 +27,23 @@ public enum EnumMCWoodType {
         this.doorBlock = door;
     }
 
-    public IBlockState getSlabBlockState() {
+    public BlockState getSlabBlockState() {
         return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, plankVariant);
     }
 
-    public IBlockState getPlankBlockState() {
+    public BlockState getPlankBlockState() {
         return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, plankVariant);
     }
 
-    public IBlockState getStairBlockState() {
+    public BlockState getStairBlockState() {
         return stairBlock.getDefaultState();
     }
 
-    public IBlockState getFenceBlockState() {
+    public BlockState getFenceBlockState() {
         return fenceBlock.getDefaultState();
     }
 
-    public IBlockState getDoorBlockState() {
+    public BlockState getDoorBlockState() {
         return doorBlock.getDefaultState();
     }
 

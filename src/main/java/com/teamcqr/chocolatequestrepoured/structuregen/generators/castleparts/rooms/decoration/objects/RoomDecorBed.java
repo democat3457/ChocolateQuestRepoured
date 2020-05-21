@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.r
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockBed;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 
 public class RoomDecorBed extends RoomDecorBlocksBase {
@@ -13,9 +13,9 @@ public class RoomDecorBed extends RoomDecorBlocksBase {
 
 	@Override
 	protected void makeSchematic() {
-		IBlockState head = Blocks.BED.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
+		BlockState head = Blocks.BED.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
 		this.schematic.add(new DecoBlockRotating(0, 0, 0, head, BlockBed.FACING, Direction.NORTH, BlockStateGenArray.GenerationPhase.MAIN));
-		IBlockState foot = Blocks.BED.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+		BlockState foot = Blocks.BED.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 		this.schematic.add(new DecoBlockRotating(0, 0, 1, foot, BlockBed.FACING, Direction.NORTH, BlockStateGenArray.GenerationPhase.MAIN));
 	}
 }

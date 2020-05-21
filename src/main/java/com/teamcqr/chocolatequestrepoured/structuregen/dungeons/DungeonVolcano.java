@@ -14,9 +14,10 @@ import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 
 /**
  * Copyright (c) 29.04.2019
@@ -43,7 +44,7 @@ public class DungeonVolcano extends DungeonBase {
 	private String rampMobName = "minecraft:zombie";
 	private Block stoneBlock = Blocks.STONE;
 	private Block lavaBlock = Blocks.LAVA;
-	private Block magmaBlock = Blocks.MAGMA;
+	private Block magmaBlock = Blocks.MAGMA_BLOCK;
 	private Block rampBlock = Blocks.NETHERRACK;
 	private Block lowerStoneBlock = Blocks.COBBLESTONE;
 	private Block pillarBlock = ModBlocks.GRANITE_LARGE;
@@ -94,14 +95,14 @@ public class DungeonVolcano extends DungeonBase {
 		this.oreConcentration = Math.min(Math.max(1, Math.abs(PropertyFileHelper.getIntProperty(prop, "orechance", 5))), 100);
 		this.rampMobName = prop.getProperty("rampMob", "minecraft:zombie");
 		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTableList.CHESTS_ABANDONED_MINESHAFT,
-				LootTableList.CHESTS_NETHER_BRIDGE,
+				LootTables.CHESTS_ABANDONED_MINESHAFT,
+				LootTables.CHESTS_NETHER_BRIDGE,
 				ModLoottables.CHESTS_FOOD
 		});
 		this.stoneBlock = PropertyFileHelper.getBlockProperty(prop, "topBlock", Blocks.STONE);
 		this.lowerStoneBlock = PropertyFileHelper.getBlockProperty(prop, "lowerBlock", Blocks.COBBLESTONE);
 		this.lavaBlock = PropertyFileHelper.getBlockProperty(prop, "lavaBlock", Blocks.LAVA);
-		this.magmaBlock = PropertyFileHelper.getBlockProperty(prop, "magmaBlock", Blocks.MAGMA);
+		this.magmaBlock = PropertyFileHelper.getBlockProperty(prop, "magmaBlock", Blocks.MAGMA_BLOCK);
 		this.rampBlock = PropertyFileHelper.getBlockProperty(prop, "rampBlock", Blocks.NETHERRACK);
 		this.pillarBlock = PropertyFileHelper.getBlockProperty(prop, "pillarBlock", ModBlocks.GRANITE_LARGE);
 		this.oreBlocks = PropertyFileHelper.getBlockArrayProperty(prop, "oreBlocks", new Block[] {
@@ -146,7 +147,7 @@ public class DungeonVolcano extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		IDungeonGenerator generator = new GeneratorVolcano(this);
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	public int getMinHeight() {

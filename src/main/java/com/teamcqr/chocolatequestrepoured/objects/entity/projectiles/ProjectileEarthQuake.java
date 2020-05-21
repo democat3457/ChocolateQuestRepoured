@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.LivingEntity;
@@ -76,7 +76,7 @@ public class ProjectileEarthQuake extends EntityThrowable {
 		}
 
 		BlockPos pos = new BlockPos(this.getPosition().getX(), this.getPosition().getY() - 1, this.getPosition().getZ());
-		IBlockState iblockstate = this.world.getBlockState(pos);
+		BlockState iblockstate = this.world.getBlockState(pos);
 
 		if (iblockstate.getBlock() == null || iblockstate.getBlock().isAir(iblockstate, this.world, pos)) {
 			iblockstate = Blocks.GLASS.getDefaultState();

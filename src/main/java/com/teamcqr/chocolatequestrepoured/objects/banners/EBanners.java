@@ -1,6 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.banners;
 
 import net.minecraft.item.DyeColor;
+import net.minecraft.block.BannerBlock;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -98,7 +99,7 @@ public enum EBanners {
 
 			patternList.add(tag);
 		}
-
+		
 		ItemStack item = BannerItem.makeBanner(this.mainColor, patternList);
 		item = item.setDisplayName(this.name);
 		return item;

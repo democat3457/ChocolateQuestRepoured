@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -27,7 +27,7 @@ public class CastleRoomLandingDirected extends CastleRoomBase {
 
 	@Override
 	public void generateRoom(BlockStateGenArray genArray, DungeonCastle dungeon) {
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 
 		//If stairs are facing to the east or west, need to flip the build lengths since we are essentially
 		//generating a room facing south and then rotating it

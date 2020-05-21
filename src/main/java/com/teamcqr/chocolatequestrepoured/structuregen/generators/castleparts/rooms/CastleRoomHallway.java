@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockGlazedTerracotta;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -43,7 +43,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 		for (int z = 0; z < this.getDecorationLengthZ(); z++) {
 			for (int x = 0; x < this.getDecorationLengthX(); x++) {
 				BlockPos pos = this.getNonWallStartPos().add(x, 0, z);
-				IBlockState tcBlock = Blocks.GRAY_GLAZED_TERRACOTTA.getDefaultState();
+				BlockState tcBlock = Blocks.GRAY_GLAZED_TERRACOTTA.getDefaultState();
 				Direction tcFacing;
 
 				//Terracotta patterns are formed in a 2x2 square from the pattern (going clockwise) N E S W
@@ -68,7 +68,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 	}
 
 	@Override
-	protected IBlockState getFloorBlock(DungeonCastle dungeon) {
+	protected BlockState getFloorBlock(DungeonCastle dungeon) {
 		return Blocks.GRAY_GLAZED_TERRACOTTA.getDefaultState();
 	}
 

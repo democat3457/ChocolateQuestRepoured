@@ -14,7 +14,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.IStructure;
 import com.teamcqr.chocolatequestrepoured.util.Perlin3D;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
@@ -112,7 +112,7 @@ public class GeneratorCavern implements IDungeonGenerator {
 	@Override
 	public void fillChests(World world, Chunk chunk, int x, int y, int z, List<List<? extends IStructure>> lists) {
 		BlockPos start = new BlockPos(x, y, z);
-		IBlockState state = Blocks.CHEST.getDefaultState();
+		BlockState state = Blocks.CHEST.getDefaultState();
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
 		TileEntityChest chest = (TileEntityChest) Blocks.CHEST.createTileEntity(world, state);
 		ResourceLocation[] chestIDs = this.dungeon.getChestIDs();
@@ -132,7 +132,7 @@ public class GeneratorCavern implements IDungeonGenerator {
 		BlockPos spawnerPos = new BlockPos(x, y, z);
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
 		
-		IBlockState state = Blocks.MOB_SPAWNER.getDefaultState();
+		BlockState state = Blocks.MOB_SPAWNER.getDefaultState();
 		TileEntityMobSpawner spawner = (TileEntityMobSpawner)Blocks.MOB_SPAWNER.createTileEntity(world, state);
 		spawner.getSpawnerBaseLogic().setEntityId(dungeon.getMob());
 		spawner.updateContainingBlockInfo();

@@ -8,7 +8,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.rooms.decoration.RoomDecorTypes;
 
 import net.minecraft.block.BlockColored;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 
@@ -35,7 +35,7 @@ public class CastleRoomBedroomFancy extends CastleRoomGenericBase {
 	}
 
 	@Override
-	protected IBlockState getFloorBlock(DungeonCastle dungeon) {
+	protected BlockState getFloorBlock(DungeonCastle dungeon) {
 		return Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, this.carpetColor);
 	}
 }

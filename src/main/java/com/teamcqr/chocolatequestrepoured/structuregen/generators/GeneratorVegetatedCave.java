@@ -26,7 +26,7 @@ import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHugeMushroom;
 import net.minecraft.block.BlockVine;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
@@ -184,7 +184,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 		ResourceLocation[] chestIDs = this.dungeon.getChestIDs();
 		for (BlockPos pos : this.chests) {
 			Block block = Blocks.CHEST;
-			IBlockState state = block.getDefaultState();
+			BlockState state = block.getDefaultState();
 			TileEntityChest chest = (TileEntityChest) block.createTileEntity(world, state);
 
 			if (chest != null) {
@@ -207,7 +207,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
 		for (BlockPos pos : this.spawners) {
 			Block block = Blocks.MOB_SPAWNER;
-			IBlockState state = block.getDefaultState();
+			BlockState state = block.getDefaultState();
 			TileEntityMobSpawner spawner = (TileEntityMobSpawner) block.createTileEntity(world, state);
 			spawner.getSpawnerBaseLogic().setEntityId(mobtype.getEntityResourceLocation());
 			spawner.updateContainingBlockInfo();
@@ -295,7 +295,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 			for (int iZ = 0; iZ < blob[0][0].length; iZ++) {
 				for (int iY = 1; iY < blob[0].length; iY++) {
 					if (blob[iX][iY][iZ] != null) {
-						IBlockState state = blob[iX][iY][iZ].getDefaultState();
+						BlockState state = blob[iX][iY][iZ].getDefaultState();
 						BlockPos bp = new BlockPos(iX - radius, iY - radius, iZ - radius);
 						this.blocks.put(blobCenter.add(bp), new ExtendedBlockState(state, null));
 					}
@@ -413,7 +413,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 	private void createVegetation(Random random) {
 		for (BlockPos floorPos : this.floorBlocks) {
 			int number = random.nextInt(300);
-			IBlockState state = null;
+			BlockState state = null;
 			if (number >= 295) {
 				// Giant mushroom
 				boolean flag = true;
@@ -591,7 +591,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 
 						if (position.getY() >= position.getY() + i - 1 || blockhugemushroom$enumtype != BlockHugeMushroom.EnumType.ALL_INSIDE) {
 							BlockPos blockpos = new BlockPos(l1, l2, i2);
-							//IBlockState state = worldIn.getBlockState(blockpos);
+							//BlockState state = worldIn.getBlockState(blockpos);
 
 							// PUT IN MAP
 							//this.setBlockAndNotifyAdequately(worldIn, blockpos, block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, blockhugemushroom$enumtype));
@@ -602,7 +602,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 			}
 
 			for (int i3 = 0; i3 < i; ++i3) {
-				//IBlockState iblockstate = worldIn.getBlockState(position.up(i3));
+				//BlockState iblockstate = worldIn.getBlockState(position.up(i3));
 				// PUT IN MAP
 				//this.setBlockAndNotifyAdequately(worldIn, position.up(i3), block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM));
 				stateMap.put(position.up(i3), new ExtendedBlockState(block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM), null));

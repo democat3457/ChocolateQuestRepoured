@@ -16,7 +16,7 @@ import com.teamcqr.chocolatequestrepoured.objects.items.armor.ItemArmorDyable;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -329,7 +329,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 		while (true) {
 			if (!this.world.isBlockNormalCube(blockpos, true) && this.world.isBlockNormalCube(blockpos.down(), true)) {
 				if (!this.world.isAirBlock(blockpos)) {
-					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					BlockState iblockstate = this.world.getBlockState(blockpos);
 					AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.world, blockpos);
 
 					if (axisalignedbb != null) {

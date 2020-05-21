@@ -9,7 +9,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Direction;
@@ -34,7 +34,7 @@ public class RoomDecorChest extends RoomDecorBlocksBase {
 		ResourceLocation[] chestIDs = room.getChestIDs();
 		if (chestIDs != null && chestIDs.length > 0) {
 			Block chestBlock = Blocks.CHEST;
-			IBlockState state = this.schematic.get(0).getState(side);
+			BlockState state = this.schematic.get(0).getState(side);
 			TileEntityChest chest = (TileEntityChest) chestBlock.createTileEntity(world, state);
 			if (chest != null) {
 				ResourceLocation resLoc = chestIDs[dungeon.getRandom().nextInt(chestIDs.length)];

@@ -28,7 +28,7 @@ import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.IEntityMultiPart;
@@ -525,7 +525,7 @@ public class EntityCQRNetherDragon extends AbstractEntityCQRBoss implements IEnt
 			for (int l1 = y1; l1 <= y2; ++l1) {
 				for (int i2 = z1; i2 <= z2; ++i2) {
 					BlockPos blockpos = new BlockPos(k1, l1, i2);
-					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					BlockState iblockstate = this.world.getBlockState(blockpos);
 					Block block = iblockstate.getBlock();
 
 					if (!block.isAir(iblockstate, this.world, blockpos) && iblockstate.getMaterial() != Material.FIRE) {
@@ -850,7 +850,7 @@ public class EntityCQRNetherDragon extends AbstractEntityCQRBoss implements IEnt
     }
 	
 	@Override
-    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
+    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos)
     {
     }
 	
@@ -880,7 +880,7 @@ public class EntityCQRNetherDragon extends AbstractEntityCQRBoss implements IEnt
             if (this.onGround)
             {
                 BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
-                IBlockState underState = this.world.getBlockState(underPos);
+                BlockState underState = this.world.getBlockState(underPos);
                 f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.91F;
             }
 
@@ -891,7 +891,7 @@ public class EntityCQRNetherDragon extends AbstractEntityCQRBoss implements IEnt
             if (this.onGround)
             {
                 BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
-                IBlockState underState = this.world.getBlockState(underPos);
+                BlockState underState = this.world.getBlockState(underPos);
                 f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.91F;
             }
 

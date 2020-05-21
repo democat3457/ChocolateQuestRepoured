@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.tileentity;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -55,7 +55,7 @@ public class TileEntityTable extends TileEntitySyncClient {
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
 		return (oldState.getBlock() != newSate.getBlock());
 	}
 

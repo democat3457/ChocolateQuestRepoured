@@ -13,7 +13,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.rooms.segments.RoomWalls;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -169,7 +169,7 @@ public abstract class CastleRoomBase {
         }
     }
 
-	protected IBlockState getFloorBlock(DungeonCastle dungeon) {
+	protected BlockState getFloorBlock(DungeonCastle dungeon) {
 		return dungeon.getFloorBlockState();
 	}
 

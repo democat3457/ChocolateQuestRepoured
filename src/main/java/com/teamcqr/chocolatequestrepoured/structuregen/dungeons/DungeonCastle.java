@@ -13,7 +13,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.EnumMCWoodType;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.state.IProperty;
 import net.minecraft.world.World;
 
@@ -27,17 +27,17 @@ public class DungeonCastle extends DungeonBase {
 	private int maxSize;
 	private int roomSize;
 	private int floorHeight;
-	private IBlockState mainBlock;
-	private IBlockState fancyBlock;
-	private IBlockState slabBlock;
-	private IBlockState stairBlock;
-	private IBlockState roofBlock;
-	private IBlockState fenceBlock;
-	private IBlockState floorBlock;
-	private IBlockState woodStairBlock;
-	private IBlockState woodSlabBlock;
-	private IBlockState plankBlock;
-	private IBlockState doorBlock;
+	private BlockState mainBlock;
+	private BlockState fancyBlock;
+	private BlockState slabBlock;
+	private BlockState stairBlock;
+	private BlockState roofBlock;
+	private BlockState fenceBlock;
+	private BlockState floorBlock;
+	private BlockState woodStairBlock;
+	private BlockState woodSlabBlock;
+	private BlockState plankBlock;
+	private BlockState doorBlock;
 
 	private CQRWeightedRandom<RandomCastleConfigOptions.RoofType> roofTypeRandomizer;
 	private CQRWeightedRandom<RandomCastleConfigOptions.WindowType> windowTypeRandomizer;
@@ -110,50 +110,50 @@ public class DungeonCastle extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		IDungeonGenerator generator = new GeneratorCastle(this);
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunkAt(x >> 4, z >> 4), x, y, z);
 	}
 
-	public IBlockState getMainBlockState() {
+	public BlockState getMainBlockState() {
 		return this.mainBlock;
 	}
 
-	public IBlockState getFancyBlockState() {
+	public BlockState getFancyBlockState() {
 		return fancyBlock;
 	}
 
-	public IBlockState getSlabBlockState() {
+	public BlockState getSlabBlockState() {
 		return slabBlock;
 	}
 
-	public IBlockState getStairBlockState() {
+	public BlockState getStairBlockState() {
 		return stairBlock;
 	}
 
-	public IBlockState getFloorBlockState() {
+	public BlockState getFloorBlockState() {
 		return this.floorBlock;
 	}
 
-	public IBlockState getRoofBlockState() {
+	public BlockState getRoofBlockState() {
 		return this.roofBlock;
 	}
 
-	public IBlockState getFenceBlockState() {
+	public BlockState getFenceBlockState() {
 		return fenceBlock;
 	}
 
-	public IBlockState getWoodStairBlockState() {
+	public BlockState getWoodStairBlockState() {
 		return this.woodStairBlock;
 	}
 
-	public IBlockState getWoodSlabBlockState() {
+	public BlockState getWoodSlabBlockState() {
 		return woodSlabBlock;
 	}
 
-	public IBlockState getPlankBlockState() {
+	public BlockState getPlankBlockState() {
 		return plankBlock;
 	}
 
-	public IBlockState getDoorBlockState() {
+	public BlockState getDoorBlockState() {
 		return doorBlock;
 	}
 

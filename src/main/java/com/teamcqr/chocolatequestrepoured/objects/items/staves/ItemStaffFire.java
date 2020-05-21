@@ -10,7 +10,7 @@ import com.teamcqr.chocolatequestrepoured.util.IRangedWeapon;
 
 import net.java.games.input.Keyboard;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -71,7 +71,7 @@ public class ItemStaffFire extends Item implements IRangedWeapon {
 
 		if (result != null && !worldIn.isRemote) {
 			BlockPos pos = new BlockPos(result.hitVec);
-			IBlockState blockStateLookingAt = worldIn.getBlockState(pos);
+			BlockState blockStateLookingAt = worldIn.getBlockState(pos);
 
 			if (blockStateLookingAt.getBlock() == ModBlocks.UNLIT_TORCH) {
 				worldIn.setBlockState(pos, Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, blockStateLookingAt.getValue(BlockUnlitTorch.FACING)));

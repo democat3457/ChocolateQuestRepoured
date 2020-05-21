@@ -105,7 +105,7 @@ public class DungeonStrongholdLinear extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		IDungeonGenerator generator = new GeneratorStronghold(this);
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	public int getMinFloors() {

@@ -12,6 +12,7 @@ import com.teamcqr.chocolatequestrepoured.util.Perlin3D;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -197,12 +198,8 @@ public class PlateauBuilder {
 					double perlin2 = perlinNoise2.getNoiseAt(startPos.getX() + iX, startPos.getY() + iY, startPos.getZ() + iZ);
 
 					if ((perlin1 * perlin2 * (double) noise) < 0.5D) {
-						if (!Block.isEqualTo(world.getBlockState(startPos.add(iX, iY, iZ)).getBlock(), fillBlock)) {
-							if (Block.isEqualTo(fillBlock, Blocks.AIR)) {
-								world.setBlockToAir(startPos.add(iX, iY, iZ));
-							} else {
-								world.setBlockState(startPos.add(iX, iY, iZ), fillBlock.getDefaultState(), 2);
-							}
+						if (!(world.getBlockState(startPos.add(iX, iY, iZ)).getBlock() == fillBlock)) {
+							world.setBlockState(startPos.add(iX, iY, iZ), fillBlock.getDefaultState(), 2);
 						}
 					}
 				}

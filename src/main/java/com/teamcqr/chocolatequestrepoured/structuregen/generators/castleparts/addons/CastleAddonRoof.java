@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.Ra
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -46,7 +46,7 @@ public class CastleAddonRoof implements ICastleAddon {
 		int x = this.startPos.getX();
 		int y = this.startPos.getY();
 		int z = this.startPos.getZ();
-		IBlockState blockState = dungeon.getRoofBlockState();
+		BlockState blockState = dungeon.getRoofBlockState();
 		boolean xIsLongSide;
 
 		if (sizeX > sizeZ) {
@@ -61,7 +61,7 @@ public class CastleAddonRoof implements ICastleAddon {
 
 		do {
 			// Add the foundation under the roof
-			IBlockState state = dungeon.getMainBlockState();
+			BlockState state = dungeon.getMainBlockState();
 			if (underLenX > 0 && underLenZ > 0)
 			{
 				for (int i = 0; i < underLenX; i++) {
@@ -126,7 +126,7 @@ public class CastleAddonRoof implements ICastleAddon {
 
 		do {
 			// Add the foundation under the roof
-			IBlockState state = dungeon.getMainBlockState();
+			BlockState state = dungeon.getMainBlockState();
 			if (underLenX > 0 && underLenZ > 0)
 			{
 				for (int i = 0; i < underLenX; i++)
@@ -148,7 +148,7 @@ public class CastleAddonRoof implements ICastleAddon {
 
 			// add the north row
 			for (int i = 0; i < roofLenX; i++) {
-				IBlockState blockState = dungeon.getRoofBlockState();
+				BlockState blockState = dungeon.getRoofBlockState();
 				blockState = blockState.withProperty(BlockStairs.FACING, Direction.SOUTH);
 
 				// Apply properties to corner pieces
@@ -162,7 +162,7 @@ public class CastleAddonRoof implements ICastleAddon {
 			}
 			// add the south row
 			for (int i = 0; i < roofLenX; i++) {
-				IBlockState blockState = dungeon.getRoofBlockState();
+				BlockState blockState = dungeon.getRoofBlockState();
 				blockState = blockState.withProperty(BlockStairs.FACING, Direction.NORTH);
 
 				// Apply properties to corner pieces
@@ -176,7 +176,7 @@ public class CastleAddonRoof implements ICastleAddon {
 			}
 
 			for (int i = 0; i < roofLenZ; i++) {
-				IBlockState blockState = dungeon.getRoofBlockState().withProperty(BlockStairs.FACING, Direction.EAST);
+				BlockState blockState = dungeon.getRoofBlockState().withProperty(BlockStairs.FACING, Direction.EAST);
 				genArray.addBlockState(new BlockPos(roofX, y, roofZ + i), blockState, BlockStateGenArray.GenerationPhase.MAIN);
 
 				blockState = dungeon.getRoofBlockState().withProperty(BlockStairs.FACING, Direction.WEST);

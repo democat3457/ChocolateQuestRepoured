@@ -12,7 +12,7 @@ import com.teamcqr.chocolatequestrepoured.structureprot.ProtectedRegion;
 import com.teamcqr.chocolatequestrepoured.util.BlockPlacingHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -48,7 +48,7 @@ public class ExtendedBlockStatePart implements IStructure {
 		}
 	}
 
-	public ExtendedBlockStatePart(BlockPos pos, BlockPos size, IBlockState[][][] blockStateArray) {
+	public ExtendedBlockStatePart(BlockPos pos, BlockPos size, BlockState[][][] blockStateArray) {
 		this.pos = pos;
 		this.size = size;
 		this.extendedstates = new ExtendedBlockState[this.size.getX()][this.size.getY()][this.size.getZ()];
@@ -92,9 +92,9 @@ public class ExtendedBlockStatePart implements IStructure {
 	public CompoundNBT writeToNBT() {
 		CompoundNBT compound = new CompoundNBT();
 
-		compound.setString("id", "extendedBlockStatePart");
-		compound.setTag("pos", NBTUtil.createPosTag(this.pos));
-		compound.setTag("size", NBTUtil.createPosTag(this.size));
+		compound.putString("id", "extendedBlockStatePart");
+		compound.put("pos", NBTUtil.writeBlockPos(this.pos));
+		compound.put("size", NBTUtil.writeBlockPos(this.size));
 
 		ListNBT nbtTagList = new ListNBT();
 		for (int x = 0; x < this.size.getX(); x++) {
@@ -104,43 +104,43 @@ public class ExtendedBlockStatePart implements IStructure {
 					ExtendedBlockState extendedstate = this.extendedstates[x][y][z];
 
 					if (extendedstate != null) {
-						IBlockState blockstate = extendedstate.getState();
+						BlockState blockstate = extendedstate.getState();
 						Block block = blockstate.getBlock();
-						tag.setString("block", block.getRegistryName().toString());
-						tag.setInteger("meta", block.getMetaFromState(blockstate));
+						tag.putString("block", block.getRegistryName().toString());
+						tag.putInt("meta", block.getMetaFromState(blockstate));
 						CompoundNBT tileentitydata = extendedstate.getTileentitydata();
 
 						if (tileentitydata != null) {
-							tag.setTag("nbt", tileentitydata);
+							tag.put("nbt", tileentitydata);
 						}
 					}
-					nbtTagList.appendTag(tag);
+					nbtTagList.add(tag);
 				}
 			}
 		}
-		compound.setTag("blocks", nbtTagList);
+		compound.put("blocks", nbtTagList);
 
 		return compound;
 	}
 
 	@Override
 	public void readFromNBT(CompoundNBT compound) {
-		this.pos = NBTUtil.getPosFromTag(compound.getCompoundTag("pos"));
-		this.size = NBTUtil.getPosFromTag(compound.getCompoundTag("size"));
+		this.pos = NBTUtil.readBlockPos(compound.getCompound("pos"));
+		this.size = NBTUtil.readBlockPos(compound.getCompound("size"));
 		this.extendedstates = new ExtendedBlockState[this.size.getX()][this.size.getY()][this.size.getZ()];
 
-		ListNBT nbtTagList = compound.getTagList("blocks", 10);
+		ListNBT nbtTagList = compound.getList("blocks", 10);
 		for (int x = 0; x < this.size.getX(); x++) {
 			for (int y = 0; y < this.size.getY(); y++) {
 				for (int z = 0; z < this.size.getZ(); z++) {
-					CompoundNBT tag = nbtTagList.getCompoundTagAt(x * this.size.getY() * this.size.getZ() + y * this.size.getZ() + z);
+					CompoundNBT tag = nbtTagList.getCompound(x * this.size.getY() * this.size.getZ() + y * this.size.getZ() + z);
 
-					if (tag.hasKey("block")) {
+					if (tag.contains("block")) {
 						Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("block")));
 
 						if (block != null) {
-							IBlockState blockstate = block.getStateFromMeta(tag.getInteger("meta"));
-							CompoundNBT tileentitydata = tag.hasKey("nbt") ? tag.getCompoundTag("nbt") : null;
+							BlockState blockstate = block.getStateFromMeta(tag.getInt("meta"));
+							CompoundNBT tileentitydata = tag.contains("nbt") ? tag.getCompound("nbt") : null;
 							this.extendedstates[x][y][z] = new ExtendedBlockState(blockstate, tileentitydata);
 						}
 					}
@@ -167,7 +167,7 @@ public class ExtendedBlockStatePart implements IStructure {
 	/**
 	 * @param map BlockPos keys are coordinates in the world
 	 */
-	public static List<ExtendedBlockStatePart> splitBlockStateMap(Map<BlockPos, IBlockState> map) {
+	public static List<ExtendedBlockStatePart> splitBlockStateMap(Map<BlockPos, BlockState> map) {
 		return ExtendedBlockStatePart.splitBlockStateList(new ArrayList<>(map.entrySet()));
 	}
 
@@ -175,7 +175,7 @@ public class ExtendedBlockStatePart implements IStructure {
 	 * @param pos Start position
 	 * @param map BlockPos keys are the relative coordinates to the start position
 	 */
-	public static List<ExtendedBlockStatePart> splitBlockStateMap(BlockPos pos, Map<BlockPos, IBlockState> map) {
+	public static List<ExtendedBlockStatePart> splitBlockStateMap(BlockPos pos, Map<BlockPos, BlockState> map) {
 		return ExtendedBlockStatePart.splitBlockStateList(pos, new ArrayList<>(map.entrySet()));
 	}
 
@@ -228,10 +228,10 @@ public class ExtendedBlockStatePart implements IStructure {
 	/**
 	 * @param entryList BlockPos keys are coordinates in the world
 	 */
-	public static List<ExtendedBlockStatePart> splitBlockStateList(List<Map.Entry<BlockPos, IBlockState>> entryList) {
+	public static List<ExtendedBlockStatePart> splitBlockStateList(List<Map.Entry<BlockPos, BlockState>> entryList) {
 		if (!entryList.isEmpty()) {
 			List<Map.Entry<BlockPos, ExtendedBlockState>> list = new ArrayList<>(entryList.size());
-			for (Map.Entry<BlockPos, IBlockState> entry : entryList) {
+			for (Map.Entry<BlockPos, BlockState> entry : entryList) {
 				list.add(new AbstractMap.SimpleEntry<>(entry.getKey(), new ExtendedBlockState(entry.getValue(), null)));
 			}
 			return ExtendedBlockStatePart.splitExtendedBlockStateList(list);
@@ -244,10 +244,10 @@ public class ExtendedBlockStatePart implements IStructure {
 	 * @param pos       Start position
 	 * @param entryList BlockPos keys are the relative coordinates to the start position
 	 */
-	public static List<ExtendedBlockStatePart> splitBlockStateList(BlockPos pos, List<Map.Entry<BlockPos, IBlockState>> entryList) {
+	public static List<ExtendedBlockStatePart> splitBlockStateList(BlockPos pos, List<Map.Entry<BlockPos, BlockState>> entryList) {
 		if (!entryList.isEmpty()) {
 			List<Map.Entry<BlockPos, ExtendedBlockState>> list = new ArrayList<>(entryList.size());
-			for (Map.Entry<BlockPos, IBlockState> entry : entryList) {
+			for (Map.Entry<BlockPos, BlockState> entry : entryList) {
 				list.add(new AbstractMap.SimpleEntry<>(entry.getKey(), new ExtendedBlockState(entry.getValue(), null)));
 			}
 			return ExtendedBlockStatePart.splitExtendedBlockStateList(pos, list);
@@ -351,7 +351,7 @@ public class ExtendedBlockStatePart implements IStructure {
 	 * @param pos   Start position
 	 * @param array Array keys are the relative coordinates to the start position
 	 */
-	public static List<ExtendedBlockStatePart> split(BlockPos pos, IBlockState[][][] array) {
+	public static List<ExtendedBlockStatePart> split(BlockPos pos, BlockState[][][] array) {
 		return ExtendedBlockStatePart.split(pos, array, 16);
 	}
 
@@ -392,7 +392,7 @@ public class ExtendedBlockStatePart implements IStructure {
 	 * @param array Array keys are the relative coordinates to the start position
 	 * @param size  Size of the parts
 	 */
-	public static List<ExtendedBlockStatePart> split(BlockPos pos, IBlockState[][][] array, int size) {
+	public static List<ExtendedBlockStatePart> split(BlockPos pos, BlockState[][][] array, int size) {
 		if (array.length > 0 && array[0].length > 0 && array[0][0].length > 0) {
 			ExtendedBlockState[][][] blocks = new ExtendedBlockState[array.length][array[0].length][array[0][0].length];
 			for (int x = 0; x < blocks.length; x++) {
@@ -461,15 +461,15 @@ public class ExtendedBlockStatePart implements IStructure {
 
 	public static class ExtendedBlockState {
 
-		private IBlockState state;
+		private BlockState state;
 		private CompoundNBT tileentitydata;
 
-		public ExtendedBlockState(IBlockState state, @Nullable CompoundNBT tileentitydata) {
+		public ExtendedBlockState(BlockState state, @Nullable CompoundNBT tileentitydata) {
 			this.state = state;
 			this.tileentitydata = tileentitydata;
 		}
 
-		public IBlockState getState() {
+		public BlockState getState() {
 			return this.state;
 		}
 

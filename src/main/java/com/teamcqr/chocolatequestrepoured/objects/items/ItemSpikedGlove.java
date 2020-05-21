@@ -1,7 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.items;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -87,7 +87,7 @@ public class ItemSpikedGlove extends Item {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -112,7 +112,7 @@ public class ItemSpikedGlove extends Item {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -137,7 +137,7 @@ public class ItemSpikedGlove extends Item {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {
@@ -158,7 +158,7 @@ public class ItemSpikedGlove extends Item {
 			}
 
 			BlockPos blockpos = new BlockPos(i, j, k);
-			IBlockState iblockstate = world.getBlockState(blockpos);
+			BlockState iblockstate = world.getBlockState(blockpos);
 
 			if (!iblockstate.getBlock().addRunningEffects(iblockstate, world, blockpos, player)) {
 				if (iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE) {

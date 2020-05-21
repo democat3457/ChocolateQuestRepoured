@@ -57,7 +57,7 @@ public class EntityDataPart implements IStructure {
     @Override
     public void generate(World world, ProtectedRegion protectedRegion)
     {
-        //Map<BlockPos, IBlockState> map = new HashMap<>();
+        //Map<BlockPos, BlockState> map = new HashMap<>();
         for (int x = 0; x < extendedEntities.length; x++) {
             for (int y = 0; y < extendedEntities[x].length; y++) {
                 for (int z = 0; z < extendedEntities[x][y].length; z++) {

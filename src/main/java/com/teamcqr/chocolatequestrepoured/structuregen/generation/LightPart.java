@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.structuregen.generation;
 
 import com.teamcqr.chocolatequestrepoured.structureprot.ProtectedRegion;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +36,7 @@ public class LightPart implements IStructure {
 		for (BlockPos.MutableBlockPos mutablePos : BlockPos.getAllInBoxMutable(this.startPos, this.endPos)) {
 			world.checkLight(mutablePos);
 			Chunk chunk = world.getChunkFromBlockCoords(mutablePos);
-			IBlockState state = chunk.getBlockState(mutablePos);
+			BlockState state = chunk.getBlockState(mutablePos);
 			world.markAndNotifyBlock(mutablePos, chunk, state, state, 18);
 		}
 	}

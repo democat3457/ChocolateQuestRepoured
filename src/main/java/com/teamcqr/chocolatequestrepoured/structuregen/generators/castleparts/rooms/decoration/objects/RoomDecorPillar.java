@@ -8,7 +8,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -34,9 +34,9 @@ public class RoomDecorPillar extends RoomDecorBlocksBase {
     private ArrayList<DecoBlockBase> getSizedSchematic(CastleRoomBase room) {
         ArrayList<DecoBlockBase> sizedSchematic = new ArrayList<>();
         int height = room.getDecorationLengthY();
-        final IBlockState lowerStairs = Blocks.STONE_BRICK_STAIRS.getDefaultState();
-        final IBlockState upperStairs = Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP);
-        IBlockState stairs;
+        final BlockState lowerStairs = Blocks.STONE_BRICK_STAIRS.getDefaultState();
+        final BlockState upperStairs = Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP);
+        BlockState stairs;
         final BlockStateGenArray.GenerationPhase genPhase = BlockStateGenArray.GenerationPhase.MAIN;
 
         stairs = lowerStairs.withProperty(BlockStairs.FACING, Direction.SOUTH);

@@ -4,7 +4,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.SpiralStaircaseBuilder;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,7 +21,7 @@ public class CastleRoomLandingSpiral extends CastleRoomDecoratedBase {
 	@Override
 	public void generateRoom(BlockStateGenArray genArray, DungeonCastle dungeon) {
 		BlockPos pos;
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 		BlockPos pillarStart = new BlockPos(this.stairsBelow.getCenterX(), this.origin.getY(), this.stairsBelow.getCenterZ());
 		Direction firstStairSide = this.stairsBelow.getLastStairSide().rotateY();
 

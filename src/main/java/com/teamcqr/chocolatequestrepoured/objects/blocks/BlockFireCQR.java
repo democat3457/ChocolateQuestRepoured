@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class BlockFireCQR extends BlockFire {
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+	public void updateTick(World worldIn, BlockPos pos, BlockState state, Random rand) {
 		if (worldIn.getGameRules().getBoolean("doFireTick")) {
 			if (!worldIn.isAreaLoaded(pos, 2)) {
 				return; // Forge: prevent loading unloaded chunks when spreading fire
@@ -126,7 +126,7 @@ public class BlockFireCQR extends BlockFire {
 		int i = worldIn.getBlockState(pos).getBlock().getFlammability(worldIn, pos, face);
 
 		if (random.nextInt(chance) < i) {
-			IBlockState iblockstate = worldIn.getBlockState(pos);
+			BlockState iblockstate = worldIn.getBlockState(pos);
 
 			if (random.nextInt(age + 10) < 5 && !worldIn.isRainingAt(pos)) {
 				int j = age + random.nextInt(5) / 4;

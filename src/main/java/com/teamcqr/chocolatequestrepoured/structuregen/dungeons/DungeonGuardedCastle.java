@@ -9,6 +9,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.World;
 
 /**
@@ -60,7 +61,7 @@ public class DungeonGuardedCastle extends DungeonBase {
 			((GeneratorGuardedStructure) generator).addStructure(this.getStructureFileFromDirectory(this.structureFolder));
 		}
 
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	public int getMinDistance() {

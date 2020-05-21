@@ -9,7 +9,7 @@ import com.teamcqr.chocolatequestrepoured.CQRMain;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -154,7 +154,7 @@ public class PropertyFileHelper {
 		return retVal;
 	}
 
-	public static IBlockState getDefaultStateBlockProperty(Properties prop, String key, IBlockState defVal) {
+	public static BlockState getDefaultStateBlockProperty(Properties prop, String key, BlockState defVal) {
 		String s = prop.getProperty(key);
 		if (s == null || s.isEmpty()) {
 			return defVal;
@@ -163,7 +163,7 @@ public class PropertyFileHelper {
 		Block retBlock = Block.getBlockFromName(s);
 		if (retBlock == null) {
 			//Try one last thing - to see if the block exists only as a block variant in forge 1.12
-			IBlockState variantState = EnumForgeBlockVariant.getVariantStateFromName(s);
+			BlockState variantState = EnumForgeBlockVariant.getVariantStateFromName(s);
 			if (variantState == null) {
 				return defVal;
 			} else {

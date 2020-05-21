@@ -10,6 +10,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.World;
 
 /**
@@ -29,7 +30,7 @@ public class DungeonNetherCity extends DungeonBase {
 	// private boolean singleAirPocketsForHouses = false;
 	private boolean specialUseForCentralBuilding = false;
 	private boolean makeSpaceForBuildings = true;
-	private Block bridgeBlock = Blocks.NETHER_BRICK;
+	private Block bridgeBlock = Blocks.NETHER_BRICKS;
 	private Block floorBlock = Blocks.LAVA;
 	private Block airBlockForPocket = Blocks.AIR;
 
@@ -56,7 +57,7 @@ public class DungeonNetherCity extends DungeonBase {
 
 		this.bridgeSizeMultiplier = PropertyFileHelper.getDoubleProperty(prop, "bridgelengthmultiplier", 1.2D);
 
-		this.bridgeBlock = PropertyFileHelper.getBlockProperty(prop, "streetblock", Blocks.NETHER_BRICK);
+		this.bridgeBlock = PropertyFileHelper.getBlockProperty(prop, "streetblock", Blocks.NETHER_BRICKS);
 		this.floorBlock = PropertyFileHelper.getBlockProperty(prop, "floorblock", Blocks.LAVA);
 		this.airBlockForPocket = PropertyFileHelper.getBlockProperty(prop, "airPocketBlock", Blocks.AIR);
 
@@ -87,7 +88,7 @@ public class DungeonNetherCity extends DungeonBase {
 		}
 
 		IDungeonGenerator generator = new GeneratorGridCity(this);
-		generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	public int getCaveHeight() {

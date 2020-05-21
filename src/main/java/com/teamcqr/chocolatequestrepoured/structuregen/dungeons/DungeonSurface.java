@@ -43,7 +43,7 @@ public class DungeonSurface extends DungeonBase {
 			}
 
 			IDungeonGenerator generator = new GeneratorSurface(this, structure, settings);
-			generator.generate(world, world.getChunkFromChunkCoords(x >> 4, z >> 4), x, y, z);
+			generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 		}
 	}
 

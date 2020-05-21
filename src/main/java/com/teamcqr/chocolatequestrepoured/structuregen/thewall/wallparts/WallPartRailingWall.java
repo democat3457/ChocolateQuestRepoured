@@ -16,7 +16,7 @@ import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 
 import net.minecraft.block.BlockStoneSlab;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -131,7 +131,7 @@ public class WallPartRailingWall implements IWallPart {
 			((ItemArmorDyable) ModItems.BOOTS_IRON_DYABLE).setColor(boots, 000000);
 			spawnerEnt.setItemStackToSlot(EquipmentSlotType.FEET, boots);
 
-			IBlockState state2 = ModBlocks.SPAWNER.getDefaultState();
+			BlockState state2 = ModBlocks.SPAWNER.getDefaultState();
 			TileEntitySpawner tileSpawner = (TileEntitySpawner) ModBlocks.SPAWNER.createTileEntity(world, state2);
 			tileSpawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(spawnerEnt));
 

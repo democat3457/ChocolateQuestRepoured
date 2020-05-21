@@ -8,7 +8,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -85,14 +85,14 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	}
 
 	private void buildFloorBlock(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
-		IBlockState blockToBuild = dungeon.getFloorBlockState();
+		BlockState blockToBuild = dungeon.getFloorBlockState();
 		genArray.addBlockState(this.origin.add(x, 0, z), blockToBuild, BlockStateGenArray.GenerationPhase.MAIN);
 	}
 
 	private void buildUpperStair(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
 		int stairHeight = this.centerStairLength + (z - PLATFORM_LENGTH);
 		Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.SOUTH, this.numRotations);
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 		for (int y = 1; y < this.height; y++) {
 			if (y < stairHeight) {
 				blockToBuild = dungeon.getMainBlockState();
@@ -108,7 +108,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	private void buildLowerStair(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
 		int stairHeight = this.centerStairLength - (z - PLATFORM_LENGTH + 1);
 		Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 		for (int y = 1; y < this.height; y++) {
 			if (y < stairHeight) {
 				blockToBuild = dungeon.getMainBlockState();
@@ -122,7 +122,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	}
 
 	private void buildPlatform(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 		int platformHeight = this.centerStairLength; // the stair length is also the platform height
 
 		for (int y = 1; y < this.height; y++) {

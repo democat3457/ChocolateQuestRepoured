@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
@@ -14,9 +14,9 @@ public class GenerationTemplate {
 
     private class GenerationRule {
         public Predicate<Vec3i> condition;
-        public IBlockState block;
+        public BlockState block;
 
-        public GenerationRule(Predicate<Vec3i> condition, IBlockState blockToBuild)
+        public GenerationRule(Predicate<Vec3i> condition, BlockState blockToBuild)
         {
             this.condition = condition;
             this.block = blockToBuild;
@@ -26,7 +26,7 @@ public class GenerationTemplate {
             return condition;
         }
 
-        public IBlockState getBlock() {
+        public BlockState getBlock() {
             return block;
         }
     }
@@ -50,12 +50,12 @@ public class GenerationTemplate {
         this.lengthZ = dimensions.getZ();
     }
 
-    public void addRule(Predicate<Vec3i> condition, IBlockState blockToBuild) {
+    public void addRule(Predicate<Vec3i> condition, BlockState blockToBuild) {
         generationRules.add(new GenerationRule(condition, blockToBuild));
     }
 
-    public HashMap<BlockPos, IBlockState> GetGenerationMap(BlockPos origin, boolean fillUnusedWithAir) {
-        HashMap<BlockPos, IBlockState> result = new HashMap<>();
+    public HashMap<BlockPos, BlockState> GetGenerationMap(BlockPos origin, boolean fillUnusedWithAir) {
+        HashMap<BlockPos, BlockState> result = new HashMap<>();
 
         for (int x = 0; x < lengthX; x++) {
             for (int z = 0; z < lengthZ; z++) {
@@ -84,7 +84,7 @@ public class GenerationTemplate {
         return result;
     }
 
-    public ArrayList<Map.Entry<BlockPos, IBlockState>> GetGenerationList(BlockPos origin, boolean fillUnusedWithAir) {
+    public ArrayList<Map.Entry<BlockPos, BlockState>> GetGenerationList(BlockPos origin, boolean fillUnusedWithAir) {
         return new ArrayList<>(GetGenerationMap(origin, fillUnusedWithAir).entrySet());
     }
 }

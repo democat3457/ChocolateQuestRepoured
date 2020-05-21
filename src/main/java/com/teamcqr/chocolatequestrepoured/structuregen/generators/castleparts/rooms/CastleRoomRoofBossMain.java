@@ -20,7 +20,7 @@ import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -59,7 +59,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 	public void generateRoom(BlockStateGenArray genArray, DungeonCastle dungeon) {
 		BlockPos nwCorner = this.getBossRoomBuildStartPosition();
 		BlockPos pos;
-		IBlockState blockToBuild;
+		BlockState blockToBuild;
 		this.dungeon = dungeon;
 
 		for (int x = 0; x < BOSS_ROOM_STATIC_SIZE; x++) {
@@ -109,7 +109,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 
 		if (mobEntity != null) {
 			Block spawnerBlock = ModBlocks.SPAWNER;
-			IBlockState state = spawnerBlock.getDefaultState();
+			BlockState state = spawnerBlock.getDefaultState();
 			TileEntitySpawner spawner = (TileEntitySpawner)spawnerBlock.createTileEntity(world, state);
 			if (spawner != null) {
 				spawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(mobEntity));
@@ -122,7 +122,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 	}
 
 	private void placeTorches(BlockPos nwCorner, BlockStateGenArray genArray) {
-		IBlockState torchBase = Blocks.TORCH.getDefaultState();
+		BlockState torchBase = Blocks.TORCH.getDefaultState();
 		genArray.addBlockState(nwCorner.add(10, 3, 2), torchBase.withProperty(BlockTorch.FACING, Direction.SOUTH), BlockStateGenArray.GenerationPhase.POST);
 		genArray.addBlockState(nwCorner.add(6, 3, 2), torchBase.withProperty(BlockTorch.FACING, Direction.SOUTH), BlockStateGenArray.GenerationPhase.POST);
 		genArray.addBlockState(nwCorner.add(6, 3, 14), torchBase.withProperty(BlockTorch.FACING, Direction.NORTH), BlockStateGenArray.GenerationPhase.POST);
@@ -175,8 +175,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return this.getNonWallStartPos().add(this.bossBuildOffset);
 	}
 
-	private IBlockState getBlockToBuild(int x, int y, int z) {
-		IBlockState blockToBuild = Blocks.AIR.getDefaultState();
+	private BlockState getBlockToBuild(int x, int y, int z) {
+		BlockState blockToBuild = Blocks.AIR.getDefaultState();
 		if (y == 0 || y == 7) {
 			if (this.floorDesignBlock(x, z)) {
 				blockToBuild = Blocks.CONCRETE.getDefaultState();
@@ -227,7 +227,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		}
 	}
 
-	private IBlockState getOuterEdgeBlock(int x, int y, int z) {
+	private BlockState getOuterEdgeBlock(int x, int y, int z) {
 		if (x == 0 || x == 16) {
 			if (z == 0 || z == 3 || z == 6 || z == 10 || z == 13 || z == 16) {
 				return dungeon.getMainBlockState();
@@ -287,8 +287,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return dungeon.getMainBlockState();
 	}
 
-	private IBlockState getInnerRing1Block(int x, int y, int z) {
-		final IBlockState detailBlock = dungeon.getFancyBlockState();
+	private BlockState getInnerRing1Block(int x, int y, int z) {
+		final BlockState detailBlock = dungeon.getFancyBlockState();
 
 		if (x == 1 || x == 15) {
 			if (z == 3 || z == 6 || z == 10 || z == 13) {
@@ -325,7 +325,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return Blocks.AIR.getDefaultState();
 	}
 
-	private IBlockState getInnerRing2Block(int x, int y, int z) {
+	private BlockState getInnerRing2Block(int x, int y, int z) {
 		if (x == 2 || x == 14) {
 			if ((z == 2 || z == 14) && y == 1) {
 				return Blocks.LAVA.getDefaultState();
@@ -355,7 +355,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return Blocks.AIR.getDefaultState();
 	}
 
-	private IBlockState getInnerRing3Block(int x, int y, int z) {
+	private BlockState getInnerRing3Block(int x, int y, int z) {
 		if ((x == 3 || x == 13) && z == 3) {
 			if (y >= 2 & y <= 5) {
 				return Blocks.IRON_BARS.getDefaultState();

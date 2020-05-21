@@ -10,11 +10,12 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockVine;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.VineBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 
 public class DungeonVegetatedCave extends DungeonBase {
 	
@@ -46,12 +47,12 @@ public class DungeonVegetatedCave extends DungeonBase {
 		super(name, prop);
 		this.vineBlock = PropertyFileHelper.getBlockProperty(prop, "vineBlock", Blocks.VINE);
 		//DONE: Add a non-cross-shape vine thing
-		this.crossVine = (this.vineBlock instanceof BlockVine);
+		this.crossVine = (this.vineBlock instanceof VineBlock);
 		this.airBlock = PropertyFileHelper.getBlockProperty(prop, "airBlock", Blocks.AIR);
-		this.pumpkinBlock = PropertyFileHelper.getBlockProperty(prop, "lanternBlock", Blocks.LIT_PUMPKIN);
+		this.pumpkinBlock = PropertyFileHelper.getBlockProperty(prop, "lanternBlock", Blocks.JACK_O_LANTERN);
 		this.flowerBlocks = PropertyFileHelper.getBlockArrayProperty(prop, "flowerBlocks", new Block[] {
-			Blocks.RED_FLOWER,
-			Blocks.YELLOW_FLOWER
+			Blocks.POPPY,
+			Blocks.DANDELION
 		});
 		this.mushrooms = PropertyFileHelper.getBlockArrayProperty(prop, "mushroomBlocks", new Block[] {
 			Blocks.BROWN_MUSHROOM,
@@ -77,8 +78,8 @@ public class DungeonVegetatedCave extends DungeonBase {
 		this.vineLatchBlock = PropertyFileHelper.getBlockProperty(prop, "vineLatchBlock", Blocks.COBBLESTONE);
 		this.tunnelStartSize = PropertyFileHelper.getIntProperty(prop, "tunnelStartSize", 10);
 		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTableList.CHESTS_ABANDONED_MINESHAFT,
-				LootTableList.CHESTS_NETHER_BRIDGE,
+				LootTables.CHESTS_ABANDONED_MINESHAFT,
+				LootTables.CHESTS_NETHER_BRIDGE,
 				ModLoottables.CHESTS_FOOD
 		});
 		this.skipCeilingFiltering = PropertyFileHelper.getBooleanProperty(prop, "skipCeilingFiltering", false);
@@ -87,7 +88,7 @@ public class DungeonVegetatedCave extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		GeneratorVegetatedCave generator = new GeneratorVegetatedCave(this);
-		generator.generate(world, world.getChunkFromBlockCoords(new BlockPos(x,y,z)), x, posY, z);
+		generator.generate(world, world.getChunkAt(new BlockPos(x,y,z)), x, posY, z);
 	}
 	
 	public File getRandomCentralBuilding() {
