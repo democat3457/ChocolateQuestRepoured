@@ -65,7 +65,7 @@ public class BlockExporterChest extends BlockHorizontal {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
+		return this.getDefaultState().withProperty(FACING, Direction.getHorizontal(meta));
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class BlockExporterChest extends BlockHorizontal {
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, Direction face) {
 		return BlockFaceShape.UNDEFINED;
 	}
 
@@ -105,14 +105,14 @@ public class BlockExporterChest extends BlockHorizontal {
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer) {
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer) {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		EnumFacing connectedChestDirection = null;
-		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+		Direction connectedChestDirection = null;
+		for (Direction facing : Direction.HORIZONTALS) {
 			if (BlockExporterChest.isChest(worldIn.getBlockState(pos.offset(facing)).getBlock())) {
 				connectedChestDirection = facing;
 				break;
@@ -121,8 +121,8 @@ public class BlockExporterChest extends BlockHorizontal {
 
 		if (connectedChestDirection != null) {
 			IBlockState connectedChestState = worldIn.getBlockState(pos.offset(connectedChestDirection));
-			EnumFacing facing = state.getValue(FACING);
-			EnumFacing otherFacing = connectedChestState.getValue(FACING);
+			Direction facing = state.getValue(FACING);
+			Direction otherFacing = connectedChestState.getValue(FACING);
 
 			if (facing != otherFacing || facing == connectedChestDirection || facing.getOpposite() == connectedChestDirection) {
 				if (facing.rotateYCCW() == connectedChestDirection || facing.rotateY() == connectedChestDirection) {
@@ -145,7 +145,7 @@ public class BlockExporterChest extends BlockHorizontal {
 	private static boolean canPlaceChestAt(World worldIn, BlockPos pos) {
 		int i = 0;
 
-		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+		for (Direction facing : Direction.HORIZONTALS) {
 			if (isChest(worldIn.getBlockState(pos.offset(facing)).getBlock())) {
 				if (isDoubleChest(worldIn, pos, facing)) {
 					return false;
@@ -162,7 +162,7 @@ public class BlockExporterChest extends BlockHorizontal {
 		return block instanceof BlockExporterChest || block == Blocks.CHEST;
 	}
 
-	private static boolean isDoubleChest(World worldIn, BlockPos pos, EnumFacing facing) {
+	private static boolean isDoubleChest(World worldIn, BlockPos pos, Direction facing) {
 		if (isChest(worldIn.getBlockState(pos.offset(facing)).getBlock())) {
 			BlockPos blockpos = pos.offset(facing).offset(facing.rotateYCCW());
 			BlockPos blockpos1 = pos.offset(facing).offset(facing);

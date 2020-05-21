@@ -23,7 +23,7 @@ public class ModDispenseBehaviors {
 		@Override
 		public ItemStack dispense(IBlockSource source, ItemStack stack) {
 			Vec3d velocity = new Vec3d(0,0,0);
-			switch((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING)) {
+			switch((Direction)source.getBlockState().getValue(BlockDispenser.FACING)) {
 			case DOWN:
 				velocity = new Vec3d(0,-1,0);
 				break;

@@ -24,11 +24,11 @@ public class RoomDecorChest extends RoomDecorBlocksBase {
 
 	@Override
 	protected void makeSchematic() {
-		this.schematic.add(new DecoBlockRotating(0, 0, 0, Blocks.CHEST.getDefaultState(), BlockChest.FACING, EnumFacing.SOUTH, BlockStateGenArray.GenerationPhase.MAIN));
+		this.schematic.add(new DecoBlockRotating(0, 0, 0, Blocks.CHEST.getDefaultState(), BlockChest.FACING, Direction.SOUTH, BlockStateGenArray.GenerationPhase.MAIN));
 	}
 
 	@Override
-	public void build(World world, BlockStateGenArray genArray, CastleRoomBase room, DungeonCastle dungeon, BlockPos start, EnumFacing side, HashSet<BlockPos> decoMap) {
+	public void build(World world, BlockStateGenArray genArray, CastleRoomBase room, DungeonCastle dungeon, BlockPos start, Direction side, HashSet<BlockPos> decoMap) {
 		//super.build(world, genArray, room, dungeon, start, side, decoMap);
 
 		ResourceLocation[] chestIDs = room.getChestIDs();

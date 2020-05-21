@@ -9,7 +9,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class CastleRoomStaircaseSpiral extends CastleRoomDecoratedBase {
-	private EnumFacing firstStairSide;
+	private Direction firstStairSide;
 	private BlockPos pillarStart;
 
 	public CastleRoomStaircaseSpiral(BlockPos startOffset, int sideLength, int height, int floor) {
@@ -18,7 +18,7 @@ public class CastleRoomStaircaseSpiral extends CastleRoomDecoratedBase {
 		this.defaultCeiling = false;
 		this.defaultFloor = false;
 
-		this.firstStairSide = EnumFacing.NORTH;
+		this.firstStairSide = Direction.NORTH;
 		this.recalcPillarStart();
 	}
 
@@ -76,8 +76,8 @@ public class CastleRoomStaircaseSpiral extends CastleRoomDecoratedBase {
 		return false;
 	}
 
-	public EnumFacing getLastStairSide() {
-		EnumFacing result = EnumFacing.NORTH;
+	public Direction getLastStairSide() {
+		Direction result = Direction.NORTH;
 		for (int i = 0; i < this.height - 1; i++) {
 			result = result.rotateY();
 		}

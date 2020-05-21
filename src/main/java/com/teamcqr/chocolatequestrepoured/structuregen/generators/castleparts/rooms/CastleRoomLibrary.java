@@ -44,18 +44,18 @@ public class CastleRoomLibrary extends CastleRoomDecoratedBase
         shelfZLen = this.getDecorationLengthZ() - 2;
         shelfHeight = this.getDecorationLengthY() - 2; //leave some room to the ceiling
 
-        if (this.hasDoorOnSide(EnumFacing.WEST)) {
+        if (this.hasDoorOnSide(Direction.WEST)) {
             shelfStart = shelfStart.east();
             --shelfXLen;
         }
-        if (this.hasDoorOnSide(EnumFacing.EAST)) {
+        if (this.hasDoorOnSide(Direction.EAST)) {
             --shelfXLen;
         }
-        if (this.hasDoorOnSide(EnumFacing.NORTH)) {
+        if (this.hasDoorOnSide(Direction.NORTH)) {
             shelfStart = shelfStart.south();
             --shelfZLen;
         }
-        if (this.hasDoorOnSide(EnumFacing.SOUTH)) {
+        if (this.hasDoorOnSide(Direction.SOUTH)) {
             --shelfZLen;
         }
 

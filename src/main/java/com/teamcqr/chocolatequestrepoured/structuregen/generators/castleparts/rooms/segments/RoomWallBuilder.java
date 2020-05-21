@@ -26,11 +26,11 @@ public class RoomWallBuilder {
 	protected int doorHeight = 0;
 	protected int length;
 	protected int height;
-	protected EnumFacing side;
+	protected Direction side;
 	protected Random random;
 	protected RandomCastleConfigOptions.WindowType windowType = RandomCastleConfigOptions.WindowType.BASIC_GLASS;
 
-	public RoomWallBuilder(BlockPos wallStart, int height, int length, WallOptions options, EnumFacing side) {
+	public RoomWallBuilder(BlockPos wallStart, int height, int length, WallOptions options, Direction side) {
 		this.height = height;
 		this.length = length;
 		this.options = options;
@@ -49,18 +49,18 @@ public class RoomWallBuilder {
 		BlockPos pos;
 		IBlockState blockToBuild;
 
-		EnumFacing iterDirection;
+		Direction iterDirection;
 		this.windowType = dungeon.getRandomWindowType();
 
-		if (this.side.getAxis() == EnumFacing.Axis.X) {
-			iterDirection = EnumFacing.SOUTH;
+		if (this.side.getAxis() == Direction.Axis.X) {
+			iterDirection = Direction.SOUTH;
 		} else {
-			iterDirection = EnumFacing.EAST;
+			iterDirection = Direction.EAST;
 		}
 
 		for (int i = 0; i < this.length; i++) {
 			for (int y = 0; y < this.height; y++) {
-				pos = this.wallStart.offset(iterDirection, i).offset(EnumFacing.UP, y);
+				pos = this.wallStart.offset(iterDirection, i).offset(Direction.UP, y);
 				blockToBuild = this.getBlockToBuild(pos, dungeon);
 				genArray.forceAddBlockState(pos, blockToBuild, BlockStateGenArray.GenerationPhase.MAIN);
 			}
@@ -131,9 +131,9 @@ public class RoomWallBuilder {
 					blockToBuild = dungeon.getSlabBlockState().withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP);
 				}
 			} else if (dist == halfPoint + 1 || dist == halfPoint - 2) {
-				EnumFacing stairFacing;
+				Direction stairFacing;
 
-				if (this.side == EnumFacing.WEST || this.side == EnumFacing.SOUTH) {
+				if (this.side == Direction.WEST || this.side == Direction.SOUTH) {
 					stairFacing = (dist == halfPoint - 2) ? this.side.rotateY() : this.side.rotateYCCW();
 				} else {
 					stairFacing = (dist == halfPoint - 2) ? this.side.rotateYCCW() : this.side.rotateY();
@@ -191,7 +191,7 @@ public class RoomWallBuilder {
 					BlockDoor.EnumDoorHalf half = (y == 1) ? BlockDoor.EnumDoorHalf.LOWER : BlockDoor.EnumDoorHalf.UPPER;
 					BlockDoor.EnumHingePosition hinge;
 
-					if (this.side == EnumFacing.WEST || this.side == EnumFacing.SOUTH) {
+					if (this.side == Direction.WEST || this.side == Direction.SOUTH) {
 						hinge = (dist == halfPoint) ? BlockDoor.EnumHingePosition.LEFT : BlockDoor.EnumHingePosition.RIGHT;
 					} else {
 						hinge = (dist == halfPoint) ? BlockDoor.EnumHingePosition.RIGHT : BlockDoor.EnumHingePosition.LEFT;
@@ -325,7 +325,7 @@ public class RoomWallBuilder {
 	 * wall or a vertical wall.
 	 */
 	protected int getLengthPoint(BlockPos pos) {
-		if (this.side.getAxis() == EnumFacing.Axis.X) {
+		if (this.side.getAxis() == Direction.Axis.X) {
 			return pos.getZ() - this.wallStart.getZ();
 		} else {
 			return pos.getX() - this.wallStart.getX();

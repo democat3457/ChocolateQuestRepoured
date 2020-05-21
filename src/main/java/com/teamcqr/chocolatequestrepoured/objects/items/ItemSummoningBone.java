@@ -66,7 +66,7 @@ public class ItemSummoningBone extends Item {
 		RayTraceResult result = worldIn.rayTraceBlocks(start, end);
 
 		if (result != null) {
-			if(worldIn.isAirBlock(result.getBlockPos().offset(EnumFacing.UP, 1)) && worldIn.isAirBlock(new BlockPos(result.hitVec).offset(EnumFacing.UP, 2))) {
+			if(worldIn.isAirBlock(result.getBlockPos().offset(Direction.UP, 1)) && worldIn.isAirBlock(new BlockPos(result.hitVec).offset(Direction.UP, 2))) {
 				//DONE: Spawn circle
 				ResourceLocation resLoc = new ResourceLocation(Reference.MODID, "skeleton");
 				//Get entity id

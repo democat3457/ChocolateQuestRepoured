@@ -43,20 +43,20 @@ public class StairCaseHelper {
 			return EStairSection.valueOf(this.successorName);
 		}
 
-		public EnumFacing getAsSkyDirection() {
+		public Direction getAsSkyDirection() {
 			switch (this) {
 			case EAST:
 			case EAST_SEC:
-				return EnumFacing.EAST;
+				return Direction.EAST;
 			case NORTH:
 			case NORTH_SEC:
-				return EnumFacing.NORTH;
+				return Direction.NORTH;
 			case SOUTH:
 			case SOUTH_SEC:
-				return EnumFacing.SOUTH;
+				return Direction.SOUTH;
 			case WEST:
 			case WEST_SEC:
-				return EnumFacing.WEST;
+				return Direction.WEST;
 			default:
 				return null;
 			}
@@ -92,19 +92,19 @@ public class StairCaseHelper {
 		return false;
 	}
 
-	public static EnumFacing getFacingWithRotation(EnumFacing orig, Rotation rotation) {
-		EnumFacing ret = orig;
+	public static Direction getFacingWithRotation(Direction orig, Rotation rotation) {
+		Direction ret = orig;
 		switch (orig) {
 		case EAST:
 			switch (rotation) {
 			case CLOCKWISE_180:
-				ret = EnumFacing.WEST;
+				ret = Direction.WEST;
 				break;
 			case CLOCKWISE_90:
-				ret = EnumFacing.SOUTH;
+				ret = Direction.SOUTH;
 				break;
 			case COUNTERCLOCKWISE_90:
-				ret = EnumFacing.NORTH;
+				ret = Direction.NORTH;
 				break;
 			default:
 				break;
@@ -113,13 +113,13 @@ public class StairCaseHelper {
 		case NORTH:
 			switch (rotation) {
 			case CLOCKWISE_180:
-				ret = EnumFacing.SOUTH;
+				ret = Direction.SOUTH;
 				break;
 			case CLOCKWISE_90:
-				ret = EnumFacing.EAST;
+				ret = Direction.EAST;
 				break;
 			case COUNTERCLOCKWISE_90:
-				ret = EnumFacing.WEST;
+				ret = Direction.WEST;
 				break;
 			default:
 				break;
@@ -128,13 +128,13 @@ public class StairCaseHelper {
 		case SOUTH:
 			switch (rotation) {
 			case CLOCKWISE_180:
-				ret = EnumFacing.NORTH;
+				ret = Direction.NORTH;
 				break;
 			case CLOCKWISE_90:
-				ret = EnumFacing.WEST;
+				ret = Direction.WEST;
 				break;
 			case COUNTERCLOCKWISE_90:
-				ret = EnumFacing.EAST;
+				ret = Direction.EAST;
 				break;
 			default:
 				break;
@@ -143,13 +143,13 @@ public class StairCaseHelper {
 		case WEST:
 			switch (rotation) {
 			case CLOCKWISE_180:
-				ret = EnumFacing.EAST;
+				ret = Direction.EAST;
 				break;
 			case CLOCKWISE_90:
-				ret = EnumFacing.NORTH;
+				ret = Direction.NORTH;
 				break;
 			case COUNTERCLOCKWISE_90:
-				ret = EnumFacing.SOUTH;
+				ret = Direction.SOUTH;
 				break;
 			default:
 				break;

@@ -227,7 +227,7 @@ public class ItemSpearBase extends ItemSword {
 			}
 
 			if (pointedEntity == null || eyeVec.distanceTo(vec3d3) > distance) {
-				return new RayTraceResult(RayTraceResult.Type.MISS, eyeVec, (EnumFacing) null, rtResult.getBlockPos());
+				return new RayTraceResult(RayTraceResult.Type.MISS, eyeVec, (Direction) null, rtResult.getBlockPos());
 			} else {
 				return new RayTraceResult(pointedEntity, vec3d3);
 			}

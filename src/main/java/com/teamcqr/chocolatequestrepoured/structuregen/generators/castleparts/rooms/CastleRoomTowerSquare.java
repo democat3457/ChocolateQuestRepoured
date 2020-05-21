@@ -10,12 +10,12 @@ import net.minecraft.util.math.BlockPos;
 
 public class CastleRoomTowerSquare extends CastleRoomBase {
 	private static final int MIN_SIZE = 5;
-	private EnumFacing connectedSide;
+	private Direction connectedSide;
 	private int stairYOffset;
 	private BlockPos pillarStart;
-	private EnumFacing firstStairSide;
+	private Direction firstStairSide;
 
-	public CastleRoomTowerSquare(BlockPos startOffset, int sideLength, int height, EnumFacing connectedSide,
+	public CastleRoomTowerSquare(BlockPos startOffset, int sideLength, int height, Direction connectedSide,
 								 int towerSize, CastleRoomTowerSquare towerBelow, int floor) {
 		super(startOffset, sideLength, height, floor);
 		this.roomType = EnumRoomType.TOWER_SQUARE;
@@ -27,15 +27,15 @@ public class CastleRoomTowerSquare extends CastleRoomBase {
 		this.pathable = false;
 		this.isTower = true;
 
-		if (connectedSide == EnumFacing.NORTH || connectedSide == EnumFacing.SOUTH) {
+		if (connectedSide == Direction.NORTH || connectedSide == Direction.SOUTH) {
 			this.offsetX += (sideLength - this.buildLengthX) / 2;
-			if (connectedSide == EnumFacing.SOUTH) {
+			if (connectedSide == Direction.SOUTH) {
 				this.offsetZ += sideLength - this.buildLengthZ;
 			}
 		}
-		if (connectedSide == EnumFacing.WEST || connectedSide == EnumFacing.EAST) {
+		if (connectedSide == Direction.WEST || connectedSide == Direction.EAST) {
 			this.offsetZ += (sideLength - this.buildLengthZ) / 2;
-			if (connectedSide == EnumFacing.EAST) {
+			if (connectedSide == Direction.EAST) {
 				this.offsetX += sideLength - this.buildLengthX;
 			}
 		}
@@ -48,7 +48,7 @@ public class CastleRoomTowerSquare extends CastleRoomBase {
 			this.stairYOffset = 1; // account for 1 layer of floor
 		}
 
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			this.walls.addOuter(side);
 		}
 
@@ -86,8 +86,8 @@ public class CastleRoomTowerSquare extends CastleRoomBase {
 		}
 	}
 
-	public EnumFacing getLastStairSide() {
-		EnumFacing result = this.firstStairSide;
+	public Direction getLastStairSide() {
+		Direction result = this.firstStairSide;
 		for (int i = this.stairYOffset; i < this.height - 1; i++) {
 			result = result.rotateY();
 		}

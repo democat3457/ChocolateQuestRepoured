@@ -31,7 +31,7 @@ public class TileEntityExporterChestRenderer extends TileEntitySpecialRenderer<T
 		World world = te.getWorld();
 		Block block = te.getBlockType();
 
-		EnumFacing facing = EnumFacing.SOUTH;
+		Direction facing = Direction.SOUTH;
 		ModelChestNormal model = this.chestNormal;
 		ResourceLocation texture = new ResourceLocation(Reference.MODID, "textures/entity/chest/exporter_chest.png");
 		ResourceLocation itemTexture = new ResourceLocation("textures/items/stick.png");
@@ -80,7 +80,7 @@ public class TileEntityExporterChestRenderer extends TileEntitySpecialRenderer<T
 	}
 
 	private boolean isDoubleChest(World world, BlockPos pos) {
-		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+		for (Direction facing : Direction.HORIZONTALS) {
 			if (this.isChest(world.getBlockState(pos.offset(facing)).getBlock())) {
 				return true;
 			}
@@ -93,7 +93,7 @@ public class TileEntityExporterChestRenderer extends TileEntitySpecialRenderer<T
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glTranslated(x + 0.5D, y + 0.5D, z + 0.5D);
 
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			GL11.glPushMatrix();
 			GL11.glRotated(side.getHorizontalAngle(), 0.0D, 1.0D, 0.0D);
 			GL11.glTranslated(0.0, 0.0D, 0.4375D + 0.0001D);

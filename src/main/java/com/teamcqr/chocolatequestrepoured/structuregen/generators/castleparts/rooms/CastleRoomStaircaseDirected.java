@@ -14,18 +14,18 @@ import net.minecraft.util.math.BlockPos;
 
 public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	private static final int PLATFORM_LENGTH = 2;
-	private EnumFacing doorSide;
+	private Direction doorSide;
 	private int numRotations;
 	private int upperStairWidth;
 	private int upperStairLength;
 	private int centerStairWidth;
 	private int centerStairLength;
 
-	public CastleRoomStaircaseDirected(BlockPos startOffset, int sideLength, int height, EnumFacing doorSide, int floor) {
+	public CastleRoomStaircaseDirected(BlockPos startOffset, int sideLength, int height, Direction doorSide, int floor) {
 		super(startOffset, sideLength, height, floor);
 		this.roomType = EnumRoomType.STAIRCASE_DIRECTED;
 		this.doorSide = doorSide;
-		this.numRotations = DungeonGenUtils.getCWRotationsBetween(EnumFacing.SOUTH, this.doorSide);
+		this.numRotations = DungeonGenUtils.getCWRotationsBetween(Direction.SOUTH, this.doorSide);
 		this.defaultCeiling = false;
 
 		this.upperStairWidth = 0;
@@ -46,8 +46,8 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	public void generateRoom(BlockStateGenArray genArray, DungeonCastle dungeon) {
 		//If stairs are facing to the east or west, need to flip the build lengths since we are essentially
 		//generating a room facing south and then rotating it
-		int lenX = this.doorSide.getAxis() == EnumFacing.Axis.Z ? this.buildLengthX : this.buildLengthZ;
-		int lenZ = this.doorSide.getAxis() == EnumFacing.Axis.Z ? this.buildLengthZ : this.buildLengthX;
+		int lenX = this.doorSide.getAxis() == Direction.Axis.Z ? this.buildLengthX : this.buildLengthZ;
+		int lenZ = this.doorSide.getAxis() == Direction.Axis.Z ? this.buildLengthZ : this.buildLengthX;
 
 		for (int x = 0; x < lenX - 1; x++) {
 			for (int z = 0; z < lenZ - 1; z++) {
@@ -64,7 +64,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 		}
 	}
 
-	public void setDoorSide(EnumFacing side) {
+	public void setDoorSide(Direction side) {
 		this.doorSide = side;
 	}
 
@@ -80,7 +80,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 		return this.centerStairWidth;
 	}
 
-	public EnumFacing getDoorSide() {
+	public Direction getDoorSide() {
 		return this.doorSide;
 	}
 
@@ -91,7 +91,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 
 	private void buildUpperStair(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
 		int stairHeight = this.centerStairLength + (z - PLATFORM_LENGTH);
-		EnumFacing stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(EnumFacing.SOUTH, this.numRotations);
+		Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.SOUTH, this.numRotations);
 		IBlockState blockToBuild;
 		for (int y = 1; y < this.height; y++) {
 			if (y < stairHeight) {
@@ -107,7 +107,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 
 	private void buildLowerStair(int x, int z, BlockStateGenArray genArray, DungeonCastle dungeon) {
 		int stairHeight = this.centerStairLength - (z - PLATFORM_LENGTH + 1);
-		EnumFacing stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(EnumFacing.NORTH, this.numRotations);
+		Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
 		IBlockState blockToBuild;
 		for (int y = 1; y < this.height; y++) {
 			if (y < stairHeight) {
@@ -136,18 +136,18 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 	}
 
 	@Override
-	public boolean canBuildDoorOnSide(EnumFacing side) {
+	public boolean canBuildDoorOnSide(Direction side) {
 		return (side == this.doorSide);
 	}
 
 	@Override
-	public boolean reachableFromSide(EnumFacing side) {
+	public boolean reachableFromSide(Direction side) {
 		return (side == this.doorSide);
 	}
 
 	//Only centered doors look good, as the stairs are centered in the room
 	@Override
-	public DoorPlacement addDoorOnSideRandom(Random random, EnumFacing side) {
+	public DoorPlacement addDoorOnSideRandom(Random random, Direction side) {
 		return super.addDoorOnSideCentered(side);
 	}
 }

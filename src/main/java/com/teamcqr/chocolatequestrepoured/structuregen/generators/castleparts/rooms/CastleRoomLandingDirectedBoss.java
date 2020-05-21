@@ -17,7 +17,7 @@ public class CastleRoomLandingDirectedBoss extends CastleRoomLandingDirected {
     }
 
     @Override
-    public boolean canBuildInnerWallOnSide(EnumFacing side) {
+    public boolean canBuildInnerWallOnSide(Direction side) {
         return side != this.stairStartSide;
     }
 }

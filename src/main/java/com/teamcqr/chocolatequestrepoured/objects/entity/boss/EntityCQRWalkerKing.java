@@ -97,7 +97,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 				v = v.subtract(0, v.y, 0);
 				v = v.scale(3);
 				teleportPos = new BlockPos(getAttackTarget().getPositionVector().subtract(v));
-				if(world.isBlockFullCube(teleportPos) || world.isBlockFullCube(teleportPos.offset(EnumFacing.UP)) || world.isAirBlock(teleportPos.offset(EnumFacing.DOWN))) {
+				if(world.isBlockFullCube(teleportPos) || world.isBlockFullCube(teleportPos.offset(Direction.UP)) || world.isAirBlock(teleportPos.offset(Direction.DOWN))) {
 					teleportPos = getAttackTarget().getPosition();
 				}
 			} else if(getHomePositionCQR() != null && !world.isRemote) {

@@ -37,7 +37,7 @@ public class ItemSpawnEggCQR extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUse(PlayerEntity player, World worldIn, BlockPos pos, Hand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(PlayerEntity player, World worldIn, BlockPos pos, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			AbstractEntityCQR entity = null;
 			try {

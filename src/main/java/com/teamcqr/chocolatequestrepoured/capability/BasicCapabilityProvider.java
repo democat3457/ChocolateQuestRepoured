@@ -15,12 +15,12 @@ public class BasicCapabilityProvider<C> implements ICapabilityProvider {
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(Capability<?> capability, Direction facing) {
 		return capability == this.capability;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing) {
 		return capability == this.capability ? this.capability.<T>cast(this.instance) : null;
 	}
 

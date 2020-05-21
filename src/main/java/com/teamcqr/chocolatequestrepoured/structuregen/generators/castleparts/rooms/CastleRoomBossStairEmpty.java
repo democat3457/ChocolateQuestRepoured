@@ -7,9 +7,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class CastleRoomBossStairEmpty extends CastleRoomDecoratedBase {
-	private EnumFacing doorSide;
+	private Direction doorSide;
 
-	public CastleRoomBossStairEmpty(BlockPos startOffset, int sideLength, int height, EnumFacing doorSide, int floor) {
+	public CastleRoomBossStairEmpty(BlockPos startOffset, int sideLength, int height, Direction doorSide, int floor) {
 		super(startOffset, sideLength, height, floor);
 		this.roomType = EnumRoomType.STAIRCASE_BOSS;
 		this.pathable = true;
@@ -46,8 +46,8 @@ public class CastleRoomBossStairEmpty extends CastleRoomDecoratedBase {
 	}
 
 	@Override
-	public void addInnerWall(EnumFacing side) {
-		if (!(this.doorSide.getAxis() == EnumFacing.Axis.X && side == EnumFacing.NORTH) && !(this.doorSide.getAxis() == EnumFacing.Axis.Z && side == EnumFacing.WEST)) {
+	public void addInnerWall(Direction side) {
+		if (!(this.doorSide.getAxis() == Direction.Axis.X && side == Direction.NORTH) && !(this.doorSide.getAxis() == Direction.Axis.Z && side == Direction.WEST)) {
 			super.addInnerWall(side);
 		}
 	}

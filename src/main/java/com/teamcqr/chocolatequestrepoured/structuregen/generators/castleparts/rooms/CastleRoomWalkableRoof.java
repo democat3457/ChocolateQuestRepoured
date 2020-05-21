@@ -29,12 +29,12 @@ public class CastleRoomWalkableRoof extends CastleRoomBase {
 	}
 
 	@Override
-	public void addInnerWall(EnumFacing side) {
+	public void addInnerWall(Direction side) {
 		; // Do nothing because walkable roofs don't need inner walls
 	}
 
 	@Override
-	protected void createAndGenerateWallBuilder(BlockStateGenArray genArray, DungeonCastle dungeon, EnumFacing side, int wallLength, BlockPos wallStart) {
+	protected void createAndGenerateWallBuilder(BlockStateGenArray genArray, DungeonCastle dungeon, Direction side, int wallLength, BlockPos wallStart) {
 		RoomWallBuilder builder = new WalkableRoofWallBuilder(wallStart, this.height, wallLength, this.walls.getOptionsForSide(side), side);
 		builder.generate(genArray, dungeon);
 	}

@@ -19,10 +19,10 @@ import net.minecraftforge.common.util.Constants;
 public class LootChestInfo {
 
 	private BlockPos position;
-	private EnumFacing facing;
+	private Direction facing;
 	private ResourceLocation lootTable;
 
-	public LootChestInfo(BlockPos position, EnumFacing facing, ResourceLocation lootTable) {
+	public LootChestInfo(BlockPos position, Direction facing, ResourceLocation lootTable) {
 		this.position = position;
 		this.facing = facing;
 		this.lootTable = lootTable;
@@ -30,7 +30,7 @@ public class LootChestInfo {
 
 	public LootChestInfo(CompoundNBT compound) {
 		this.position = NBTUtil.getPosFromTag(compound.getCompoundTag("position"));
-		this.facing = EnumFacing.getHorizontal(compound.getInteger("facing"));
+		this.facing = Direction.getHorizontal(compound.getInteger("facing"));
 		if (compound.hasKey("loottable", Constants.NBT.TAG_STRING)) {
 			this.lootTable = new ResourceLocation(compound.getString("loottable"));
 		} else {
@@ -52,7 +52,7 @@ public class LootChestInfo {
 		return this.position;
 	}
 
-	public EnumFacing getFacing() {
+	public Direction getFacing() {
 		return this.facing;
 	}
 

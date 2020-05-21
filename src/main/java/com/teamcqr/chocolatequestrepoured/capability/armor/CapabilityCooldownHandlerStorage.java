@@ -14,7 +14,7 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 public class CapabilityCooldownHandlerStorage implements IStorage<CapabilityCooldownHandler> {
 
 	@Override
-	public NBTBase writeNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, EnumFacing side) {
+	public NBTBase writeNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, Direction side) {
 		NBTTagList nbtTagList = new NBTTagList();
 
 		for (Map.Entry<Item, Integer> entry : instance.getItemCooldownMap().entrySet()) {
@@ -29,7 +29,7 @@ public class CapabilityCooldownHandlerStorage implements IStorage<CapabilityCool
 	}
 
 	@Override
-	public void readNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, EnumFacing side, NBTBase nbt) {
+	public void readNBT(Capability<CapabilityCooldownHandler> capability, CapabilityCooldownHandler instance, Direction side, NBTBase nbt) {
 		if (nbt instanceof NBTTagList) {
 			NBTTagList nbtTagList = (NBTTagList) nbt;
 

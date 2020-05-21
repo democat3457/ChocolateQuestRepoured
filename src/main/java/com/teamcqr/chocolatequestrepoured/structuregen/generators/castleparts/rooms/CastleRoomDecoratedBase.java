@@ -28,7 +28,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
     protected static final int MAX_DECO_ATTEMPTS = 3;
     protected static final int LIGHT_LEVEL = 4;
     protected DecorationSelector decoSelector;
-    protected HashMap<BlockPos, EnumFacing> possibleChestLocs;
+    protected HashMap<BlockPos, Direction> possibleChestLocs;
 
     CastleRoomDecoratedBase(BlockPos startOffset, int sideLength, int height, int floor) {
         super(startOffset, sideLength, height, floor);
@@ -67,7 +67,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
 
     protected void addEdgeDecoration(World world, BlockStateGenArray genArray, DungeonCastle dungeon) {
         if (this.decoSelector.edgeDecorRegistered()) {
-            for (EnumFacing side : EnumFacing.HORIZONTALS) {
+            for (Direction side : Direction.HORIZONTALS) {
                 if (this.hasWallOnSide(side) || this.adjacentRoomHasWall(side)) {
                     ArrayList<BlockPos> edge = this.getDecorationEdge(side);
                     for (BlockPos pos : edge) {
@@ -116,7 +116,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
 
                 while (attempts < MAX_DECO_ATTEMPTS) {
                     IRoomDecor decor = this.decoSelector.randomMidDecor();
-                    EnumFacing side = EnumFacing.NORTH; //EnumFacing.HORIZONTALS[random.nextInt(EnumFacing.HORIZONTALS.length)];
+                    Direction side = Direction.NORTH; //Direction.HORIZONTALS[random.nextInt(Direction.HORIZONTALS.length)];
                     if (decor.wouldFit(pos, side, this.possibleDecoPositions, this.usedDecoPositions, this)) {
                         decor.build(world, genArray, this, dungeon, pos, side, this.usedDecoPositions);
 
@@ -163,7 +163,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
     protected void addWallDecoration(World world, BlockStateGenArray genArray, DungeonCastle dungeon) {
         int torchPercent = LIGHT_LEVEL * 3;
 
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+        for (Direction side : Direction.HORIZONTALS) {
             if (this.hasWallOnSide(side) || this.adjacentRoomHasWall(side)) {
                 ArrayList<BlockPos> edge = this.getWallDecorationEdge(side);
                 for (BlockPos pos : edge) {

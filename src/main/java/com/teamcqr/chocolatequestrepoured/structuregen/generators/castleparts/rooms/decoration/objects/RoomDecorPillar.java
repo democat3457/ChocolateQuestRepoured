@@ -20,13 +20,13 @@ public class RoomDecorPillar extends RoomDecorBlocksBase {
     }
 
     @Override
-    public boolean wouldFit(BlockPos start, EnumFacing side, HashSet<BlockPos> decoArea, HashSet<BlockPos> decoMap, CastleRoomBase room) {
+    public boolean wouldFit(BlockPos start, Direction side, HashSet<BlockPos> decoArea, HashSet<BlockPos> decoMap, CastleRoomBase room) {
         this.schematic = getSizedSchematic(room);
         return super.wouldFit(start, side, decoArea, decoMap, room);
     }
 
     @Override
-    public void build(World world, BlockStateGenArray genArray, CastleRoomBase room, DungeonCastle dungeon, BlockPos start, EnumFacing side, HashSet<BlockPos> decoMap) {
+    public void build(World world, BlockStateGenArray genArray, CastleRoomBase room, DungeonCastle dungeon, BlockPos start, Direction side, HashSet<BlockPos> decoMap) {
         this.schematic = getSizedSchematic(room);
         super.build(world, genArray, room, dungeon, start, side, decoMap);
     }
@@ -39,40 +39,40 @@ public class RoomDecorPillar extends RoomDecorBlocksBase {
         IBlockState stairs;
         final BlockStateGenArray.GenerationPhase genPhase = BlockStateGenArray.GenerationPhase.MAIN;
 
-        stairs = lowerStairs.withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
+        stairs = lowerStairs.withProperty(BlockStairs.FACING, Direction.SOUTH);
         sizedSchematic.add(new DecoBlockBase(0, 0, 0, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_LEFT), genPhase));
         sizedSchematic.add(new DecoBlockBase(1, 0, 0, stairs, genPhase));
         sizedSchematic.add(new DecoBlockBase(2, 0, 0, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_RIGHT), genPhase));
 
-        stairs = lowerStairs.withProperty(BlockStairs.FACING, EnumFacing.EAST);
+        stairs = lowerStairs.withProperty(BlockStairs.FACING, Direction.EAST);
         sizedSchematic.add(new DecoBlockBase(0, 0, 1, stairs, genPhase));
 
-        stairs = lowerStairs.withProperty(BlockStairs.FACING, EnumFacing.WEST);
+        stairs = lowerStairs.withProperty(BlockStairs.FACING, Direction.WEST);
         sizedSchematic.add(new DecoBlockBase(2, 0, 1, stairs, genPhase));
 
-        stairs = lowerStairs.withProperty(BlockStairs.FACING, EnumFacing.NORTH);
+        stairs = lowerStairs.withProperty(BlockStairs.FACING, Direction.NORTH);
         sizedSchematic.add(new DecoBlockBase(0, 0, 2, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_RIGHT), genPhase));
-        sizedSchematic.add(new DecoBlockBase(1, 0, 2, stairs.withProperty(BlockStairs.FACING, EnumFacing.NORTH), genPhase));
+        sizedSchematic.add(new DecoBlockBase(1, 0, 2, stairs.withProperty(BlockStairs.FACING, Direction.NORTH), genPhase));
         sizedSchematic.add(new DecoBlockBase(2, 0, 2, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_LEFT), genPhase));
 
         for (int y = 0; y < height; y++) {
             sizedSchematic.add(new DecoBlockBase(1, y, 1, Blocks.STONEBRICK.getDefaultState(), genPhase));
         }
 
-        stairs = upperStairs.withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
+        stairs = upperStairs.withProperty(BlockStairs.FACING, Direction.SOUTH);
         sizedSchematic.add(new DecoBlockBase(0, (height - 1), 0, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_LEFT), genPhase));
         sizedSchematic.add(new DecoBlockBase(1, (height - 1), 0, stairs, genPhase));
         sizedSchematic.add(new DecoBlockBase(2, (height - 1), 0, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_RIGHT), genPhase));
 
-        stairs = upperStairs.withProperty(BlockStairs.FACING, EnumFacing.EAST);
+        stairs = upperStairs.withProperty(BlockStairs.FACING, Direction.EAST);
         sizedSchematic.add(new DecoBlockBase(0, (height - 1), 1, stairs, genPhase));
 
-        stairs = upperStairs.withProperty(BlockStairs.FACING, EnumFacing.WEST);
+        stairs = upperStairs.withProperty(BlockStairs.FACING, Direction.WEST);
         sizedSchematic.add(new DecoBlockBase(2, (height - 1), 1, stairs, genPhase));
 
-        stairs = upperStairs.withProperty(BlockStairs.FACING, EnumFacing.NORTH);
+        stairs = upperStairs.withProperty(BlockStairs.FACING, Direction.NORTH);
         sizedSchematic.add(new DecoBlockBase(0, (height - 1), 2, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_RIGHT), genPhase));
-        sizedSchematic.add(new DecoBlockBase(1, (height - 1), 2, stairs.withProperty(BlockStairs.FACING, EnumFacing.NORTH), genPhase));
+        sizedSchematic.add(new DecoBlockBase(1, (height - 1), 2, stairs.withProperty(BlockStairs.FACING, Direction.NORTH), genPhase));
         sizedSchematic.add(new DecoBlockBase(2, (height - 1), 2, stairs.withProperty(BlockStairs.SHAPE, BlockStairs.EnumShape.INNER_LEFT), genPhase));
 
         return sizedSchematic;

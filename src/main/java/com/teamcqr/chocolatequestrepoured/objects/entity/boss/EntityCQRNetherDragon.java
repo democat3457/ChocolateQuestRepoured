@@ -534,7 +534,7 @@ public class EntityCQRNetherDragon extends AbstractEntityCQRBoss implements IEnt
 						}
 						// Check if the entity can destroy the blocks -> Event that can be cancelled by e.g. anti griefing mods or the protection system
 						else if (net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, iblockstate)) {
-							boolean container = block.hasTileEntity(iblockstate) && block.createTileEntity(world,iblockstate).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+							boolean container = block.hasTileEntity(iblockstate) && block.createTileEntity(world,iblockstate).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
 							if (breakableBlocks.contains(block.getRegistryName()) && !container && block.isCollidable() && 
 									block != Blocks.BEDROCK && 
 									block != Blocks.STRUCTURE_BLOCK &&

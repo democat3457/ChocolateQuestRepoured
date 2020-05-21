@@ -23,7 +23,7 @@ public class DecoBlockBase {
         this.genPhase = generationPhase;
     }
 
-    protected IBlockState getState(EnumFacing side) {
+    protected IBlockState getState(Direction side) {
         return blockState;
     }
 

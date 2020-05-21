@@ -12,7 +12,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 public class CapabilityExtraItemHandlerStorage implements IStorage<CapabilityExtraItemHandler> {
 
 	@Override
-	public NBTBase writeNBT(Capability<CapabilityExtraItemHandler> capability, CapabilityExtraItemHandler instance, EnumFacing side) {
+	public NBTBase writeNBT(Capability<CapabilityExtraItemHandler> capability, CapabilityExtraItemHandler instance, Direction side) {
 		NBTTagList nbtTagList = new NBTTagList();
 		int size = instance.getSlots();
 		for (int i = 0; i < size; i++) {
@@ -28,7 +28,7 @@ public class CapabilityExtraItemHandlerStorage implements IStorage<CapabilityExt
 	}
 
 	@Override
-	public void readNBT(Capability<CapabilityExtraItemHandler> capability, CapabilityExtraItemHandler instance, EnumFacing side, NBTBase base) {
+	public void readNBT(Capability<CapabilityExtraItemHandler> capability, CapabilityExtraItemHandler instance, Direction side, NBTBase base) {
 		if (!(instance instanceof IItemHandlerModifiable)) {
 			throw new RuntimeException("IItemHandler instance does not implement IItemHandlerModifiable");
 		}

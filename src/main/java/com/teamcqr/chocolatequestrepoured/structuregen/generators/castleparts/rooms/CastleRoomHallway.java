@@ -13,17 +13,17 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 	public enum Alignment {
 		VERTICAL, HORIZONTAL;
 
-		private boolean canHaveInteriorWall(EnumFacing side) {
+		private boolean canHaveInteriorWall(Direction side) {
 			if (this == VERTICAL) {
-				return (side == EnumFacing.WEST || side == EnumFacing.EAST);
+				return (side == Direction.WEST || side == Direction.EAST);
 			} else {
-				return (side == EnumFacing.NORTH || side == EnumFacing.SOUTH);
+				return (side == Direction.NORTH || side == Direction.SOUTH);
 			}
 		}
 	}
 
 	private Alignment alignment;
-	EnumFacing patternStartFacing;
+	Direction patternStartFacing;
 
 	public CastleRoomHallway(BlockPos startOffset, int sideLength, int height, Alignment alignment, int floor) {
 		super(startOffset, sideLength, height, floor);
@@ -31,7 +31,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 		this.alignment = alignment;
 		this.defaultFloor = true;
 		this.defaultCeiling = true;
-		this. patternStartFacing = EnumFacing.HORIZONTALS[random.nextInt(EnumFacing.HORIZONTALS.length)];
+		this. patternStartFacing = Direction.HORIZONTALS[random.nextInt(Direction.HORIZONTALS.length)];
 
 		this.decoSelector.registerMidDecor(RoomDecorTypes.NONE, 25);
 		this.decoSelector.registerMidDecor(RoomDecorTypes.PILLAR, 1);
@@ -44,7 +44,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 			for (int x = 0; x < this.getDecorationLengthX(); x++) {
 				BlockPos pos = this.getNonWallStartPos().add(x, 0, z);
 				IBlockState tcBlock = Blocks.GRAY_GLAZED_TERRACOTTA.getDefaultState();
-				EnumFacing tcFacing;
+				Direction tcFacing;
 
 				//Terracotta patterns are formed in a 2x2 square from the pattern (going clockwise) N E S W
 				//So create that pattern here given some starting facing
@@ -73,7 +73,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 	}
 
 	@Override
-	public void addInnerWall(EnumFacing side) {
+	public void addInnerWall(Direction side) {
 		if (this.alignment.canHaveInteriorWall(side)) {
 			super.addInnerWall(side);
 		}

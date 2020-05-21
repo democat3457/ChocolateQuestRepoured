@@ -28,7 +28,7 @@ public class DirectLineNodeProcessor extends NodeProcessor {
 	public int findPathOptions(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
 		int i = 0;
 
-        for (EnumFacing enumfacing : EnumFacing.values())
+        for (Direction enumfacing : Direction.values())
         {
             PathPoint pathpoint = this.openPoint(currentPoint.x + enumfacing.getFrontOffsetX(), currentPoint.y + enumfacing.getFrontOffsetY(), currentPoint.z + enumfacing.getFrontOffsetZ());
 

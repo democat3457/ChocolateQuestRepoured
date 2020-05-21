@@ -145,7 +145,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 						if (extendedBlockStorage != Chunk.NULL_BLOCK_STORAGE) {
 							IBlockState state1 = extendedBlockStorage.get(x3 & 15, y3 & 15, z3 & 15);
 
-							if (state1.getBlock() == Blocks.FIRE && !oldState.getBlock().isFireSource(world, pos2.setPos(x3, y3 - 1, z3), EnumFacing.UP)) {
+							if (state1.getBlock() == Blocks.FIRE && !oldState.getBlock().isFireSource(world, pos2.setPos(x3, y3 - 1, z3), Direction.UP)) {
 								Vec3d vec3d1 = this.entity.getPositionEyes(1.0F);
 								Vec3d vec3d2 = new Vec3d(x3 + 0.5D, y3 + 0.5D, z3 + 0.5D);
 								RayTraceResult rayTraceResult = this.entity.world.rayTraceBlocks(vec3d1, vec3d2, false, false, false);

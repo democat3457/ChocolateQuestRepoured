@@ -152,12 +152,12 @@ public class DungeonGenUtils {
 	 * Rotate a vec3i to align with the given side.
 	 * Assumes that the vec3i is default +x right, +z down coordinate system
 	 */
-	public static Vec3i rotateVec3i(Vec3i vec, EnumFacing side) {
-		if (side == EnumFacing.SOUTH) {
+	public static Vec3i rotateVec3i(Vec3i vec, Direction side) {
+		if (side == Direction.SOUTH) {
 			return new Vec3i(-vec.getX(), vec.getY(), -vec.getZ());
-		} else if (side == EnumFacing.WEST) {
+		} else if (side == Direction.WEST) {
 			return new Vec3i(vec.getZ(), vec.getY(), -vec.getX());
-		} else if (side == EnumFacing.EAST) {
+		} else if (side == Direction.EAST) {
 			return new Vec3i(-vec.getZ(), vec.getY(), vec.getX());
 		} else {
 			// North side, or some other invalid side
@@ -206,7 +206,7 @@ public class DungeonGenUtils {
 		}
 	}
 
-	public static int getCWRotationsBetween(EnumFacing start, EnumFacing end) {
+	public static int getCWRotationsBetween(Direction start, Direction end) {
 		int rotations = 0;
 		if (start.getAxis().isHorizontal() && end.getAxis().isHorizontal()) {
 			while (start != end) {
@@ -217,7 +217,7 @@ public class DungeonGenUtils {
 		return rotations;
 	}
 
-	public static EnumFacing rotateFacingNTimesAboutY(EnumFacing facing, int n) {
+	public static Direction rotateFacingNTimesAboutY(Direction facing, int n) {
 		for (int i = 0; i < n; i++) {
 			facing = facing.rotateY();
 		}

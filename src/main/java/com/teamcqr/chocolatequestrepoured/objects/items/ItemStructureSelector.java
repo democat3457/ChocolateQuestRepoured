@@ -41,7 +41,7 @@ public class ItemStructureSelector extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, Hand hand) {
+	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (world.getTileEntity(pos) instanceof TileEntityExporter) {

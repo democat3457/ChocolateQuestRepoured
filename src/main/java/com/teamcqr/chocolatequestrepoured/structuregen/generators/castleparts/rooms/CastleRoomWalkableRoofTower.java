@@ -16,7 +16,7 @@ public class CastleRoomWalkableRoofTower extends CastleRoomWalkableRoof {
 		this.buildLengthX = tower.getBuildLengthX();
 		this.buildLengthZ = tower.getBuildLengthZ();
 
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			this.walls.addOuter(side);
 		}
 	}

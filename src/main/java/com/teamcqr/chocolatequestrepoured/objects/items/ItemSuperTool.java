@@ -86,7 +86,7 @@ public class ItemSuperTool extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUse(PlayerEntity player, World worldIn, BlockPos pos, Hand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(PlayerEntity player, World worldIn, BlockPos pos, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (!player.isCreative()) {
@@ -99,14 +99,14 @@ public class ItemSuperTool extends Item {
 		}
 
 		int size = 1;
-		EnumFacing facing1;
-		EnumFacing facing2;
+		Direction facing1;
+		Direction facing2;
 
-		if (facing.getAxis() == EnumFacing.Axis.Y) {
-			facing1 = EnumFacing.NORTH;
-			facing2 = EnumFacing.EAST;
+		if (facing.getAxis() == Direction.Axis.Y) {
+			facing1 = Direction.NORTH;
+			facing2 = Direction.EAST;
 		} else {
-			facing1 = EnumFacing.UP;
+			facing1 = Direction.UP;
 			facing2 = facing.rotateY();
 		}
 

@@ -47,7 +47,7 @@ public abstract class CastleRoomBase {
 	protected Random random = new Random();
 
 	protected RoomWalls walls; // the walls of this room
-	protected HashSet<EnumFacing> adjacentWalls; // track which adjacent rooms have walls
+	protected HashSet<Direction> adjacentWalls; // track which adjacent rooms have walls
 	protected HashSet<BlockPos> possibleDecoPositions; // set of possible decoration positions
 	protected HashSet<BlockPos> usedDecoPositions; // set of decoration positions that have been added (subset of possible)
 	//protected HashSet<BlockPos> decoEdge; // set of all positions that are along the edge of the room (subset of possible)
@@ -96,14 +96,14 @@ public abstract class CastleRoomBase {
 	}
 
 	protected void generateWalls(BlockStateGenArray genArray, DungeonCastle dungeon) {
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			if (this.walls.hasWallOnSide(side)) {
-				int wallLength = (side.getAxis() == EnumFacing.Axis.X) ? this.buildLengthZ : this.buildLengthX;
+				int wallLength = (side.getAxis() == Direction.Axis.X) ? this.buildLengthZ : this.buildLengthX;
 				BlockPos wallStart;
-				if (side == EnumFacing.EAST) {
-					wallStart = this.getExteriorBuildStart().offset(EnumFacing.EAST, this.buildLengthX - 1);
-				} else if (side == EnumFacing.SOUTH) {
-					wallStart = this.getExteriorBuildStart().offset(EnumFacing.SOUTH, this.buildLengthZ - 1);
+				if (side == Direction.EAST) {
+					wallStart = this.getExteriorBuildStart().offset(Direction.EAST, this.buildLengthX - 1);
+				} else if (side == Direction.SOUTH) {
+					wallStart = this.getExteriorBuildStart().offset(Direction.SOUTH, this.buildLengthZ - 1);
 				} else {
 					wallStart = new BlockPos(this.getExteriorBuildStart());
 				}
@@ -113,20 +113,20 @@ public abstract class CastleRoomBase {
 		}
 	}
 
-	protected void createAndGenerateWallBuilder(BlockStateGenArray genArray, DungeonCastle dungeon, EnumFacing side, int wallLength, BlockPos wallStart) {
+	protected void createAndGenerateWallBuilder(BlockStateGenArray genArray, DungeonCastle dungeon, Direction side, int wallLength, BlockPos wallStart) {
 		RoomWallBuilder builder = new RoomWallBuilder(wallStart, this.height, wallLength, this.walls.getOptionsForSide(side), side);
 		builder.generate(genArray, dungeon);
 	}
 
-	public boolean canBuildDoorOnSide(EnumFacing side) {
+	public boolean canBuildDoorOnSide(Direction side) {
 		return true;
 	}
 
-	public boolean canBuildInnerWallOnSide(EnumFacing side) {
+	public boolean canBuildInnerWallOnSide(Direction side) {
 		return true;
 	}
 
-	public boolean reachableFromSide(EnumFacing side) {
+	public boolean reachableFromSide(Direction side) {
 		return true;
 	}
 
@@ -177,7 +177,7 @@ public abstract class CastleRoomBase {
 		return this.roomType;
 	}
 
-	protected BlockPos getRotatedPlacement(int x, int y, int z, EnumFacing rotation) {
+	protected BlockPos getRotatedPlacement(int x, int y, int z, Direction rotation) {
 		switch (rotation) {
 		case EAST:
 			return this.origin.add(z, y, this.sideLength - 2 - x);
@@ -199,62 +199,62 @@ public abstract class CastleRoomBase {
 		return this.buildStartPos.add(this.offsetX, 0, this.offsetZ);
 	}
 
-	public boolean hasWallOnSide(EnumFacing side) {
+	public boolean hasWallOnSide(Direction side) {
 		return this.walls.hasWallOnSide(side);
 	}
 
-	protected boolean adjacentRoomHasWall(EnumFacing side) {
+	protected boolean adjacentRoomHasWall(Direction side) {
 		return this.adjacentWalls.contains(side);
 	}
 
-	public boolean hasDoorOnSide(EnumFacing side) {
+	public boolean hasDoorOnSide(Direction side) {
 		return this.walls.hasDoorOnSide(side);
 	}
 
-	public DoorPlacement addDoorOnSideCentered(EnumFacing side) {
-		int sideLength = (side.getAxis() == EnumFacing.Axis.X) ? this.buildLengthZ : this.buildLengthX;
+	public DoorPlacement addDoorOnSideCentered(Direction side) {
+		int sideLength = (side.getAxis() == Direction.Axis.X) ? this.buildLengthZ : this.buildLengthX;
 		return this.walls.addCenteredDoor(this.random, sideLength, side, EnumCastleDoorType.RANDOM);
 	}
 
-	public DoorPlacement addDoorOnSideRandom(Random random, EnumFacing side) {
-		int sideLength = (side.getAxis() == EnumFacing.Axis.X) ? this.buildLengthZ : this.buildLengthX;
+	public DoorPlacement addDoorOnSideRandom(Random random, Direction side) {
+		int sideLength = (side.getAxis() == Direction.Axis.X) ? this.buildLengthZ : this.buildLengthX;
 		return this.walls.addRandomDoor(random, sideLength, side, EnumCastleDoorType.RANDOM);
 	}
 
-	public DoorPlacement addGrandEntrance(EnumFacing side) {
-		int sideLength = (side.getAxis() == EnumFacing.Axis.X) ? this.buildLengthZ : this.buildLengthX;
+	public DoorPlacement addGrandEntrance(Direction side) {
+		int sideLength = (side.getAxis() == Direction.Axis.X) ? this.buildLengthZ : this.buildLengthX;
 		return this.walls.addCenteredDoor(this.random, sideLength, side, EnumCastleDoorType.GRAND_ENTRY);
 	}
 
-	public void addOuterWall(EnumFacing side) {
+	public void addOuterWall(Direction side) {
 		if (!this.walls.hasWallOnSide(side)) {
 			this.walls.addOuter(side);
 
-			if (side == EnumFacing.NORTH) {
+			if (side == Direction.NORTH) {
 				this.buildStartPos = this.buildStartPos.north();
 				++this.buildLengthZ;
-			} else if (side == EnumFacing.WEST) {
+			} else if (side == Direction.WEST) {
 				this.buildStartPos = this.buildStartPos.west();
 				++this.buildLengthX;
 			}
 		}
 	}
 
-	public void addInnerWall(EnumFacing side) {
+	public void addInnerWall(Direction side) {
 		if (!this.walls.hasWallOnSide(side) && this.canBuildInnerWallOnSide(side)) {
 			this.walls.addInner(side);
 		}
 	}
 
-	public void removeWall(EnumFacing side) {
+	public void removeWall(Direction side) {
 		this.walls.removeWall(side);
 	}
 
-	public void registerAdjacentRoomDoor(EnumFacing side, DoorPlacement door) {
+	public void registerAdjacentRoomDoor(Direction side, DoorPlacement door) {
 		this.walls.registerAdjacentDoor(side, door);
 	}
 
-	public void registerAdjacentRoomWall(EnumFacing side) {
+	public void registerAdjacentRoomWall(Direction side) {
 		this.adjacentWalls.add(side);
 	}
 
@@ -272,7 +272,7 @@ public abstract class CastleRoomBase {
 		int zEnd = zStart + (this.getDecorationLengthZ() - 1);
 		int yStart = topLeft.getY();
 
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			DoorPlacement placement = null;
 
 			if (this.walls.hasDoorOnSide(side)) {
@@ -286,12 +286,12 @@ public abstract class CastleRoomBase {
 				final int doorEnd;
 				final int yEnd = yStart + placement.getHeight() - 1;
 
-				if (side.getAxis() == EnumFacing.Axis.Z) {
+				if (side.getAxis() == Direction.Axis.Z) {
 					doorStart = this.origin.getX() + placement.getOffset();
 					doorEnd = doorStart + placement.getWidth() - 1;
 
 					int z;
-					if (side == EnumFacing.NORTH) {
+					if (side == Direction.NORTH) {
 						z = zStart;
 					} else // SOUTH
 					{
@@ -308,7 +308,7 @@ public abstract class CastleRoomBase {
 					doorEnd = doorStart + placement.getWidth() - 1;
 
 					int x;
-					if (side == EnumFacing.WEST) {
+					if (side == Direction.WEST) {
 						x = xStart;
 					} else // SOUTH
 					{
@@ -329,7 +329,7 @@ public abstract class CastleRoomBase {
 	 * Get a list of blocks that make up the decoratable edge of the room.
 	 * Decoratable edge positions are adjacent to a wall but not in front of a door.
 	 */
-	protected ArrayList<BlockPos> getDecorationEdge(EnumFacing side) {
+	protected ArrayList<BlockPos> getDecorationEdge(Direction side) {
 		// First get all blocks that are not occupied by walls
 		ArrayList<BlockPos> result = this.getDecorationLayer(0);
 
@@ -341,7 +341,7 @@ public abstract class CastleRoomBase {
 
 	protected ArrayList<BlockPos> getDecorationMiddle() {
 		ArrayList<BlockPos> result = getDecorationLayer(0);
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
+		for (Direction side : Direction.HORIZONTALS) {
 			result.removeAll(this.getDecorationEdge(side));
 		}
 
@@ -351,7 +351,7 @@ public abstract class CastleRoomBase {
 	/*
 	 * Get a list of blocks that make up the ring of potential painting locations
 	 */
-	protected ArrayList<BlockPos> getWallDecorationEdge(EnumFacing side) {
+	protected ArrayList<BlockPos> getWallDecorationEdge(Direction side) {
 		// First get all blocks that are not occupied by walls
 		ArrayList<BlockPos> result = this.getDecorationLayer(2);
 
@@ -361,23 +361,23 @@ public abstract class CastleRoomBase {
 		return result;
 	}
 
-	private void removeAllButEdge(ArrayList<BlockPos> blockList, EnumFacing side) {
+	private void removeAllButEdge(ArrayList<BlockPos> blockList, Direction side) {
 		BlockPos topLeft = this.getDecorationStartPos();
 		final int xStart = topLeft.getX();
 		final int zStart = topLeft.getZ();
 		final int xEnd = xStart + (this.getDecorationLengthX() - 1);
 		final int zEnd = zStart + (this.getDecorationLengthZ() - 1);
 
-		if (side == EnumFacing.NORTH) {
+		if (side == Direction.NORTH) {
 			blockList.removeIf(p -> p.getZ() != zStart);
 			blockList.sort(Comparator.comparingInt(BlockPos::getX));
-		} else if (side == EnumFacing.SOUTH) {
+		} else if (side == Direction.SOUTH) {
 			blockList.removeIf(p -> p.getZ() != zEnd);
 			blockList.sort(Comparator.comparingInt(BlockPos::getX).reversed());
-		} else if (side == EnumFacing.WEST) {
+		} else if (side == Direction.WEST) {
 			blockList.removeIf(p -> p.getX() != xStart);
 			blockList.sort(Comparator.comparingInt(BlockPos::getZ));
-		} else if (side == EnumFacing.EAST) {
+		} else if (side == Direction.EAST) {
 			blockList.removeIf(p -> p.getX() != xEnd);
 			blockList.sort(Comparator.comparingInt(BlockPos::getZ).reversed());
 		}
@@ -434,10 +434,10 @@ public abstract class CastleRoomBase {
 	protected int getDecorationLengthX() {
 		int result = this.buildLengthX;
 
-		if (this.walls.hasWallOnSide(EnumFacing.WEST)) {
+		if (this.walls.hasWallOnSide(Direction.WEST)) {
 			--result;
 		}
-		if (this.walls.hasWallOnSide(EnumFacing.EAST)) {
+		if (this.walls.hasWallOnSide(Direction.EAST)) {
 			--result;
 		}
 
@@ -447,10 +447,10 @@ public abstract class CastleRoomBase {
 	protected int getDecorationLengthZ() {
 		int result = this.buildLengthZ;
 
-		if (this.walls.hasWallOnSide(EnumFacing.NORTH)) {
+		if (this.walls.hasWallOnSide(Direction.NORTH)) {
 			--result;
 		}
-		if (this.walls.hasWallOnSide(EnumFacing.SOUTH)) {
+		if (this.walls.hasWallOnSide(Direction.SOUTH)) {
 			--result;
 		}
 

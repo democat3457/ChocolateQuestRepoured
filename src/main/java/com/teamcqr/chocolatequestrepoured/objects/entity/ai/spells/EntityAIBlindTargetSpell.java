@@ -29,7 +29,7 @@ public class EntityAIBlindTargetSpell extends AbstractEntityAISpell<AbstractEnti
 		BlockPos pos = new BlockPos(vec);
 
 		attackTarget.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, this.duration));
-		if (this.entity.world.getBlockState(pos).isSideSolid(this.entity.world, pos, EnumFacing.UP)) {
+		if (this.entity.world.getBlockState(pos).isSideSolid(this.entity.world, pos, Direction.UP)) {
 			this.entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 0.7F, 1.1F);
 			this.entity.attemptTeleport(vec.x, vec.y, vec.z);
 		}

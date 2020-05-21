@@ -27,7 +27,7 @@ public class ItemSpawnerConverter extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, Hand hand) {
+	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand) {
 		if (player.isCreative()) {
 			Block block = world.getBlockState(pos).getBlock();
 			if (block == ModBlocks.SPAWNER || block == Blocks.MOB_SPAWNER) {

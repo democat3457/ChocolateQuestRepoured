@@ -32,7 +32,7 @@ public class SpiralStaircaseBuilder {
 	}
 
 	public IBlockState getBlock(BlockPos position) {
-		EnumFacing stairSide;
+		Direction stairSide;
 		int startX = this.start.getX();
 		int startZ = this.start.getZ();
 		int posX = position.getX();
@@ -44,7 +44,7 @@ public class SpiralStaircaseBuilder {
 
 		// The side of the stairs rotates each level from the bottom
 		stairSide = this.rotateFacingNTimesCW(this.firstSide, Math.abs(position.getY() - this.start.getY()));
-		EnumFacing stairFacing = this.rotateFacingNTimesCW(stairSide, 1);
+		Direction stairFacing = this.rotateFacingNTimesCW(stairSide, 1);
 
 		switch (stairSide) {
 		case NORTH:
@@ -84,7 +84,7 @@ public class SpiralStaircaseBuilder {
 		return Blocks.AIR.getDefaultState();
 	}
 
-	private EnumFacing rotateFacingNTimesCW(EnumFacing facing, int n) {
+	private Direction rotateFacingNTimesCW(Direction facing, int n) {
 		n = n % 4; // cap at 0-3 rotations, any more is redundant
 		while (n != 0) {
 			facing = facing.rotateY();

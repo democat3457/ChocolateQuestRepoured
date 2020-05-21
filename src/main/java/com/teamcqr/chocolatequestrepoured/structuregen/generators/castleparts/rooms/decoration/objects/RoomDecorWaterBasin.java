@@ -18,15 +18,15 @@ public class RoomDecorWaterBasin extends RoomDecorBlocksBase {
         final IBlockState stairs = Blocks.STONE_BRICK_STAIRS.getDefaultState();
 
         this.schematic.add(new DecoBlockBase(0, 0, 0, chiseledStone, BlockStateGenArray.GenerationPhase.MAIN));
-        this.schematic.add(new DecoBlockRotating(1, 0, 0, stairs, BlockStairs.FACING, EnumFacing.SOUTH, BlockStateGenArray.GenerationPhase.MAIN));
+        this.schematic.add(new DecoBlockRotating(1, 0, 0, stairs, BlockStairs.FACING, Direction.SOUTH, BlockStateGenArray.GenerationPhase.MAIN));
         this.schematic.add(new DecoBlockBase(2, 0, 0, chiseledStone, BlockStateGenArray.GenerationPhase.MAIN));
 
-        this.schematic.add(new DecoBlockRotating(0, 0, 1, stairs, BlockStairs.FACING, EnumFacing.EAST, BlockStateGenArray.GenerationPhase.MAIN));
+        this.schematic.add(new DecoBlockRotating(0, 0, 1, stairs, BlockStairs.FACING, Direction.EAST, BlockStateGenArray.GenerationPhase.MAIN));
         this.schematic.add(new DecoBlockBase(1, 0, 1, Blocks.WATER.getDefaultState(), BlockStateGenArray.GenerationPhase.POST));
-        this.schematic.add(new DecoBlockRotating(2, 0, 1, stairs, BlockStairs.FACING, EnumFacing.WEST, BlockStateGenArray.GenerationPhase.MAIN));
+        this.schematic.add(new DecoBlockRotating(2, 0, 1, stairs, BlockStairs.FACING, Direction.WEST, BlockStateGenArray.GenerationPhase.MAIN));
 
         this.schematic.add(new DecoBlockBase(0, 0, 2, chiseledStone, BlockStateGenArray.GenerationPhase.MAIN));
-        this.schematic.add(new DecoBlockRotating(1, 0, 2, stairs, BlockStairs.FACING, EnumFacing.NORTH, BlockStateGenArray.GenerationPhase.MAIN));
+        this.schematic.add(new DecoBlockRotating(1, 0, 2, stairs, BlockStairs.FACING, Direction.NORTH, BlockStateGenArray.GenerationPhase.MAIN));
         this.schematic.add(new DecoBlockBase(2, 0, 2, chiseledStone, BlockStateGenArray.GenerationPhase.MAIN));
     }
 }

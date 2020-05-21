@@ -45,7 +45,7 @@ public class BlockStateGenArray {
         return entityMap;
     }
 
-    public boolean addChestWithLootTable(World world, BlockPos pos, EnumFacing facing, ResourceLocation lootTable, GenerationPhase phase) {
+    public boolean addChestWithLootTable(World world, BlockPos pos, Direction facing, ResourceLocation lootTable, GenerationPhase phase) {
         if (lootTable != null) {
             Block chestBlock = Blocks.CHEST;
             IBlockState state = Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, facing);

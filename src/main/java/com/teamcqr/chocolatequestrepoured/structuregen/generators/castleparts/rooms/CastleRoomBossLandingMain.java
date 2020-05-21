@@ -20,7 +20,7 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 	private static final int STAIR_OPENING_LENGTH_Z = 2;
 	private static final int BOSS_ROOM_WIDTH = 17; // may want to get this from the boss room itself later
 
-	private EnumFacing doorSide;
+	private Direction doorSide;
 	private int numRotations;
 
 	private int endX;
@@ -36,11 +36,11 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 	private int stairOpeningZStartIdx;
 	private int stairOpeningZEndIdx;
 
-	public CastleRoomBossLandingMain(BlockPos startOffset, int sideLength, int height, EnumFacing doorSide, int floor) {
+	public CastleRoomBossLandingMain(BlockPos startOffset, int sideLength, int height, Direction doorSide, int floor) {
 		super(startOffset, sideLength, height, floor);
 		this.roomType = EnumRoomType.LANDING_BOSS;
 		this.doorSide = doorSide;
-		this.numRotations = DungeonGenUtils.getCWRotationsBetween(EnumFacing.NORTH, this.doorSide);
+		this.numRotations = DungeonGenUtils.getCWRotationsBetween(Direction.NORTH, this.doorSide);
 		this.defaultCeiling = true;
 
 		this.endX = ROOMS_LONG * sideLength - 2; // minus 1 for the wall and 1 so it's at the last index
@@ -97,7 +97,7 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 				if (z < this.stairsDownZIdx) {
 					blockToBuild = Blocks.QUARTZ_BLOCK.getDefaultState();
 				} else if (z == this.stairsDownZIdx) {
-					EnumFacing stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(EnumFacing.NORTH, this.numRotations);
+					Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
 					blockToBuild = dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
 				} else {
 					return Blocks.AIR.getDefaultState();
@@ -145,19 +145,19 @@ public class CastleRoomBossLandingMain extends CastleRoomDecoratedBase {
 	}
 
 	@Override
-	public void addInnerWall(EnumFacing side) {
-		if (!(this.doorSide.getAxis() == EnumFacing.Axis.X && side == EnumFacing.SOUTH) && !(this.doorSide.getAxis() == EnumFacing.Axis.Z && side == EnumFacing.EAST) && !(side == this.doorSide)) {
+	public void addInnerWall(Direction side) {
+		if (!(this.doorSide.getAxis() == Direction.Axis.X && side == Direction.SOUTH) && !(this.doorSide.getAxis() == Direction.Axis.Z && side == Direction.EAST) && !(side == this.doorSide)) {
 			super.addInnerWall(side);
 		}
 	}
 
 	@Override
-	public boolean canBuildDoorOnSide(EnumFacing side) {
+	public boolean canBuildDoorOnSide(Direction side) {
 		return true;
 	}
 
 	@Override
-	public boolean reachableFromSide(EnumFacing side) {
+	public boolean reachableFromSide(Direction side) {
 		return true;
 	}
 }

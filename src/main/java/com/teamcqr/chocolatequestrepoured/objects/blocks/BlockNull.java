@@ -45,7 +45,7 @@ public class BlockNull extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, Hand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
 		if (playerIn.capabilities.isCreativeMode && playerIn.getHeldItem(Hand.MAIN_HAND).isEmpty()) {
 			if (state.getValue(PASSABLE)) {
 				worldIn.setBlockState(pos, state.withProperty(PASSABLE, false), 3);
@@ -87,7 +87,7 @@ public class BlockNull extends Block {
 	@SuppressWarnings("deprecation")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side) {
 		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
 		Block block = iblockstate.getBlock();
 

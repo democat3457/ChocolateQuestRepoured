@@ -8,7 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class WalkableRoofWallBuilder extends RoomWallBuilder {
-	public WalkableRoofWallBuilder(BlockPos roomStart, int height, int length, WallOptions options, EnumFacing side) {
+	public WalkableRoofWallBuilder(BlockPos roomStart, int height, int length, WallOptions options, Direction side) {
 		super(roomStart, height, length, options, side);
 	}
 
@@ -17,17 +17,17 @@ public class WalkableRoofWallBuilder extends RoomWallBuilder {
 		BlockPos pos;
 		IBlockState blockToBuild;
 
-		EnumFacing iterDirection;
+		Direction iterDirection;
 
-		if (this.side.getAxis() == EnumFacing.Axis.X) {
-			iterDirection = EnumFacing.SOUTH;
+		if (this.side.getAxis() == Direction.Axis.X) {
+			iterDirection = Direction.SOUTH;
 		} else {
-			iterDirection = EnumFacing.EAST;
+			iterDirection = Direction.EAST;
 		}
 
 		for (int i = 0; i < this.length; i++) {
 			for (int y = 0; y < this.height; y++) {
-				pos = this.wallStart.offset(iterDirection, i).offset(EnumFacing.UP, y);
+				pos = this.wallStart.offset(iterDirection, i).offset(Direction.UP, y);
 				blockToBuild = this.getBlockToBuild(pos, dungeon);
 				genArray.addBlockState(pos, blockToBuild, BlockStateGenArray.GenerationPhase.MAIN);
 			}
@@ -55,7 +55,7 @@ public class WalkableRoofWallBuilder extends RoomWallBuilder {
 	private boolean shouldBuildCrenellatedRoof(BlockPos pos) {
 		int heightPoint = pos.getY() - this.wallStart.getY();
 		int lengthPoint;
-		if (this.side.getAxis() == EnumFacing.Axis.X) {
+		if (this.side.getAxis() == Direction.Axis.X) {
 			lengthPoint = pos.getZ() - this.wallStart.getZ();
 		} else {
 			lengthPoint = pos.getX() - this.wallStart.getX();

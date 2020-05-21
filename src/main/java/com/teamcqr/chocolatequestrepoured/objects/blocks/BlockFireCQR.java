@@ -36,7 +36,7 @@ public class BlockFireCQR extends BlockFire {
 			}
 
 			Block block = worldIn.getBlockState(pos.down()).getBlock();
-			boolean flag = block.isFireSource(worldIn, pos.down(), EnumFacing.UP);
+			boolean flag = block.isFireSource(worldIn, pos.down(), Direction.UP);
 
 			int i = ((Integer) state.getValue(AGE)).intValue();
 
@@ -52,14 +52,14 @@ public class BlockFireCQR extends BlockFire {
 
 				if (!flag) {
 					if (!this.canNeighborCatchFire(worldIn, pos)) {
-						if (!worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), EnumFacing.UP) || i > 3) {
+						if (!worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), Direction.UP) || i > 3) {
 							worldIn.setBlockToAir(pos);
 						}
 
 						return;
 					}
 
-					if (!this.canCatchFire(worldIn, pos.down(), EnumFacing.UP) && i == 15 && rand.nextInt(4) == 0) {
+					if (!this.canCatchFire(worldIn, pos.down(), Direction.UP) && i == 15 && rand.nextInt(4) == 0) {
 						worldIn.setBlockToAir(pos);
 						return;
 					}
@@ -73,12 +73,12 @@ public class BlockFireCQR extends BlockFire {
 				}
 
 				if (!this.isPosProtected(worldIn, pos)) {
-					this.tryCatchFire(worldIn, pos.east(), 300 + j, rand, i, EnumFacing.WEST);
-					this.tryCatchFire(worldIn, pos.west(), 300 + j, rand, i, EnumFacing.EAST);
-					this.tryCatchFire(worldIn, pos.down(), 250 + j, rand, i, EnumFacing.UP);
-					this.tryCatchFire(worldIn, pos.up(), 250 + j, rand, i, EnumFacing.DOWN);
-					this.tryCatchFire(worldIn, pos.north(), 300 + j, rand, i, EnumFacing.SOUTH);
-					this.tryCatchFire(worldIn, pos.south(), 300 + j, rand, i, EnumFacing.NORTH);
+					this.tryCatchFire(worldIn, pos.east(), 300 + j, rand, i, Direction.WEST);
+					this.tryCatchFire(worldIn, pos.west(), 300 + j, rand, i, Direction.EAST);
+					this.tryCatchFire(worldIn, pos.down(), 250 + j, rand, i, Direction.UP);
+					this.tryCatchFire(worldIn, pos.up(), 250 + j, rand, i, Direction.DOWN);
+					this.tryCatchFire(worldIn, pos.north(), 300 + j, rand, i, Direction.SOUTH);
+					this.tryCatchFire(worldIn, pos.south(), 300 + j, rand, i, Direction.NORTH);
 				}
 
 				for (int k = -1; k <= 1; ++k) {
@@ -119,7 +119,7 @@ public class BlockFireCQR extends BlockFire {
 		}
 	}
 
-	private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, EnumFacing face) {
+	private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, Direction face) {
 		if (this.isPosProtected(worldIn, pos)) {
 			return;
 		}
@@ -147,7 +147,7 @@ public class BlockFireCQR extends BlockFire {
 	}
 
 	private boolean canNeighborCatchFire(World worldIn, BlockPos pos) {
-		for (EnumFacing enumfacing : EnumFacing.values()) {
+		for (Direction enumfacing : Direction.values()) {
 			if (this.canCatchFire(worldIn, pos.offset(enumfacing), enumfacing.getOpposite())) {
 				return true;
 			}
@@ -162,7 +162,7 @@ public class BlockFireCQR extends BlockFire {
 		} else {
 			int i = 0;
 
-			for (EnumFacing enumfacing : EnumFacing.values()) {
+			for (Direction enumfacing : Direction.values()) {
 				i = Math.max(worldIn.getBlockState(pos.offset(enumfacing)).getBlock().getFireSpreadSpeed(worldIn, pos.offset(enumfacing), enumfacing.getOpposite()), i);
 			}
 

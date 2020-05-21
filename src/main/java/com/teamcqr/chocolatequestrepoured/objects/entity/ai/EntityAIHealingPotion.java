@@ -141,7 +141,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 		double cos = Math.cos(Math.toRadians(this.entity.rotationYaw));
 		BlockPos pos = new BlockPos(this.entity.posX - sin, this.entity.posY - 0.001D, this.entity.posZ - cos);
 		IBlockState state = this.entity.world.getBlockState(pos);
-		return state.isSideSolid(this.entity.world, pos, EnumFacing.UP);
+		return state.isSideSolid(this.entity.world, pos, Direction.UP);
 	}
 
 	public void startHealing() {

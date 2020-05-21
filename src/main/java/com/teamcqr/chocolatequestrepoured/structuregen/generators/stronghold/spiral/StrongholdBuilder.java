@@ -28,11 +28,11 @@ public class StrongholdBuilder {
 	private BlockPos startPos;
 	private DungeonVolcano dungeon;
 	private int blocksRemainingToWall;
-	private EnumFacing direction;
+	private Direction direction;
 	private World world;
 	private List<List<? extends IStructure>> strongholdParts = new ArrayList<>();
 
-	public StrongholdBuilder(BlockPos start, int distanceToWall, DungeonVolcano dungeon, EnumFacing expansionDirection, World world) {
+	public StrongholdBuilder(BlockPos start, int distanceToWall, DungeonVolcano dungeon, Direction expansionDirection, World world) {
 		this.startPos = start;
 		this.dungeon = dungeon;
 		this.blocksRemainingToWall = distanceToWall;
@@ -158,8 +158,8 @@ public class StrongholdBuilder {
 	private void buildPillar(BlockPos bottom, Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap) {
 		for (int iY = 1; iY <= 4; iY++) {
 			BlockPos pos = bottom.add(0, iY, 0);
-			//this.world.setBlockState(pos, ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
-			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), new CompoundNBT()));
+			//this.world.setBlockState(pos, ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, Direction.Axis.Y));
+			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, Direction.Axis.Y), new CompoundNBT()));
 		}
 		//this.world.setBlockState(bottom.add(0, 5, 0), ModBlocks.GRANITE_CARVED.getDefaultState());
 		stateMap.put(bottom.add(0, 5, 0), new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_CARVED.getDefaultState(), new CompoundNBT()));

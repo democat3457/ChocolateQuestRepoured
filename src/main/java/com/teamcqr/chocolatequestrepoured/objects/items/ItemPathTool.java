@@ -65,7 +65,7 @@ public class ItemPathTool extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, Hand hand) {
+	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand) {
 		/*
 		 * Shift right click with no target block -> erase positions
 		 * right click -> add position

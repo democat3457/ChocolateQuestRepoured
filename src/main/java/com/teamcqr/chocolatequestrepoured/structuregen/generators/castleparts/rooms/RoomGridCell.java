@@ -139,7 +139,7 @@ public class RoomGridCell {
         this.state = CellState.POPULATED;
     }
 
-    public boolean reachableFromSide(EnumFacing side) {
+    public boolean reachableFromSide(Direction side) {
         if (this.room != null) {
             return this.room.reachableFromSide(side);
         } else {

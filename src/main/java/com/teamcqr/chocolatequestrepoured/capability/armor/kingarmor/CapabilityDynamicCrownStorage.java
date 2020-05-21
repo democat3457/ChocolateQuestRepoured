@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.Constants;
 public class CapabilityDynamicCrownStorage implements IStorage<CapabilityDynamicCrown> {
 
 	@Override
-	public NBTBase writeNBT(Capability<CapabilityDynamicCrown> capability, CapabilityDynamicCrown instance, EnumFacing side) {
+	public NBTBase writeNBT(Capability<CapabilityDynamicCrown> capability, CapabilityDynamicCrown instance, Direction side) {
 		CompoundNBT compound = new CompoundNBT();
 		if(instance.getAttachedItem() != null) {
 			compound.setString("attachedItem", instance.getAttachedItem().getRegistryName().toString());
@@ -20,7 +20,7 @@ public class CapabilityDynamicCrownStorage implements IStorage<CapabilityDynamic
 	}
 
 	@Override
-	public void readNBT(Capability<CapabilityDynamicCrown> capability, CapabilityDynamicCrown instance, EnumFacing side, NBTBase nbt) {
+	public void readNBT(Capability<CapabilityDynamicCrown> capability, CapabilityDynamicCrown instance, Direction side, NBTBase nbt) {
 		CompoundNBT compound = (CompoundNBT) nbt;
 		if(compound.hasKey("attachedItem", Constants.NBT.TAG_STRING)) {
 			instance.attachItem(new ResourceLocation(compound.getString("attachedItem")));
