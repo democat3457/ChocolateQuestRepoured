@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.LivingEntity;

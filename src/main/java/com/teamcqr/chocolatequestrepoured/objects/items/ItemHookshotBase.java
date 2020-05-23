@@ -100,7 +100,7 @@ public abstract class ItemHookshotBase extends Item implements IRangedWeapon {
 
         this.addPropertyOverride(new ResourceLocation("hook_out"), new IItemPropertyGetter() {
             @Override
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Side.CLIENT)
             public float apply(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
                 if (entityIn != null && stack.getItem() instanceof ItemHookshotBase) {
                     CompoundNBT stackTag = stack.getTagCompound();
@@ -167,7 +167,7 @@ public abstract class ItemHookshotBase extends Item implements IRangedWeapon {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
             tooltip.add(TextFormatting.BLUE + I18n.format(getTranslationKey()));

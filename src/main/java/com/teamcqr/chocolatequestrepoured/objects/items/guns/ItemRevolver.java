@@ -38,7 +38,7 @@ public class ItemRevolver extends Item implements IRangedWeapon {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(TextFormatting.BLUE + "5.0 " + I18n.format("description.bullet_damage.name"));
 		tooltip.add(TextFormatting.RED + "-30 " + I18n.format("description.fire_rate.name"));

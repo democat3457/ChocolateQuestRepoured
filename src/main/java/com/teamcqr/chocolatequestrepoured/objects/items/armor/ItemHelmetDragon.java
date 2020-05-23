@@ -35,7 +35,7 @@ public class ItemHelmetDragon extends ItemArmor {
 	}
 
 	/*
-	 * @SideOnly(Side.CLIENT)
+	 * @OnlyIn(Side.CLIENT)
 	 * 
 	 * @Override
 	 * public ModelBiped getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot,

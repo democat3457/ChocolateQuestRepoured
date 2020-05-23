@@ -74,7 +74,7 @@ public class EntityWalkerTornado extends Entity {
 	}
 
 	// Particle code taken from aether legacy's whirlwind
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public void updateParticles() {
 		final Integer color = this.getColor();
 		for (int k = 0; k < 4; ++k) {
@@ -109,7 +109,7 @@ public class EntityWalkerTornado extends Entity {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public float getDistanceToParticle(final EntityParticle particle) {
 		final float f = (float) (this.posX - particle.getX());
 		final float f2 = (float) (this.posY - particle.getY());

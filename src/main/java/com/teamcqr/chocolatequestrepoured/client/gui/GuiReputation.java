@@ -11,7 +11,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class GuiReputation extends GuiScreen {
 
 	// Textures

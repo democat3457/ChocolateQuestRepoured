@@ -30,7 +30,7 @@ public class ItemCrown extends ItemArmor {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public ModelBiped getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, ModelBiped _default) {
 		return ModArmorModels.crown;
 	}

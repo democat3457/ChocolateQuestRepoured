@@ -137,7 +137,7 @@ public class ItemSpearBase extends ItemSword {
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)
 	public static class EventHandler {
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Side.CLIENT)
 		@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
 		public static void onEvent(MouseEvent event) {
 			if (event.getButton() == 0 && event.isButtonstate()) {
@@ -164,7 +164,7 @@ public class ItemSpearBase extends ItemSword {
 
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public static RayTraceResult getMouseOverExtended(float distance) {
 		// Most of this is copied from EntityRenderer#getMouseOver(). Some variable names changed for readability
 
@@ -239,7 +239,7 @@ public class ItemSpearBase extends ItemSword {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			tooltip.add(TextFormatting.BLUE + I18n.format("description.spear_diamond.name"));

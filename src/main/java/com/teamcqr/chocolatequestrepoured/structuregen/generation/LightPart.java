@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.structuregen.generation;
 
 import com.teamcqr.chocolatequestrepoured.structureprot.ProtectedRegion;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;

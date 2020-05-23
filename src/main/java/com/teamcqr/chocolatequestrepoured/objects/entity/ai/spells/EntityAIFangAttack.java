@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.EntityEvokerFangs;
 import net.minecraft.util.SoundEvent;

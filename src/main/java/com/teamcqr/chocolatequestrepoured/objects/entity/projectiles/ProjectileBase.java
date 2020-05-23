@@ -1,6 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.math.RayTraceResult;

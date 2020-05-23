@@ -17,10 +17,10 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerEntityMP;
-import net.minecraft.item.ItemAxe;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
@@ -43,9 +43,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class EventsHandler {
 
 	@SubscribeEvent
@@ -74,16 +74,9 @@ public class EventsHandler {
 				return;
 			}
 
-			double d = attacker.posX + (attacker.world.rand.nextDouble() - 0.5D) * 4.0D;
-			double d1 = attacker.posY;
-			double d2 = attacker.posZ + (attacker.world.rand.nextDouble() - 0.5D) * 4.0D;
-
-			@SuppressWarnings("unused")
-			double d3 = player.posX;
-			@SuppressWarnings("unused")
-			double d4 = player.posY;
-			@SuppressWarnings("unused")
-			double d5 = player.posZ;
+			double d = attacker.getPosX() + (attacker.world.rand.nextDouble() - 0.5D) * 4.0D;
+			double d1 = attacker.getPosY();
+			double d2 = attacker.getPosZ() + (attacker.world.rand.nextDouble() - 0.5D) * 4.0D;
 
 			int i = MathHelper.floor(d);
 			int j = MathHelper.floor(d1);
@@ -92,13 +85,13 @@ public class EventsHandler {
 			BlockPos ep = new BlockPos(i, j, k);
 			BlockPos ep1 = new BlockPos(i, j + 1, k);
 
-			if (world.getCollisionBoxes(player, player.getEntityBoundingBox()).size() == 0 && !world.containsAnyLiquid(attacker.getEntityBoundingBox()) && player.isActiveItemStackBlocking() && player.getDistanceSq(attacker) >= 25.0D) {
+			if (world.getCollisionShapes(player, player.getBoundingBox()).count() == 0 && !world.containsAnyLiquid(attacker.getBoundingBox()) && player.isActiveItemStackBlocking() && player.getDistanceSq(attacker) >= 25.0D) {
 				if (world.getBlockState(ep).getBlock().isPassable(world, ep) && world.getBlockState(ep1).getBlock().isPassable(world, ep1)) {
 					tep = true;
 				} else {
 					tep = false;
 					if (!world.isRemote) {
-						((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, player.posX, player.posY + player.height * 0.5D, player.posZ, 12, 0.25D, 0.25D, 0.25D, 0.0D);
+						((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 					}
 				}
 			}
@@ -110,9 +103,9 @@ public class EventsHandler {
 
 						playerMP.connection.setPlayerLocation(d, d1, d2, playerMP.rotationYaw, playerMP.rotationPitch);
 						if (!world.isRemote) {
-							((WorldServer) world).spawnParticle(EnumParticleTypes.PORTAL, player.posX, player.posY + player.height * 0.5D, player.posZ, 12, 0.25D, 0.25D, 0.25D, 0.0D);
+							((WorldServer) world).spawnParticle(EnumParticleTypes.PORTAL, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 						}
-						world.playSound(null, d, d1, d2, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.MASTER, 1.0F, 1.0F);
+						world.playSound(null, d, d1, d2, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.MASTER, 1.0F, 1.0F);
 					}
 					event.setCanceled(true);
 					tep = false;
@@ -125,22 +118,22 @@ public class EventsHandler {
 	public static void onLivingDeath(LivingDeathEvent event) {
 		Random rand = new Random();
 		Entity entity = event.getEntity();
-		CompoundNBT tag = entity.getEntityData();
+		CompoundNBT tag = entity.serializeNBT();
 
-		if (tag.hasKey("Items")) {
-			ListNBT itemList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+		if (tag.contains("Items")) {
+			ListNBT itemList = tag.getList("Items", Constants.NBT.TAG_COMPOUND);
 
 			if (itemList == null) {
 				return;
 			}
 
-			for (int i = 0; i < itemList.tagCount(); i++) {
-				CompoundNBT entry = itemList.getCompoundTagAt(i);
-				ItemStack stack = new ItemStack(entry);
+			for (int i = 0; i < itemList.size(); i++) {
+				CompoundNBT entry = itemList.getCompound(i);
+				ItemStack stack = ItemStack.read(entry);
 
 				if (stack != null) {
 					if (!entity.world.isRemote) {
-						entity.world.spawnEntity(new EntityItem(entity.world, entity.posX + rand.nextDouble(), entity.posY, entity.posZ + rand.nextDouble(), stack));
+						entity.world.addEntity(new ItemEntity(entity.world, entity.getPosX() + rand.nextDouble(), entity.getPosY(), entity.getPosZ() + rand.nextDouble(), stack));
 					}
 				}
 			}
@@ -149,32 +142,32 @@ public class EventsHandler {
 
 	@SubscribeEvent
 	public static void onWorldLoad(WorldEvent.Load e) {
-		DungeonDataManager.handleWorldLoad(e.getWorld());
+		DungeonDataManager.handleWorldLoad((World) e.getWorld());
 	}
 
 	@SubscribeEvent
 	public static void onWorldCreateSpawnpoint(WorldEvent.CreateSpawnPosition e) {
-		DungeonDataManager.handleWorldLoad(e.getWorld());
+		DungeonDataManager.handleWorldLoad((World) e.getWorld());
 	}
 
 	@SubscribeEvent
 	public static void onWorldSave(WorldEvent.Save e) {
-		DungeonDataManager.handleWorldSave(e.getWorld());
+		DungeonDataManager.handleWorldSave((World) e.getWorld());
 	}
 
 	@SubscribeEvent
 	public static void onRecipeRegister(RegistryEvent.Register<IRecipe> event) {
-		event.getRegistry().register(new RecipesArmorDyes().setRegistryName(Reference.MODID, "armor_coloring"));
+		event.getRegistry().register(new RecipesArmorDyes());
 		event.getRegistry().register(new RecipeArmorDyableRainbow());
 		event.getRegistry().register(new RecipeArmorDyableBreathing());
-		event.getRegistry().register(new RecipeDynamicCrown().setRegistryName(Reference.MODID, "dynamic_king_crown"));
+		event.getRegistry().register(new RecipeDynamicCrown());
 	}
 
 	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void onWorldUnload(WorldEvent.Unload e) {
-		if (!e.getWorld().isRemote) {
-			DungeonDataManager.handleWorldUnload(e.getWorld());
+		if (!e.getWorld().isRemote()) {
+			DungeonDataManager.handleWorldUnload((World) e.getWorld());
 			// Stop export threads
 			if (!CQStructure.RUNNING_EXPORT_THREADS.isEmpty()) {
 				for (Thread t : CQStructure.RUNNING_EXPORT_THREADS) {
@@ -208,13 +201,13 @@ public class EventsHandler {
 	@SubscribeEvent
 	public static void onAttackEntityEvent(AttackEntityEvent event) {
 		if (CQRConfig.mobs.blockCancelledByAxe) {
-			PlayerEntity player = event.getPlayerEntity();
+			PlayerEntity player = event.getPlayer();
 			World world = player.world;
 
 			if (!world.isRemote && event.getTarget() instanceof AbstractEntityCQR) {
 				AbstractEntityCQR targetCQR = (AbstractEntityCQR) event.getTarget();
 
-				if (targetCQR.canBlockDamageSource(DamageSource.causePlayerDamage(player)) && player.getHeldItemMainhand().getItem() instanceof ItemAxe && player.getCooledAttackStrength(0) == 1.0F) {
+				if (targetCQR.canBlockDamageSource(DamageSource.causePlayerDamage(player)) && player.getHeldItemMainhand().getItem() instanceof AxeItem && player.getCooledAttackStrength(0) == 1.0F) {
 					targetCQR.setLastTimeHitByAxeWhileBlocking(targetCQR.ticksExisted);
 				}
 			}

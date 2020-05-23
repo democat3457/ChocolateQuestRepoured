@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Author: DerToaster98
  * Github: https://github.com/DerToaster98
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class ModelNexusCrystal extends ModelBase {
 
 	/** The cube model for the Ender Crystal. */

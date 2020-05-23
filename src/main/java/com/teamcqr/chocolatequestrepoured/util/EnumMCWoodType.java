@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockWoodSlab;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 
 public enum EnumMCWoodType {
     OAK(BlockPlanks.EnumType.OAK, Blocks.OAK_STAIRS, Blocks.OAK_FENCE, Blocks.OAK_DOOR),

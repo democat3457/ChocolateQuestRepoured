@@ -14,7 +14,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class ModelCustomArmorBase extends ModelBiped {
 
 	public ModelCustomArmorBase(float scale, int textureWidth, int textureHeight) {

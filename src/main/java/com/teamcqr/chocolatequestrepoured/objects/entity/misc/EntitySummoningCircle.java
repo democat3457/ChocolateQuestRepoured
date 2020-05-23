@@ -141,7 +141,7 @@ public class EntitySummoningCircle extends Entity implements IEntityAdditionalSp
 		this.ticksExisted = additionalData.readInt();
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public int getTextureID() {
 		return this.texture.ordinal();
 	}

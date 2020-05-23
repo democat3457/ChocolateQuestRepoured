@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class GuiBackpack extends GuiContainer {
 
 	private static final ResourceLocation GUI_BACKPACK = new ResourceLocation("textures/gui/container/shulker_box.png");

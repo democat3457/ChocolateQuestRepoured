@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 
 import java.util.Random;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;

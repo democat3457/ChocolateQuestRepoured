@@ -148,7 +148,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public static float MAX_DEATH_TICKS = 200.0F;
 
 	// Client only
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	protected int currentSpeechBubbleID;
 
 	public AbstractEntityCQR(World worldIn) {
@@ -970,17 +970,17 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public ESpeechBubble getCurrentSpeechBubble() {
 		return ESpeechBubble.values()[this.currentSpeechBubbleID];
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public void chooseNewRandomSpeechBubble() {
 		this.currentSpeechBubbleID = this.rand.nextInt(ESpeechBubble.values().length);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public int getTextureIndex() {
 		return this.dataManager.get(TEXTURE_INDEX);
 	}

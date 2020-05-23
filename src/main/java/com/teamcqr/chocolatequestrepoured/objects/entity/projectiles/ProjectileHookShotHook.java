@@ -10,7 +10,7 @@ import com.teamcqr.chocolatequestrepoured.init.ModSerializers;
 import com.teamcqr.chocolatequestrepoured.network.packets.toClient.HookShotPlayerStopPacket;
 import com.teamcqr.chocolatequestrepoured.objects.items.ItemHookshotBase;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -391,7 +391,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	private void pullIfClientIsShooter()
 	{
 		//Must be client side to check this
@@ -426,7 +426,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	private void pullIfClientIsPulledEntity()
 	{
 		//Must be client side to check this

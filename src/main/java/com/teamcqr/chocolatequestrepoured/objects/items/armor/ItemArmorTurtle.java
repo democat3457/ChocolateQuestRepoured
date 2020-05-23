@@ -65,7 +65,7 @@ public class ItemArmorTurtle extends ItemArmor {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		PlayerEntity player = Minecraft.getMinecraft().player;
 		if (player != null) {
@@ -95,7 +95,7 @@ public class ItemArmorTurtle extends ItemArmor {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	@Nullable
 	public ModelBiped getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, ModelBiped _default) {
 		return armorSlot == EquipmentSlotType.LEGS ? ModArmorModels.turtleArmorLegs : ModArmorModels.turtleArmor;

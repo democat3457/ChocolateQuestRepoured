@@ -50,7 +50,7 @@ public class ItemArmorHeavy extends ItemArmor {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Side.CLIENT)
 	@Nullable
 	public ModelBiped getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, ModelBiped _default) {
 		ArmorMaterial armorMaterial = ((ItemArmor) itemStack.getItem()).getArmorMaterial();

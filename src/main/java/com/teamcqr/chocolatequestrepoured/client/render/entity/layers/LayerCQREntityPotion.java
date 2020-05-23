@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class LayerCQREntityPotion extends AbstractLayerCQR {
 
 	public LayerCQREntityPotion(RenderCQREntity<?> renderCQREntity) {

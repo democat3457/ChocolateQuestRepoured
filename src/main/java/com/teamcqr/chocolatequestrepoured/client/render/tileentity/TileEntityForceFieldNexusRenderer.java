@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Author: DerToaster98
  * Github: https://github.com/DerToaster98
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Side.CLIENT)
 public class TileEntityForceFieldNexusRenderer extends TileEntitySpecialRenderer<TileEntityForceFieldNexus> {
 
 	private final ModelBase crystal = new ModelNexusCrystal();
