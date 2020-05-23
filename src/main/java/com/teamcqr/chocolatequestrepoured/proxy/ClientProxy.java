@@ -13,18 +13,19 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(modid = Reference.MODID, value = Side.CLIENT)
+@EventBusSubscriber(modid = Reference.MODID, value = {Dist.CLIENT})
 public class ClientProxy implements IProxy {
 
 	static final String KEY_CATEGORY_MAIN = "Chocolate Quest Repoured";
@@ -73,10 +74,9 @@ public class ClientProxy implements IProxy {
 			}
 		}
 		
-		event.getItemColors().registerItemColorHandler(new IItemColor() {
-			
+		event.getItemColors().register(new IItemColor() {
 			@Override
-			public int colorMultiplier(ItemStack stack, int tintIndex) {
+			public int getColor(ItemStack stack, int tintIndex) {
 				return tintIndex > 0 ? -1 : ((ItemArmorDyable)stack.getItem()).getColor(stack);
 			}
 		}, dyables.toArray(new Item[dyables.size()]));

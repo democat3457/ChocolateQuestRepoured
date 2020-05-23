@@ -6,14 +6,14 @@ import com.teamcqr.chocolatequestrepoured.init.ModMaterials;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
-public class ItemArmorDyable extends ItemArmor {
+public class ItemArmorDyable extends ArmorItem {
 
 	public ItemArmorDyable(ArmorMaterial materialIn, int renderIndexIn, EquipmentSlotType equipmentSlotIn) {
 		super(materialIn, renderIndexIn, equipmentSlotIn);
