@@ -24,9 +24,10 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -353,7 +354,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 			if(rdm.nextBoolean()) {
 				Block block = Blocks.CHEST;
 				BlockState state = block.getDefaultState();
-				TileEntityChest chest = (TileEntityChest)block.createTileEntity(world, state);
+				ChestTileEntity chest = (ChestTileEntity)block.createTileEntity(state, world);
 				
 				if (chest != null) {
 					ResourceLocation resLoc = chestIDs[rdm.nextInt(chestIDs.length)];
@@ -363,7 +364,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 					}
 				}
 				
-				CompoundNBT nbt = chest.writeToNBT(new CompoundNBT());
+				CompoundNBT nbt = chest.write(new CompoundNBT());
 				stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(state, nbt));
 			}
 		}
@@ -380,7 +381,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 			Block block = ModBlocks.SPAWNER;//Blocks.MOB_SPAWNER;
 			BlockState state = block.getDefaultState();
 			//TileEntityMobSpawner spawner = (TileEntityMobSpawner)block.createTileEntity(world, state);
-			TileEntitySpawner spawner = (TileEntitySpawner)block.createTileEntity(world, state);
+			TileEntitySpawner spawner = (TileEntitySpawner)block.createTileEntity(state, world);
 			/*spawner.getSpawnerBaseLogic().setEntityId(dungeon.getRampMob());
 			
 			//Spawner settings
@@ -417,7 +418,7 @@ public class GeneratorVolcano implements IDungeonGenerator {
 				//CompoundNBT entity = SpawnerFactory.createSpawnerNBTFromEntity(ent);
 				spawner.inventory.setStackInSlot(i, SpawnerFactory.getSoulBottleItemStackForEntity(ent));
 			}
-			CompoundNBT data = spawner.writeToNBT(new CompoundNBT());
+			CompoundNBT data = spawner.write(new CompoundNBT());
 			stateMap.put(pos.add(0, 1, 0), new ExtendedBlockStatePart.ExtendedBlockState(state, data));
 			floor--;
 		}
