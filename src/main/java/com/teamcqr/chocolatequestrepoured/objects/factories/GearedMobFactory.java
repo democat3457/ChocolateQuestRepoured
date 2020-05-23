@@ -7,12 +7,12 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class GearedMobFactory {
 
@@ -27,7 +27,7 @@ public class GearedMobFactory {
 	}
 	
 	public Entity getGearedEntityByFloor(int floor, World world) {
-		Entity entity = EntityList.createEntityByIDFromName(entityID, world);
+		Entity entity = ForgeRegistries.ENTITIES.getValue(entityID).create(world);//EntityList.createEntityByIDFromName(entityID, world);
 		
 		boolean enchant = enchantGear(floor);
 		boolean sword = false;
