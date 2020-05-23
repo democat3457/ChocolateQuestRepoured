@@ -14,6 +14,7 @@ import com.teamcqr.chocolatequestrepoured.util.EnumMCWoodType;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.state.IProperty;
 import net.minecraft.world.World;
 
@@ -55,10 +56,10 @@ public class DungeonCastle extends DungeonBase {
 		this.floorHeight = PropertyFileHelper.getIntProperty(prop, "floorHeight", 8);
 
 		EnumMCWoodType woodType = PropertyFileHelper.getWoodTypeProperty(prop, "woodType", EnumMCWoodType.OAK);
-		this.mainBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "mainBlock", Blocks.STONEBRICK.getDefaultState());
+		this.mainBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "mainBlock", Blocks.STONE_BRICKS.getDefaultState());
 		this.stairBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "stairBlock", Blocks.STONE_BRICK_STAIRS.getDefaultState());
 		this.slabBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "slabBlock", Blocks.STONE_SLAB.getDefaultState());
-		this.fancyBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "fancyBlock", Blocks.STONEBRICK.getDefaultState());
+		this.fancyBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "fancyBlock", Blocks.STONE_BRICKS.getDefaultState());
 		this.floorBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "floorBlock", woodType.getPlankBlockState());
 		this.roofBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "roofBlock", woodType.getStairBlockState());
 		this.fenceBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "fenceBlock", woodType.getFenceBlockState());
@@ -66,7 +67,7 @@ public class DungeonCastle extends DungeonBase {
 		this.woodSlabBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "woodSlabBlock", woodType.getSlabBlockState());
 		this.plankBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "plankBlock", woodType.getPlankBlockState());
 		this.doorBlock = PropertyFileHelper.getDefaultStateBlockProperty(prop, "doorBlock", woodType.getDoorBlockState());
-		Collection<IProperty<? >> x = Blocks.SANDSTONE.getDefaultState().getPropertyKeys();
+		Collection<IProperty<? >> x = Blocks.SANDSTONE.getDefaultState().getProperties();
 
 		this.roomRandomizer = new CQRWeightedRandom<>(this.random);
 		int weight = PropertyFileHelper.getIntProperty(prop, "roomWeightAlchemyLab", 1);
@@ -110,7 +111,7 @@ public class DungeonCastle extends DungeonBase {
 	@Override
 	public void generate(World world, int x, int y, int z) {
 		IDungeonGenerator generator = new GeneratorCastle(this);
-		generator.generate(world, world.getChunkAt(x >> 4, z >> 4), x, y, z);
+		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
 	}
 
 	public BlockState getMainBlockState() {
