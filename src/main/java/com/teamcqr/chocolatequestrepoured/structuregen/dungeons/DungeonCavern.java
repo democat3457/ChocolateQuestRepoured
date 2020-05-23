@@ -185,7 +185,7 @@ public class DungeonCavern extends DungeonBase {
 			BlockState state2 = ModBlocks.SPAWNER.getDefaultState();
 			TileEntitySpawner tileSpawner = (TileEntitySpawner) ModBlocks.SPAWNER.createTileEntity(world, state2);
 			tileSpawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(EntityList.createEntityByIDFromName(this.getBossMob(), world)));
-			stateMap.put(bossPos, new ExtendedBlockStatePart.ExtendedBlockState(state2, tileSpawner.writeToNBT(new CompoundNBT())));
+			stateMap.put(bossPos, new ExtendedBlockStatePart.ExtendedBlockState(state2, tileSpawner.write(new CompoundNBT())));
 			
 			lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
 		}
