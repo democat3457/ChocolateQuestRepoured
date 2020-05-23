@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
@@ -42,7 +42,7 @@ public class ProjectileEarthQuake extends EntityThrowable {
 	@Override
 	protected void onImpact(RayTraceResult result) {
 		if (!this.world.isRemote) {
-			if (!(result.entityHit instanceof EntityLiving)) {
+			if (!(result.entityHit instanceof LivingEntity)) {
 				this.motionY = 0.0D;
 			}
 		}

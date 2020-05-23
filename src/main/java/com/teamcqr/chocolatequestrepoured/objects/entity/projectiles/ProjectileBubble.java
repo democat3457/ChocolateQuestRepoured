@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.projectiles;
 import com.teamcqr.chocolatequestrepoured.objects.entity.misc.EntityBubble;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.item.ItemShield;
@@ -56,7 +56,7 @@ public class ProjectileBubble extends ProjectileBase {
 			return;
 		}
 		
-		if(entityHit instanceof EntityLiving && ((EntityLiving)entityHit).getActiveItemStack().getItem() instanceof ItemShield) {
+		if(entityHit instanceof LivingEntity && ((LivingEntity)entityHit).getActiveItemStack().getItem() instanceof ItemShield) {
 			return;
 		}
 

@@ -39,7 +39,7 @@ public class CapabilityCooldownHandlerProvider extends SerializableCapabilityPro
 
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getLivingEntity();
 		CapabilityCooldownHandler icapability = entity.getCapability(CAPABILITY_ITEM_COOLDOWN_CQR, null);
 		for (Item item : icapability.getItemCooldownMap().keySet()) {
 			icapability.reduceCooldown(item);

@@ -1,13 +1,13 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai.navigator;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.util.math.MathHelper;
 
 public class MoveHelperDirectFlight extends EntityMoveHelper {
 
-	public MoveHelperDirectFlight(EntityLiving entitylivingIn) {
+	public MoveHelperDirectFlight(LivingEntity entitylivingIn) {
 		super(entitylivingIn);
 	}
 

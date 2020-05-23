@@ -1,6 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai.navigator;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathPoint;
@@ -42,7 +42,7 @@ public class DirectLineNodeProcessor extends NodeProcessor {
 	}
 
 	@Override
-	public PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn) {
+	public PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, LivingEntity entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn) {
 		return PathNodeType.OPEN;
 	}
 

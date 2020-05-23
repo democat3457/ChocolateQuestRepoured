@@ -1,6 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai.navigator;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.math.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class PathNavigateDirectLine extends PathNavigate {
 
-	public PathNavigateDirectLine(EntityLiving entity, World world) {
+	public PathNavigateDirectLine(LivingEntity entity, World world) {
 		super(entity, world);
 	}
 
