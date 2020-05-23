@@ -7,9 +7,9 @@ import com.teamcqr.chocolatequestrepoured.structureprot.ProtectedRegionManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

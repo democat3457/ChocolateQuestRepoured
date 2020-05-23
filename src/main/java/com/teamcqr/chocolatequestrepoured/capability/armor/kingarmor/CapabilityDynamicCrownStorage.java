@@ -1,7 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.capability.armor.kingarmor;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;

@@ -1,7 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.banners;
 
 import com.teamcqr.chocolatequestrepoured.util.Reference;
-import com.teamcqr.chocolatequestrepoured.util.ReflectionHelper;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;

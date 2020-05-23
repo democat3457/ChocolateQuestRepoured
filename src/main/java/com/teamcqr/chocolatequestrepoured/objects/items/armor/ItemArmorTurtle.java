@@ -35,13 +35,13 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemArmorTurtle extends ItemArmor {
 
@@ -114,7 +114,7 @@ public class ItemArmorTurtle extends ItemArmor {
 					double x = entity.posX;
 					double y = entity.posY + entity.getEyeHeight();
 					double z = entity.posZ;
-					((WorldServer) entity.world).spawnParticle(EnumParticleTypes.HEART, x, y, z, 2, 0.5D, 0.5D, 0.5D, 1.0D);
+					((ServerWorld) entity.world).spawnParticle(EnumParticleTypes.HEART, x, y, z, 2, 0.5D, 0.5D, 0.5D, 1.0D);
 				}
 
 				if (!CapabilityCooldownHandlerHelper.onCooldown(entity, ModItems.CHESTPLATE_TURTLE) && entity.getHealth() < Math.max(5.0F, entity.getMaxHealth() * 0.2F)) {
@@ -123,7 +123,7 @@ public class ItemArmorTurtle extends ItemArmor {
 						double x = entity.posX;
 						double y = entity.posY + entity.getEyeHeight();
 						double z = entity.posZ;
-						((WorldServer) entity.world).spawnParticle(EnumParticleTypes.HEART, x, y, z, 4, 0.5D, 0.5D, 0.5D, 1.0D);
+						((ServerWorld) entity.world).spawnParticle(EnumParticleTypes.HEART, x, y, z, 4, 0.5D, 0.5D, 0.5D, 1.0D);
 						entity.world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.PLAYERS, 0.6F, 1.2F);
 					}
 					CapabilityCooldownHandlerHelper.setCooldown(entity, ModItems.CHESTPLATE_TURTLE, 12000);

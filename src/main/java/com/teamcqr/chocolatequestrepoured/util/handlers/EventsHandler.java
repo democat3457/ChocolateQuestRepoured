@@ -32,7 +32,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -91,7 +91,7 @@ public class EventsHandler {
 				} else {
 					tep = false;
 					if (!world.isRemote) {
-						((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
+						((ServerWorld) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 					}
 				}
 			}
@@ -103,7 +103,7 @@ public class EventsHandler {
 
 						playerMP.connection.setPlayerLocation(d, d1, d2, playerMP.rotationYaw, playerMP.rotationPitch);
 						if (!world.isRemote) {
-							((WorldServer) world).spawnParticle(EnumParticleTypes.PORTAL, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
+							((ServerWorld) world).spawnParticle(EnumParticleTypes.PORTAL, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 						}
 						world.playSound(null, d, d1, d2, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.MASTER, 1.0F, 1.0F);
 					}

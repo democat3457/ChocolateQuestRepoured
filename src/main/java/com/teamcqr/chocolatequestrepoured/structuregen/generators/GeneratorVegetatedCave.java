@@ -25,8 +25,8 @@ import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHugeMushroom;
-import net.minecraft.block.BlockVine;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockVine;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;

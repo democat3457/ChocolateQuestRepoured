@@ -3,8 +3,8 @@ package com.teamcqr.chocolatequestrepoured.client.models.entities.customarmor;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @OnlyIn(Side.CLIENT)
 public class ModelCQREndermanArmor extends ModelBiped {

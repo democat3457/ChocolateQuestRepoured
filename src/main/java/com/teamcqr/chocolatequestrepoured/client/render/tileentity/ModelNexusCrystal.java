@@ -5,8 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /*
  * 06.01.2020

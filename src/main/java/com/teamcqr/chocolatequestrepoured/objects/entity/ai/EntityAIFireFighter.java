@@ -13,10 +13,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.server.ServerWorld;
 
 public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> {
 
@@ -73,7 +73,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 		if (this.entity.getDistanceSqToCenter(this.nearestFire) <= REACH_DISTANCE_SQ) {
 			if (this.entity.world.getBlockState(this.nearestFire).getBlock() == Blocks.FIRE) {
 				this.entity.world.setBlockToAir(this.nearestFire);
-				((WorldServer) this.entity.world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.nearestFire.getX() + 0.5D, this.nearestFire.getY() + 0.5D, this.nearestFire.getZ() + 0.5D, 4, 0.25D, 0.25D, 0.25D, 0.0D);
+				((ServerWorld) this.entity.world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.nearestFire.getX() + 0.5D, this.nearestFire.getY() + 0.5D, this.nearestFire.getZ() + 0.5D, 4, 0.25D, 0.25D, 0.25D, 0.0D);
 				this.entity.world.playSound(null, this.nearestFire.getX() + 0.5D, this.nearestFire.getY() + 0.5D, this.nearestFire.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, this.entity.getSoundCategory(), 1.0F, 0.9F + this.entity.getRNG().nextFloat() * 0.2F);
 			}
 			this.nearestFire = null;

@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.projectiles.ProjectileH
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.ClientPlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;

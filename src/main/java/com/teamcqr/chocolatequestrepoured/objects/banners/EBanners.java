@@ -1,8 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.banners;
 
-import net.minecraft.item.DyeColor;
-import net.minecraft.block.BannerBlock;
 import net.minecraft.item.BannerItem;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;

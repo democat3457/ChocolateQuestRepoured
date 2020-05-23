@@ -1,7 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraftforge.items.CapabilityItemHandler;

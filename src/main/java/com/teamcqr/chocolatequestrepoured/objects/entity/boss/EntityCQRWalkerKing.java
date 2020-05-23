@@ -22,8 +22,8 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,7 +47,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BossInfo.Color;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 
 public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	
@@ -107,7 +107,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 				//spawn cloud
 				for(int ix = -1; ix <= 1; ix++) {
 					for(int iz = -1; iz <= 1; iz++) {
-						((WorldServer)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
+						((ServerWorld)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
 					}
 				}
 				world.playSound(posX, posY, posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.AMBIENT, 1, 1, true);
@@ -170,7 +170,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 		if(getNavigator().canEntityStandOnPos(new BlockPos(p.x,p.y,p.z))) {
 			for(int ix = -1; ix <= 1; ix++) {
 				for(int iz = -1; iz <= 1; iz++) {
-					((WorldServer)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
+					((ServerWorld)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
 				}
 			}
 			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.AMBIENT, 1, 1, true);

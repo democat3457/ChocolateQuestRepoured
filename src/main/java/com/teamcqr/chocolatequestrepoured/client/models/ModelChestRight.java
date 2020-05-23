@@ -1,8 +1,8 @@
 package com.teamcqr.chocolatequestrepoured.client.models;
 
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @OnlyIn(Side.CLIENT)
 public class ModelChestRight extends ModelChestNormal {

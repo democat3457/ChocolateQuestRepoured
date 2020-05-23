@@ -16,7 +16,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 
 public class ItemMobToSpawner extends Item {
 
@@ -57,8 +57,8 @@ public class ItemMobToSpawner extends Item {
 
 	private void spawnAdditions(World world, double x, double y, double z) {
 		if (!world.isRemote) {
-			((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 4, 0.25D, 0.25D, 0.25D, 0.0D);
-			((WorldServer) world).spawnParticle(EnumParticleTypes.LAVA, x, y, z, 8, 0.25D, 0.25D, 0.25D, 0.0D);
+			((ServerWorld) world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 4, 0.25D, 0.25D, 0.25D, 0.0D);
+			((ServerWorld) world).spawnParticle(EnumParticleTypes.LAVA, x, y, z, 8, 0.25D, 0.25D, 0.25D, 0.0D);
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.PLAYERS, 0.8F, 0.6F + itemRand.nextFloat() * 0.2F);
 		}
 	}

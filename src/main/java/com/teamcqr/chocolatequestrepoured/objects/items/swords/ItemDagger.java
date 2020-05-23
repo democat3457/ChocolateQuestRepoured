@@ -20,13 +20,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDagger extends ItemSword {
 
@@ -71,7 +71,7 @@ public class ItemDagger extends ItemSword {
 			DamageSource source = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
 
 			target.attackEntityFrom(source, damage * 2F * (attacker.fallDistance > 0.0F ? 1.5F : 1.0F));
-			((WorldServer) attacker.world).spawnParticle(EnumParticleTypes.CRIT, target.posX, target.posY, target.posZ, 12, 0.5D, 0.5D, 0.5D, 1.0D);
+			((ServerWorld) attacker.world).spawnParticle(EnumParticleTypes.CRIT, target.posX, target.posY, target.posZ, 12, 0.5D, 0.5D, 0.5D, 1.0D);
 		}
 		return true;
 	}

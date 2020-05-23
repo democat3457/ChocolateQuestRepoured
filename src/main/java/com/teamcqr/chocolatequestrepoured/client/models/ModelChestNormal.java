@@ -3,8 +3,8 @@ package com.teamcqr.chocolatequestrepoured.client.models;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @OnlyIn(Side.CLIENT)
 public class ModelChestNormal extends ModelBase {

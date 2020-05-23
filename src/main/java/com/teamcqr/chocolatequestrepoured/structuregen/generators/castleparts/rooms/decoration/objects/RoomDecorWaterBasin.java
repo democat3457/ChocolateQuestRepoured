@@ -3,8 +3,8 @@ package com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.r
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.util.Direction;
 
 public class RoomDecorWaterBasin extends RoomDecorBlocksBase {

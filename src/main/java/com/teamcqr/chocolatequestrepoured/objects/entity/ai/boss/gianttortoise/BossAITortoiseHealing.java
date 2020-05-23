@@ -4,7 +4,7 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.ai.AbstractCQREntityAI;
 import com.teamcqr.chocolatequestrepoured.objects.entity.boss.EntityCQRGiantTortoise;
 
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 
 public class BossAITortoiseHealing extends AbstractCQREntityAI<EntityCQRGiantTortoise> {
 
@@ -76,7 +76,7 @@ public class BossAITortoiseHealing extends AbstractCQREntityAI<EntityCQRGiantTor
 				((EntityCQRGiantTortoise) this.entity).setTimesHealed(((EntityCQRGiantTortoise) this.entity).getTimesHealed() +1);
 				this.getBoss().setCanBeStunned(true);
 			} else {
-				((WorldServer)entity.getEntityWorld()).spawnParticle(EnumParticleTypes.HEART, entity.posX, entity.posY, entity.posZ, 5, 0.5D, 1.0D, 0.5D, 0D);
+				((ServerWorld)entity.getEntityWorld()).spawnParticle(EnumParticleTypes.HEART, entity.posX, entity.posY, entity.posZ, 5, 0.5D, 1.0D, 0.5D, 0D);
 				this.getBoss().heal(1F);
 				this.getBoss().setCanBeStunned(false);
 				this.getBoss().setStunned(false);

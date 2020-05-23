@@ -24,9 +24,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Copyright (c) 15 Feb 2019
@@ -198,7 +198,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 			setHookItemShootingTag(false);
 		} else if(this.getThrower() == null) {
 			if(!this.world.isRemote) {
-				this.thrower = (LivingEntity) ((WorldServer)this.world).getEntityFromUuid(this.getShooterUUID());
+				this.thrower = (LivingEntity) ((ServerWorld)this.world).getEntityFromUuid(this.getShooterUUID());
 			}
 		}
 	}

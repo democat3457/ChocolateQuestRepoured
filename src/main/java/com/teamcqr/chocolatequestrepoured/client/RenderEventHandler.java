@@ -7,11 +7,11 @@ import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemRevolver;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.HandSide;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @OnlyIn(Side.CLIENT)
 @EventBusSubscriber(value = Side.CLIENT)

@@ -3,13 +3,13 @@ package com.teamcqr.chocolatequestrepoured.client.gui;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.ClientPlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @OnlyIn(Side.CLIENT)
 public class GuiReputation extends GuiScreen {

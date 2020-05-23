@@ -2,8 +2,8 @@ package com.teamcqr.chocolatequestrepoured.inventory;
 
 import com.teamcqr.chocolatequestrepoured.objects.items.armor.ItemBackpack;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
