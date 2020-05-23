@@ -15,9 +15,9 @@ public class CQRBlockUtil {
             Blocks.STONE_BRICK_STAIRS,
             Blocks.STONE_SLAB,
             Blocks.STONE_PRESSURE_PLATE,
-            Blocks.STONE_SLAB2,
-            Blocks.DOUBLE_STONE_SLAB,
-            Blocks.DOUBLE_STONE_SLAB2,
+            Blocks.SMOOTH_STONE_SLAB,
+            Blocks.SMOOTH_STONE,
+            //Blocks.DOUBLE_STONE_SLAB,
             Blocks.COBBLESTONE,
             Blocks.COBBLESTONE_WALL,
             Blocks.MOSSY_COBBLESTONE,
@@ -48,9 +48,18 @@ public class CQRBlockUtil {
     public static final Set<Block> VANILLA_DIRT_SET = Stream.of(VANILLA_DIRT).collect(Collectors.toSet());
 
     public static final Block[] VANILLA_WOOD = {
-            Blocks.LOG,
-            Blocks.LOG2,
-            Blocks.PLANKS
+            Blocks.OAK_LOG,
+            Blocks.OAK_PLANKS,
+            Blocks.BIRCH_LOG,
+            Blocks.BIRCH_PLANKS,
+            Blocks.SPRUCE_LOG,
+            Blocks.SPRUCE_PLANKS,
+            Blocks.JUNGLE_LOG,
+            Blocks.JUNGLE_PLANKS,
+            Blocks.ACACIA_LOG,
+            Blocks.ACACIA_PLANKS,
+            Blocks.DARK_OAK_LOG,
+            Blocks.DARK_OAK_PLANKS
             //TODO: Add all wood crafted items, but ain't nobody got time for that
     };
 
