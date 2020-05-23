@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -60,7 +61,7 @@ public class DungeonRegistry {
 
 	public Set<DungeonBase> getDungeonsForChunk(World world, int chunkX, int chunkZ, boolean behindWall) {
 		Set<DungeonBase> dungeonsForChunk = new HashSet<>();
-		Biome biome = world.getBiomeProvider().getBiome(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
+		Biome biome = world.getBiomeManager().getBiome(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
 
 		Set<DungeonBase> biomeDungeonSet = this.biomeDungeonMap.get(biome.getRegistryName());
 		if (biomeDungeonSet != null) {
@@ -98,7 +99,7 @@ public class DungeonRegistry {
 	}
 
 	public void loadDungeons() {
-		for (Biome biome : ForgeRegistries.BIOMES.getValuesCollection()) {
+		for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
 			this.biomeDungeonMap.put(biome.getRegistryName(), new HashSet<DungeonBase>());
 		}
 		for (BiomeDictionary.Type biomeType : BiomeDictionary.Type.getAll()) {
@@ -271,7 +272,7 @@ public class DungeonRegistry {
 
 	private boolean isDungeonMissingModDependencies(DungeonBase dungeon) {
 		for (String modid : dungeon.getDependencies()) {
-			if (!Loader.isModLoaded(modid)) {
+			if (!ModList.get().isLoaded(modid)) {
 				return true;
 			}
 		}
@@ -279,7 +280,7 @@ public class DungeonRegistry {
 	}
 
 	public boolean canDungeonSpawnInWorld(World world, DungeonBase dungeon, boolean behindWall) {
-		int dim = world.provider.getDimension();
+		int dim = world.getDimension().getType().getId();
 		if (!dungeon.isDimensionAllowed(dim)) {
 			return false;
 		}
