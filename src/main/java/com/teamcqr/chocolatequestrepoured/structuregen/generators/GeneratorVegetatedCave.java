@@ -24,7 +24,6 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHugeMushroom;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HugeMushroomBlock;
@@ -39,6 +38,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 public class GeneratorVegetatedCave implements IDungeonGenerator {
@@ -404,7 +404,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 					return true;
 				}
 				if(!dungeon.skipCeilingFiltering()) {
-					return world.getHeight(arg0.getX(), arg0.getZ()) <= arg0.getY() || world.getHeight(arg0).getY() <= arg0.getY() || world.canBlockSeeSky(arg0);
+					return world.getHeight(Type.WORLD_SURFACE, arg0.getX(), arg0.getZ()) <= arg0.getY() || world.getHeight(arg0).getY() <= arg0.getY() || world.canBlockSeeSky(arg0);
 				}
 				return false;
 			}
