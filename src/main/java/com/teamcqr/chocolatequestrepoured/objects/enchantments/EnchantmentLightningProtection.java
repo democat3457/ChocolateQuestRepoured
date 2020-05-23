@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -17,12 +17,12 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class EnchantmentLightningProtection extends Enchantment {
 
 	public EnchantmentLightningProtection() {
-		this(Rarity.RARE, EnumEnchantmentType.ARMOR_HEAD, new EquipmentSlotType[] { EquipmentSlotType.HEAD });
+		this(Rarity.RARE, EnchantmentType.ARMOR_HEAD, new EquipmentSlotType[] { EquipmentSlotType.HEAD });
 	}
 
-	private EnchantmentLightningProtection(Rarity rarityIn, EnumEnchantmentType typeIn, EquipmentSlotType[] slots) {
+	private EnchantmentLightningProtection(Rarity rarityIn, EnchantmentType typeIn, EquipmentSlotType[] slots) {
 		super(rarityIn, typeIn, slots);
-		this.setName("lightning_protection");
+		this.name = "lightning_protection";
 		this.setRegistryName(Reference.MODID, "lightning_protection");
 	}
 
