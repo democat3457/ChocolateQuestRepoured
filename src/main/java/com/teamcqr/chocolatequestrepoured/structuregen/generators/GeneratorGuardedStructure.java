@@ -20,6 +20,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -87,7 +88,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 
 				newPos = start.add(v);
 			}
-			int yNew = DungeonGenUtils.getHighestYAt(world.getChunkFromBlockCoords(newPos), newPos.getX(), newPos.getZ(), true);
+			int yNew = DungeonGenUtils.getHighestYAt(world.getChunkAt(newPos), newPos.getX(), newPos.getZ(), true);
 
 			BlockPos calculatedPos = new BlockPos(newPos.getX(), yNew, newPos.getZ());
 			if (!this.structurePosList.contains(calculatedPos)) {
@@ -240,7 +241,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 
 				plcmnt.setRotation(this.rotList.get(index - 1));
 
-				for (List<? extends IStructure> list : structure.addBlocksToWorld(world, pos, plcmnt, EPosType.DEFAULT, this.dungeon, chunk.x, chunk.z))
+				for (List<? extends IStructure> list : structure.addBlocksToWorld(world, pos, plcmnt, EPosType.DEFAULT, this.dungeon, chunk.getPos().x, chunk.getPos().z))
 					lists.add(list);
 
 				/*
@@ -293,7 +294,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 	}
 
 	private void buildPathX(BlockPos start, BlockPos end) {
-		Chunk currChunk = this.worldIn.getChunkFromBlockCoords(start);
+		Chunk currChunk = this.worldIn.getChunkAt(start);
 		int vX = end.getX() < start.getX() ? -1 : 1;
 		if (end.getX() == start.getX()) {
 			vX = 0;
@@ -305,7 +306,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 			y = DungeonGenUtils.getHighestYAt(currChunk, currX, z, true);
 			this.buildPathSegmentX(new BlockPos(currX, y, z));
 			currX += vX;
-			currChunk = this.worldIn.getChunkFromBlockCoords(new BlockPos(currX, y, z));
+			currChunk = this.worldIn.getChunkAt(new BlockPos(currX, y, z));
 		} while (currX != end.getX());
 		/*
 		 * if(start.getZ() != end.getZ()) {
@@ -316,7 +317,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 	}
 
 	private void buildPathZ(BlockPos start, BlockPos end) {
-		Chunk currChunk = this.worldIn.getChunkFromBlockCoords(start);
+		Chunk currChunk = this.worldIn.getChunkAt(start);
 		int vZ = end.getZ() < start.getZ() ? -1 : 1;
 		if (end.getZ() == start.getZ()) {
 			vZ = 0;
@@ -328,7 +329,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 			y = DungeonGenUtils.getHighestYAt(currChunk, x, currZ, true);
 			this.buildPathSegmentZ(new BlockPos(x, y, currZ));
 			currZ += vZ;
-			currChunk = this.worldIn.getChunkFromBlockCoords(new BlockPos(x, y, currZ));
+			currChunk = this.worldIn.getChunkAt(new BlockPos(x, y, currZ));
 		} while (currZ != end.getZ());
 		/*
 		 * if(start.getX() != end.getX()) {
@@ -361,12 +362,12 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 	private void supportBlock(BlockPos pos) {
 		int i = 0;
 		BlockPos tmpPos = pos.up();
-		while (!Block.isEqualTo(this.worldIn.getBlockState(tmpPos).getBlock(), Blocks.AIR) && i <= 3) {
-			this.worldIn.setBlockToAir(tmpPos);
+		while (this.worldIn.getBlockState(tmpPos).getBlock() != Blocks.AIR && i <= 3) {
+			this.worldIn.setBlockState(tmpPos, Blocks.AIR.getDefaultState());
 			tmpPos = tmpPos.up();
 		}
 		tmpPos = pos.down();
-		while (Block.isEqualTo(this.worldIn.getBlockState(tmpPos).getBlock(), Blocks.AIR)) {
+		while (this.worldIn.getBlockState(tmpPos).getBlock() == Blocks.AIR) {
 			this.worldIn.setBlockState(tmpPos, this.dungeon.getPathMaterial().getDefaultState());
 			tmpPos = tmpPos.down();
 		}
@@ -400,7 +401,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 				for (int iX = startX; iX <= endX; iX++) {
 					for (int iZ = startZ; iZ <= endZ; iZ++) {
 						BlockPos pos = new BlockPos(iX, world.getTopSolidOrLiquidBlock(new BlockPos(iX, 0, iZ)).getY(), iZ);
-						if (!Block.isEqualTo(world.getBlockState(pos.subtract(new Vec3i(0, 1, 0))).getBlock(), this.dungeon.getCoverBlock())) {
+						if (world.getBlockState(pos.subtract(new Vec3i(0, 1, 0))).getBlock() != this.dungeon.getCoverBlock()) {
 							stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(this.dungeon.getCoverBlock().getDefaultState(), null));
 						}
 					}

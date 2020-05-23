@@ -19,6 +19,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -214,7 +215,7 @@ public class GeneratorGridCity implements IDungeonGenerator {
 					}
 				});
 
-				this.structureList.addAll(centralStructure.addBlocksToWorld(world, new BlockPos(x, y + 1, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z));
+				this.structureList.addAll(centralStructure.addBlocksToWorld(world, new BlockPos(x, y + 1, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z));
 			}
 		}
 		CQStructure structure = null;
@@ -250,7 +251,7 @@ public class GeneratorGridCity implements IDungeonGenerator {
 				 * bosses.add(id.toString());
 				 * }
 				 */
-				this.structureList.addAll(structure.addBlocksToWorld(world, centerPos.add(0, 1, 0), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z));
+				this.structureList.addAll(structure.addBlocksToWorld(world, centerPos.add(0, 1, 0), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z));
 			}
 		}
 
