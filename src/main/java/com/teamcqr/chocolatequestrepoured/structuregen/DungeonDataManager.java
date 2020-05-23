@@ -15,10 +15,10 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonBase;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -98,7 +98,7 @@ public class DungeonDataManager {
 	}
 
 	public DungeonDataManager(World world) {
-		int dim = world.provider.getDimension();
+		int dim = world.getDimension().getType().getId();
 		String path = world.getSaveHandler().getWorldDirectory().getAbsolutePath();
 		if (dim == 0) {
 			path += "/data/CQR/";
@@ -135,9 +135,9 @@ public class DungeonDataManager {
 				if(!data.getValue().isEmpty()) {
 					ListNBT locs = FileIOUtil.getOrCreateTagList(root, "dun-" + data.getKey(), Constants.NBT.TAG_COMPOUND);
 					for(BlockPos loc : data.getValue()) {
-						locs.appendTag(NBTUtil.createPosTag(loc));
+						locs.add(NBTUtil.writeBlockPos(loc));
 					}
-					dungeonNames.appendTag(new NBTTagString(data.getKey()));
+					dungeonNames.add(StringNBT.valueOf(data.getKey()));
 				}
 			}
 			FileIOUtil.saveNBTCompoundToFile(root, file);
@@ -148,20 +148,20 @@ public class DungeonDataManager {
 	public void readData() {
 		CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(file);
 		ListNBT dungeons = FileIOUtil.getOrCreateTagList(root, "dungeons", Constants.NBT.TAG_STRING);
-		dungeons.forEach(new Consumer<NBTBase>() {
+		dungeons.forEach(new Consumer<INBT>() {
 
 			@Override
-			public void accept(NBTBase t) {
-				if(t instanceof NBTTagString) {
-					NBTTagString tag = (NBTTagString) t;
+			public void accept(INBT t) {
+				if(t instanceof StringNBT) {
+					StringNBT tag = (StringNBT) t;
 					String s = tag.getString();
 					Set<BlockPos> poss = dungeonData.getOrDefault(s, new HashSet<>());
 					ListNBT data = FileIOUtil.getOrCreateTagList(root, "dun-" + s, Constants.NBT.TAG_COMPOUND);
-					data.forEach(new Consumer<NBTBase>() {
-						public void accept(NBTBase t1) {
+					data.forEach(new Consumer<INBT>() {
+						public void accept(INBT t1) {
 							if(t1 instanceof CompoundNBT) {
 								CompoundNBT tag1 = (CompoundNBT) t1;
-								poss.add(NBTUtil.getPosFromTag(tag1));
+								poss.add(NBTUtil.readBlockPos(tag1));
 							}
 						}
 					});
