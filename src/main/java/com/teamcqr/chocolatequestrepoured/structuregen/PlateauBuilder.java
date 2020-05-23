@@ -104,9 +104,9 @@ public class PlateauBuilder {
 
 		for (int x = 0; x < sizeX; ++x) {
 			for (int z = 0; z < sizeZ; ++z) {
-				int maxHeight = startY - TOP_LAYER_HEIGHT - world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkFromBlockCoords(new BlockPos(x + i, 0, z + k)), x + i,
+				int maxHeight = startY - TOP_LAYER_HEIGHT - world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkAt(new BlockPos(x + i, 0, z + k)), x + i,
 																																			// z + k, true);
-				int posY = world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkFromBlockCoords(new BlockPos(x + i, 0, z + k)),x + i, z + k, true);
+				int posY = world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkAt(new BlockPos(x + i, 0, z + k)),x + i, z + k, true);
 				for (int y = 0; y <= maxHeight; ++y) {
 					// This generates the "cube" that goes under the structure
 					if ((x > this.wallSize) && (z > this.wallSize) && (x < sizeX - this.wallSize) && (z < sizeZ - this.wallSize)) {
@@ -128,7 +128,7 @@ public class PlateauBuilder {
 					}
 				}
 				// This places the top layer blocks
-				maxHeight = world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkFromBlockCoords(new BlockPos(x + i, 0, z + k)),x + i, z + k, true);//
+				maxHeight = world.getTopSolidOrLiquidBlock(new BlockPos(x + startX, 0, z + startZ)).getY();// DungeonGenUtils.getHighestYAt(world.getChunkAt(new BlockPos(x + i, 0, z + k)),x + i, z + k, true);//
 																											// world.getTopSolidOrLiquidBlock(new BlockPos(x + i, 0, z + k)).getY();
 				if (maxHeight <= startY) {
 					world.setBlockState(new BlockPos(startX + x, maxHeight - 1, startZ + z), this.structureTopBlock.getDefaultState(), 2);

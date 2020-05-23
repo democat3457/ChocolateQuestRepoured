@@ -84,7 +84,7 @@ public class EntityRenderManager {
 					List<AbstractEntityCQR> list = new ArrayList<>();
 					for (RenderChunk renderChunk : EntityRenderManager.getRenderChunks()) {
 						BlockPos pos = renderChunk.getPosition();
-						Chunk chunk = mc.world.getChunkFromBlockCoords(pos);
+						Chunk chunk = mc.world.getChunkAt(pos);
 						for (Entity entity : chunk.getEntityLists()[pos.getY() >> 4]) {
 							if (entity instanceof AbstractEntityCQR && entity.isNonBoss()) {
 								list.add((AbstractEntityCQR) entity);

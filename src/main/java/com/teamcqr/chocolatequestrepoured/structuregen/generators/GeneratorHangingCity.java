@@ -90,14 +90,14 @@ public class GeneratorHangingCity implements IDungeonGenerator {
 		PlateauBuilder pb = new PlateauBuilder();
 		lists.add(pb.makeRandomBlobList(new Random(), Blocks.AIR, center.add(0, -dungeon.getYFactorHeight(), 0), radius * 3, censtruct.getSize().getY() + dungeon.getYFactorHeight() *2, 8, WorldDungeonGenerator.getSeed(world, x - y, z + y)));
 
-		this.buildBuilding(censtruct, center, world, world.getChunkFromBlockCoords(center), lists);
+		this.buildBuilding(censtruct, center, world, world.getChunkAt(center), lists);
 
 		for (BlockPos bp : this.structureMap.keySet()) {
 			CQStructure structure = new CQStructure(this.structureMap.get(bp));
 			/*BlockPos pastePos = bp.subtract(structure.getSize());
 			pastePos = new BlockPos(pastePos.getX(), y, pastePos.getZ());*/
 
-			this.buildBuilding(structure, bp, world, world.getChunkFromBlockCoords(bp), lists);
+			this.buildBuilding(structure, bp, world, world.getChunkAt(bp), lists);
 		}
 	}
 
@@ -223,7 +223,7 @@ public class GeneratorHangingCity implements IDungeonGenerator {
 		 */
 		int deltaYPerChainSegment = 5;
 
-		int maxY = DungeonGenUtils.getHighestYAt(world.getChunkFromBlockCoords(pos), pos.getX(), pos.getZ(), true);
+		int maxY = DungeonGenUtils.getHighestYAt(world.getChunkAt(pos), pos.getX(), pos.getZ(), true);
 		maxY = maxY >= 255 ? 255 : maxY;
 		int chainCount = (maxY - pos.getY()) / deltaYPerChainSegment;
 		for (int i = 0; i < chainCount; i++) {
