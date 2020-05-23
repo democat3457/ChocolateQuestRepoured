@@ -20,18 +20,18 @@ import net.minecraft.block.BlockState;
  *  a later version of forge, the config values should just map to registry values instead of coming here.
  */
 public enum EnumForgeBlockVariant {
-    MOSSY_STONE_BRICKS(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY)),
-    CRACKED_STONE_BRICKS(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED)),
-    CHISELED_STONE_BRICKS(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED)),
-    CHISELED_SANDSTONE(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED)),
-    SMOOTH_SANDSTONE(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH)),
-    SMOOTH_RED_SANDSTONE(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH)),
-    CHISELED_RED_SANDSTONE(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED)),
-    PRISMARINE_BRICKS(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.BRICKS)),
-    DARK_PRISMARINE(Blocks.PRISMARINE.getDefaultState().withProperty(BlockPrismarine.VARIANT, BlockPrismarine.EnumType.DARK)),
-    SANDSTONE_SLAB(Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SAND)),
-    NETHER_BRICK_SLAB(Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.NETHERBRICK)),
-    QUARTZ_SLAB(Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.QUARTZ));
+    MOSSY_STONE_BRICKS(Blocks.MOSSY_STONE_BRICKS.getDefaultState()),
+    CRACKED_STONE_BRICKS(Blocks.CRACKED_STONE_BRICKS.getDefaultState()),
+    CHISELED_STONE_BRICKS(Blocks.CHISELED_STONE_BRICKS.getDefaultState()),
+    CHISELED_SANDSTONE(Blocks.CHISELED_SANDSTONE.getDefaultState()),
+    SMOOTH_SANDSTONE(Blocks.SMOOTH_SANDSTONE.getDefaultState()),
+    SMOOTH_RED_SANDSTONE(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState()),
+    CHISELED_RED_SANDSTONE(Blocks.CHISELED_RED_SANDSTONE.getDefaultState()),
+    PRISMARINE_BRICKS(Blocks.PRISMARINE_BRICKS.getDefaultState()),
+    DARK_PRISMARINE(Blocks.DARK_PRISMARINE.getDefaultState()),
+    SANDSTONE_SLAB(Blocks.SANDSTONE_SLAB.getDefaultState()),
+    NETHER_BRICK_SLAB(Blocks.NETHER_BRICK_SLAB.getDefaultState()),
+    QUARTZ_SLAB(Blocks.QUARTZ_SLAB.getDefaultState());
 
 
     private final BlockState blockState;
