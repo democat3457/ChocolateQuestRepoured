@@ -2,7 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.items.armor;
 
 import com.google.common.collect.Multimap;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -26,7 +26,7 @@ public class ItemHelmetDragon extends ItemArmor {
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-		if (slot == EntityLiving.getSlotForItemStack(stack)) {
+		if (slot == LivingEntity.getSlotForItemStack(stack)) {
 			multimap.put(SharedMonsterAttributes.MAX_HEALTH.getName(), this.health);
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), this.attackDamage);
 		}

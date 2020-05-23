@@ -8,7 +8,7 @@ import com.teamcqr.chocolatequestrepoured.factions.CQRFaction;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.EntityCQRMountBase;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityOcelot;
@@ -26,7 +26,7 @@ public class TargetUtil {
 		return EntitySelectors.CAN_AI_TARGET.apply(input);
 	};
 
-	public static final Predicate<EntityLiving> PREDICATE_MOUNTS = input -> {
+	public static final Predicate<LivingEntity> PREDICATE_MOUNTS = input -> {
 		if (input == null) {
 			return false;
 		}

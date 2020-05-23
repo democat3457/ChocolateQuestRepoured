@@ -12,7 +12,7 @@ import net.java.games.input.Keyboard;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -42,7 +42,7 @@ public class ItemArmorBull extends ItemArmor {
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-		if (slot == EntityLiving.getSlotForItemStack(stack)) {
+		if (slot == LivingEntity.getSlotForItemStack(stack)) {
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), this.strength);
 		}
 

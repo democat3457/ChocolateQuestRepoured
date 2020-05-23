@@ -55,7 +55,7 @@ public class EntityAIAttack extends AbstractCQREntityAI<AbstractEntityCQR> {
 	}
 
 	protected void updatePath(LivingEntity target) {
-		this.entity.getNavigator().tryMoveToEntityLiving(target, 1.0D);
+		this.entity.getNavigator().tryMoveToLivingEntity(target, 1.0D);
 	}
 
 	protected void checkAndPerformBlock() {

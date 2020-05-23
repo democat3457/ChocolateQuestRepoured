@@ -13,7 +13,7 @@ import net.java.games.input.Keyboard;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -90,10 +90,10 @@ public class ItemGreatSword extends ItemSword {
 
 		AxisAlignedBB bb = new AxisAlignedBB(mx, my, mz, max, may, maz);
 
-		List<EntityLiving> entitiesInAABB = worldIn.getEntitiesWithinAABB(EntityLiving.class, bb);
+		List<LivingEntity> entitiesInAABB = worldIn.getEntitiesWithinAABB(LivingEntity.class, bb);
 
 		for (int i = 0; i < entitiesInAABB.size(); i++) {
-			EntityLiving entityInAABB = entitiesInAABB.get(i);
+			LivingEntity entityInAABB = entitiesInAABB.get(i);
 
 			if (this.getMaxItemUseDuration(stack) - timeLeft <= 30) {
 				entityInAABB.attackEntityFrom(DamageSource.causeExplosionDamage(entityLiving), this.damage);

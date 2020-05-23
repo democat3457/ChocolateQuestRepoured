@@ -110,7 +110,7 @@ public class EntityAIAttackRangedStrafing extends EntityAIAttack {
             }
             else
             {
-                this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, this.moveSpeedAmp);
+                this.entity.getNavigator().tryMoveToLivingEntity(entitylivingbase, this.moveSpeedAmp);
                 this.strafingTime = -1;
             }
 

@@ -21,8 +21,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -78,7 +78,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	}
 	
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+	public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata) {
 		setEquipmentBasedOnDifficulty(difficulty);
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
@@ -181,9 +181,9 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 
 	private void handleAttackedByDragon(Entity dragon) {
 		if (CQRConfig.advanced.enableSpecialFeatures && dragon.getControllingPassenger() != null /*&& (getRNG().nextInt(100) +1) > 95*/) {
-			if(dragon instanceof EntityLiving && dragon.getControllingPassenger() instanceof LivingEntity) {
+			if(dragon instanceof LivingEntity && dragon.getControllingPassenger() instanceof LivingEntity) {
 				dragon.getControllingPassenger().dismountRidingEntity();
-				//((EntityLiving)dragon).setAttackTarget((LivingEntity) dragon.getControllingPassenger());
+				//((LivingEntity)dragon).setAttackTarget((LivingEntity) dragon.getControllingPassenger());
 				/*if(dragon instanceof EntityTameable) {
 					try {
 						((EntityTameable)dragon).setOwnerId(null);

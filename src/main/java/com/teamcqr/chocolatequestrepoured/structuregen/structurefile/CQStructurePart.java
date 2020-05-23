@@ -31,8 +31,8 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.nbt.CompoundNBT;
@@ -400,9 +400,9 @@ public class CQStructurePart extends Template {
 						((AbstractEntityCQRBoss) entity).onSpawnFromCQRSpawnerInDungeon(placementIn, dungeonMob);
 						((AbstractEntityCQRBoss) entity).setHealingPotions(CQRConfig.mobs.defaultHealingPotionCount);
 					}
-					if (entity instanceof EntityLiving) {
-						((EntityLiving) entity).enablePersistence();
-						((EntityLiving) entity).onInitialSpawn(worldIn.getDifficultyForLocation(transformedPos), (IEntityLivingData) null);
+					if (entity instanceof LivingEntity) {
+						((LivingEntity) entity).enablePersistence();
+						((LivingEntity) entity).onInitialSpawn(worldIn.getDifficultyForLocation(transformedPos), (ILivingEntityData) null);
 					}
 					worldIn.spawnEntity(entity);
 

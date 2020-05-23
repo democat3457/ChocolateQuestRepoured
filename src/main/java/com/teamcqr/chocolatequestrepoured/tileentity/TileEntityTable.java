@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -65,17 +64,17 @@ public class TileEntityTable extends TileEntitySyncClient {
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT compound) {
-		compound.setTag("inventory", this.inventory.serializeNBT());
-		compound.setFloat("rotation", this.rotation);
-		return super.writeToNBT(compound);
+	public CompoundNBT write(CompoundNBT compound) {
+		compound.put("inventory", this.inventory.serializeNBT());
+		compound.putFloat("rotation", this.rotation);
+		return super.write(compound);
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT compound) {
-		this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
+	public void read(CompoundNBT compound) {
+		this.inventory.deserializeNBT((CompoundNBT) compound.get("inventory"));
 		this.rotation = compound.getFloat("rotation");
-		super.readFromNBT(compound);
+		super.read(compound);
 	}
 
 	@Override

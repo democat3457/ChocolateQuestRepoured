@@ -9,14 +9,17 @@ import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.Direction;
@@ -54,39 +57,39 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT compound) {
-		super.readFromNBT(compound);
-		this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
-		if (compound.hasKey("isDungeonSpawner")) {
+	public void read(CompoundNBT compound) {
+		super.read(compound);
+		this.inventory.deserializeNBT((CompoundNBT) compound.get("inventory"));
+		if (compound.contains("isDungeonSpawner")) {
 			this.spawnedInDungeon = compound.getBoolean("isDungeonSpawner");
 		}
-		if (compound.hasKey("overrideMob")) {
+		if (compound.contains("overrideMob")) {
 			this.mobOverride = EDungeonMobType.byString(compound.getString("overrideMob"));
 		}
-		if (compound.hasKey("dungeonChunkX") && compound.hasKey("dungeonChunkZ")) {
-			this.dungeonChunkX = compound.getInteger("dungeonChunkX");
-			this.dungeonChunkZ = compound.getInteger("dungeonChunkZ");
+		if (compound.contains("dungeonChunkX") && compound.contains("dungeonChunkZ")) {
+			this.dungeonChunkX = compound.getInt("dungeonChunkX");
+			this.dungeonChunkZ = compound.getInt("dungeonChunkZ");
 		}
-		this.mirror = Mirror.values()[compound.getInteger("mirror")];
-		this.rot = Rotation.values()[compound.getInteger("rot")];
+		this.mirror = Mirror.values()[compound.getInt("mirror")];
+		this.rot = Rotation.values()[compound.getInt("rot")];
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT compound) {
-		compound = super.writeToNBT(compound);
-		compound.setTag("inventory", this.inventory.serializeNBT());
+	public CompoundNBT write(CompoundNBT compound) {
+		compound = super.write(compound);
+		compound.put("inventory", this.inventory.serializeNBT());
 		if (this.spawnedInDungeon) {
-			compound.setBoolean("isDungeonSpawner", true);
+			compound.putBoolean("isDungeonSpawner", true);
 		}
 		if (this.mobOverride != null) {
-			compound.setString("overrideMob", this.mobOverride.name());
+			compound.putString("overrideMob", this.mobOverride.name());
 		}
 		if (this.dungeonChunkX != 0 && this.dungeonChunkZ != 0) {
-			compound.setInteger("dungeonChunkX", this.dungeonChunkX);
-			compound.setInteger("dungeonChunkZ", this.dungeonChunkZ);
+			compound.putInt("dungeonChunkX", this.dungeonChunkX);
+			compound.putInt("dungeonChunkZ", this.dungeonChunkZ);
 		}
-		compound.setInteger("mirror", this.mirror.ordinal());
-		compound.setInteger("rot", this.rot.ordinal());
+		compound.putInt("mirror", this.mirror.ordinal());
+		compound.putInt("rot", this.rot.ordinal());
 		return compound;
 	}
 
@@ -96,11 +99,16 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 		return new TextComponentString(I18n.format("tile.spawner.name"));
 	}
 
-	@Override
+	//@Override
 	public void update() {
 		if (!this.world.isRemote && this.world.getDifficulty() != Difficulty.PEACEFUL && this.isNonCreativePlayerInRange(CQRConfig.general.spawnerActivationDistance)) {
 			this.turnBackIntoEntity();
 		}
+	}
+	
+	@Override
+	public void tick() {
+		update();
 	}
 	
 	public void forceTurnBackIntoEntity() {
@@ -123,8 +131,8 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 			for (int i = 0; i < this.inventory.getSlots(); i++) {
 				ItemStack stack = this.inventory.getStackInSlot(i);
 
-				if (!stack.isEmpty() && stack.getTagCompound() != null) {
-					CompoundNBT nbt = stack.getTagCompound().getCompoundTag("EntityIn");
+				if (!stack.isEmpty() && stack.getTag() != null) {
+					CompoundNBT nbt = (CompoundNBT) stack.getTag().get("EntityIn");
 
 					while (!stack.isEmpty()) {
 						this.spawnEntityFromNBT(nbt);
@@ -133,30 +141,30 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 				}
 			}
 
-			this.world.setBlockToAir(this.pos);
+			this.world.setBlockState(this.pos, Blocks.AIR.getDefaultState());
 		}
 	}
 
 	protected Entity spawnEntityFromNBT(CompoundNBT nbt) {
 		{
 			// needed because in earlier versions the uuid and pos were not removed when using a soul bottle/mob to spawner on an entity
-			nbt.removeTag("UUIDLeast");
-			nbt.removeTag("UUIDMost");
-			nbt.removeTag("Pos");
-			ListNBT passengers = nbt.getTagList("Passengers", 10);
-			for (NBTBase passenger : passengers) {
-				((CompoundNBT) passenger).removeTag("UUIDLeast");
-				((CompoundNBT) passenger).removeTag("UUIDMost");
-				((CompoundNBT) passenger).removeTag("Pos");
+			nbt.remove("UUIDLeast");
+			nbt.remove("UUIDMost");
+			nbt.remove("Pos");
+			ListNBT passengers = nbt.getList("Passengers", 10);
+			for (INBT passenger : passengers) {
+				((CompoundNBT) passenger).remove("UUIDLeast");
+				((CompoundNBT) passenger).remove("UUIDMost");
+				((CompoundNBT) passenger).remove("Pos");
 			}
 		}
 
 		if (this.mobOverride != null && nbt.getString("id").equals(Reference.MODID + ":dummy")) {
 			if (this.mobOverride == EDungeonMobType.DEFAULT) {
 				EDungeonMobType mobType = EDungeonMobType.getMobTypeDependingOnDistance(this.world, this.pos.getX(), this.pos.getZ());
-				nbt.setString("id", mobType.getEntityResourceLocation().toString());
+				nbt.putString("id", mobType.getEntityResourceLocation().toString());
 			} else {
-				nbt.setString("id", this.mobOverride.getEntityResourceLocation().toString());
+				nbt.putString("id", this.mobOverride.getEntityResourceLocation().toString());
 			}
 		}
 
@@ -165,13 +173,13 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 		if (entity != null) {
 			Random rand = new Random();
 			Vec3d pos = new Vec3d(this.pos.getX() + 0.5D, this.pos.getY(), this.pos.getZ() + 0.5D);
-			double offset = entity.width < 0.96F ? 0.5D - entity.width * 0.5D : 0.02D;
-			pos = pos.addVector(rand.nextDouble() * offset * 2.0D - offset, 0.0D, rand.nextDouble() * offset * 2.0D - offset);
+			double offset = entity.getWidth() < 0.96F ? 0.5D - entity.getWidth() * 0.5D : 0.02D;
+			pos = pos.add(rand.nextDouble() * offset * 2.0D - offset, 0.0D, rand.nextDouble() * offset * 2.0D - offset);
 			entity.setPosition(pos.x, pos.y, pos.z);
 
-			if (entity instanceof EntityLiving) {
+			if (entity instanceof LivingEntity) {
 				if (CQRConfig.general.mobsFromCQSpawnerDontDespawn) {
-					((EntityLiving) entity).enablePersistence();
+					((LivingEntity) entity).enablePersistence();
 				}
 
 				if (this.spawnedInDungeon && entity instanceof AbstractEntityCQR) {
@@ -179,11 +187,11 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 				}
 			}
 
-			this.world.spawnEntity(entity);
+			this.world.addEntity(entity);
 
-			ListNBT list = nbt.getTagList("Passengers", 10);
-			if (!list.hasNoTags()) {
-				Entity rider = this.spawnEntityFromNBT(list.getCompoundTagAt(0));
+			ListNBT list = nbt.getList("Passengers", 10);
+			if (!list.isEmpty()) {
+				Entity rider = this.spawnEntityFromNBT(list.getCompound(0));
 				rider.startRiding(entity);
 			}
 		}
@@ -194,7 +202,7 @@ public class TileEntitySpawner extends TileEntitySyncClient implements ITickable
 	protected boolean isNonCreativePlayerInRange(double range) {
 		if (range > 0.0D) {
 			double d = range * range;
-			for (PlayerEntity player : this.world.playerEntities) {
+			for (PlayerEntity player : this.world.getPlayers()) {
 				if (!player.isCreative() && !player.isSpectator() && player.getDistanceSqToCenter(this.pos) < d) {
 					return true;
 				}

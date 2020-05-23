@@ -10,7 +10,7 @@ import com.teamcqr.chocolatequestrepoured.objects.items.ItemPotionHealing;
 import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemBullet;
 
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -210,7 +210,7 @@ public class ContainerCQREntity extends Container {
 			} else {
 				if (this.mergeItemStack(itemstack1, 36, 39, false)) {
 					return itemstack;
-				} else if (EntityLiving.getSlotForItemStack(itemstack1) == EquipmentSlotType.HEAD && this.mergeItemStack(itemstack1, 39, 40, false)) {
+				} else if (LivingEntity.getSlotForItemStack(itemstack1) == EquipmentSlotType.HEAD && this.mergeItemStack(itemstack1, 39, 40, false)) {
 					return itemstack;
 				} else if (this.mergeItemStack(itemstack1, 42, 45, false)) {
 					return itemstack;

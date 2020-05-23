@@ -37,9 +37,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -49,10 +49,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:llibrary@[1.7.19]; required:forge@14.23.5.2847")
+//@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:llibrary@[1.7.19]; required:forge@14.23.5.2847")
+@Mod(value = Reference.MODID)
 public class CQRMain {
 
-	@Instance
 	public static CQRMain INSTANCE;
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
@@ -119,7 +119,7 @@ public class CQRMain {
 		}
 	};
 
-	@EventHandler
+	@SubscribeEvent
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
 		// Important: This has to be the F I R S T statement
@@ -201,7 +201,7 @@ public class CQRMain {
 		}
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
 
@@ -211,7 +211,7 @@ public class CQRMain {
 		Blocks.FIRE.init();
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
 
@@ -224,7 +224,7 @@ public class CQRMain {
 		EntityCQRNetherDragon.reloadBreakableBlocks();
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public static void registerCommands(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandExport());
 	}

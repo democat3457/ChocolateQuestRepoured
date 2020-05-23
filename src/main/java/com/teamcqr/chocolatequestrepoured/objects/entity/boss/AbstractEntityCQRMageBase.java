@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.boss;
 import com.teamcqr.chocolatequestrepoured.init.ModItems;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQRBoss;
 
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -50,7 +50,7 @@ public abstract class AbstractEntityCQRMageBase extends AbstractEntityCQRBoss {
 	}
 
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+	public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata) {
 		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.STAFF_VAMPIRIC, 1));
 		return super.onInitialSpawn(difficulty, livingdata);
 	}

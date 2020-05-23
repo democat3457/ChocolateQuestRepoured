@@ -63,8 +63,8 @@ public class EventsHandler {
 	public static void onDefense(LivingAttackEvent event) {
 		boolean tep = false;
 
-		if (event.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+		if (event.getLivingEntity() instanceof PlayerEntity) {
+			PlayerEntity player = (PlayerEntity) event.getLivingEntity();
 			Entity attacker = event.getSource().getTrueSource();
 			@SuppressWarnings("unused")
 			float amount = event.getAmount();

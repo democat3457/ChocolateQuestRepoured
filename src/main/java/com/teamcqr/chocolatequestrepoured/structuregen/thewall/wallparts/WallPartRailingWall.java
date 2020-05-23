@@ -19,7 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -81,8 +81,8 @@ public class WallPartRailingWall implements IWallPart {
 
 	private void placeSpawner(BlockPos spawnerPos, World world, Map<BlockPos, ExtendedBlockState> stateMap) {
 		Entity spawnerEnt = EntityList.createEntityByIDFromName(new ResourceLocation(CQRConfig.wall.mob), world);
-		if (spawnerEnt instanceof EntityLiving) {
-			switch (((EntityLiving) spawnerEnt).getRNG().nextInt(5)) {
+		if (spawnerEnt instanceof LivingEntity) {
+			switch (((LivingEntity) spawnerEnt).getRNG().nextInt(5)) {
 			case 0:
 				spawnerEnt.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.DIAMOND_SWORD, 1));
 				spawnerEnt.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(ModItems.SHIELD_SPECTER, 1));
