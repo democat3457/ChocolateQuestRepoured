@@ -120,13 +120,13 @@ public class FileIOUtil {
 
 	public static ListNBT getOrCreateTagList(CompoundNBT rootTag, String key, int listType) {
 		ListNBT structureList = new ListNBT();
-		if (!rootTag.hasKey(key, Constants.NBT.TAG_LIST)) {
-			if (rootTag.hasKey(key)) {
-				rootTag.removeTag(key);
+		if (!rootTag.contains(key, Constants.NBT.TAG_LIST)) {
+			if (rootTag.contains(key)) {
+				rootTag.remove(key);
 			}
-			rootTag.setTag(key, structureList);
+			rootTag.put(key, structureList);
 		} else {
-			structureList = rootTag.getTagList(key, listType);
+			structureList = rootTag.getList(key, listType);
 		}
 		return structureList;
 	}
