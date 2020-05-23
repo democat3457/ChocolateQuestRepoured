@@ -55,7 +55,7 @@ public class StrongholdFloor {
 		
 		//System.out.println("Beginning gen...");
 		while(roomCount > 0) {
-			roomCoord = getNextRoomCoordinates(roomCoord.getFirst(), roomCoord.getSecond(), this.currentDirection);
+			roomCoord = getNextRoomCoordinates(roomCoord.getA(), roomCoord.getB(), this.currentDirection);
 			//System.out.println("X: " + roomCoord.getFirst() + "    Z: " + roomCoord.getSecond() + "        Room: " + ((this.sideLength * this.sideLength) - roomCount));
 			roomCount--;
 			slCounter--;
@@ -64,15 +64,15 @@ public class StrongholdFloor {
 			if(roomCount == 0) {
 				//DONE: Handle stair or boss room
 				if(lastFloor) {
-					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), EStrongholdRoomType.BOSS);
+					setRoomType(roomCoord.getA(), roomCoord.getB(), EStrongholdRoomType.BOSS);
 				} else {
 					//Handle stair
-					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getStair(currentDirection));
+					setRoomType(roomCoord.getA(), roomCoord.getB(), getStair(currentDirection));
 					this.currentDirection = getRoomExitDirection(getStair(currentDirection));
 				}
 				break;
 			}
-			if(slCounter <= 0 || (!reversed && slCounter > 1 && isCurveRoom(roomCoord.getFirst(), roomCoord.getSecond())) || ( reversed && slCounter > 1 && slCounter < ((sideLengthTemp * 4) -4 -2) && isCurveRoom(roomCoord.getFirst(), roomCoord.getSecond()))) {
+			if(slCounter <= 0 || (!reversed && slCounter > 1 && isCurveRoom(roomCoord.getA(), roomCoord.getB())) || ( reversed && slCounter > 1 && slCounter < ((sideLengthTemp * 4) -4 -2) && isCurveRoom(roomCoord.getA(), roomCoord.getB()))) {
 				if(slCounter <= 0) {
 					sideLengthTemp += reversed ? -2 : 2;
 					slCounter = (sideLengthTemp * 4) -4;
@@ -82,10 +82,10 @@ public class StrongholdFloor {
 					}
 				}
 				
-					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getCurve(this.currentDirection, reversed));
+					setRoomType(roomCoord.getA(), roomCoord.getB(), getCurve(this.currentDirection, reversed));
 					this.currentDirection = getRoomExitDirection(getCurve(this.currentDirection, reversed));
 			} else {
-				setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getHallway(this.currentDirection));
+				setRoomType(roomCoord.getA(), roomCoord.getB(), getHallway(this.currentDirection));
 			}
 			
 		}
@@ -143,8 +143,8 @@ public class StrongholdFloor {
 				EStrongholdRoomType room = roomPattern[iX][iZ];
 				if(room != null && room!=EStrongholdRoomType.NONE) {
 					Tuple<Integer,Integer> gridPos = arrayIndiciesToGridPos(new Tuple<>(iX, iZ));
-					int x = centerX + (gridPos.getFirst() * generator.getDungeon().getRoomSizeX());
-					int z = centerZ + (gridPos.getSecond() * generator.getDungeon().getRoomSizeZ());
+					int x = centerX + (gridPos.getA() * generator.getDungeon().getRoomSizeX());
+					int z = centerZ + (gridPos.getB() * generator.getDungeon().getRoomSizeZ());
 					int y1 = y;
 					if(room.toString().startsWith("STAIR_")) {
 						y1 -= generator.getDungeon().getRoomSizeY();
@@ -183,12 +183,12 @@ public class StrongholdFloor {
 	
 	private Tuple<Integer, Integer> gridPosToArrayIndices(Tuple<Integer, Integer> gridPosIn) {
 		int x = (int) Math.floor(sideLength /2D);
-		return new Tuple<>(gridPosIn.getFirst() + x, gridPosIn.getSecond() + x);
+		return new Tuple<>(gridPosIn.getA() + x, gridPosIn.getB() + x);
 	}
 	
 	private Tuple<Integer, Integer> arrayIndiciesToGridPos(Tuple<Integer, Integer> arrayIndiciesIn) {
 		int x = (int) Math.floor(sideLength /2D);
-		return new Tuple<>(arrayIndiciesIn.getFirst() - x, arrayIndiciesIn.getSecond() - x);
+		return new Tuple<>(arrayIndiciesIn.getA() - x, arrayIndiciesIn.getB() - x);
 	}
 	
 	public ESkyDirection getExitDirection() {
@@ -205,7 +205,7 @@ public class StrongholdFloor {
 		lastX = gpX;
 		lastZ = gpZ;
 		//System.out.println("X: " + gpX + "    Z: " + gpZ + "        Room: " + type.toString());
-		this.roomPattern[coords.getFirst()][coords.getSecond()] = type;
+		this.roomPattern[coords.getA()][coords.getB()] = type;
 	}
 	
 	private ESkyDirection getRoomExitDirection(EStrongholdRoomType room) {

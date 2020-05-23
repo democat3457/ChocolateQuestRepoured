@@ -41,8 +41,8 @@ public class SpiralStrongholdFloor {
 	}
 	
 	public void calculateRoomGrid(EStrongholdRoomType entranceRoomType, boolean rev) {
-		int x = entranceIndex.getFirst();
-		int z = entranceIndex.getSecond();
+		int x = entranceIndex.getA();
+		int z = entranceIndex.getB();
 		while(roomCount > 0) {
 			roomCount--;
 			if(roomCount == 0) {
@@ -139,7 +139,7 @@ public class SpiralStrongholdFloor {
 				continue;
 			}
 		}
-		roomGrid[entranceIndex.getFirst()][entranceIndex.getSecond()] = entranceRoomType;
+		roomGrid[entranceIndex.getA()][entranceIndex.getB()] = entranceRoomType;
 		//System.out.println("Done");
 	}
 	
@@ -174,29 +174,29 @@ public class SpiralStrongholdFloor {
 	}
 	
 	public void calculateCoordinates(int y, int roomSizeX, int roomSizeZ) {
-		BlockPos entrancePos = new BlockPos(entranceCoordinates.getFirst(), y, entranceCoordinates.getSecond());
-		coordinateGrid[entranceIndex.getFirst()][entranceIndex.getSecond()] = entrancePos;
+		BlockPos entrancePos = new BlockPos(entranceCoordinates.getA(), y, entranceCoordinates.getB());
+		coordinateGrid[entranceIndex.getA()][entranceIndex.getB()] = entrancePos;
 		for(int iX = 0; iX < sideLength; iX++) {
 			for(int iZ = 0; iZ < sideLength; iZ++) {
 				if((iX == 0 || iX == (sideLength -1)) || (iZ == 0 || iZ == (sideLength -1))) {
 					EStrongholdRoomType room = roomGrid[iX][iZ];
 					if(room != null && !room.equals(EStrongholdRoomType.NONE)) {
-						int x = (iX - entranceIndex.getFirst()) * roomSizeX;
+						int x = (iX - entranceIndex.getA()) * roomSizeX;
 						x += entrancePos.getX();
-						int z = (iZ - entranceIndex.getSecond()) * roomSizeZ;
+						int z = (iZ - entranceIndex.getB()) * roomSizeZ;
 						z += entrancePos.getZ();
 						coordinateGrid[iX][iZ] = new BlockPos(x,y,z);
 					}
 				}
 			}
 		}
-		coordinateGrid[entranceIndex.getFirst()][entranceIndex.getSecond()] = entrancePos;
+		coordinateGrid[entranceIndex.getA()][entranceIndex.getB()] = entrancePos;
 		if(!this.isLastFloor) {
-			int x = (exitIndex.getFirst() - entranceIndex.getFirst()) * roomSizeX;
+			int x = (exitIndex.getA() - entranceIndex.getA()) * roomSizeX;
 			x += entrancePos.getX();
-			int z = (exitIndex.getSecond() - entranceIndex.getSecond()) * roomSizeZ;
+			int z = (exitIndex.getB() - entranceIndex.getB()) * roomSizeZ;
 			z += entrancePos.getZ();
-			coordinateGrid[exitIndex.getFirst()][exitIndex.getSecond()] = new BlockPos(x,y,z);
+			coordinateGrid[exitIndex.getA()][exitIndex.getB()] = new BlockPos(x,y,z);
 			exitCoordinates = new Tuple<>(x, z);
 		}
 	}
@@ -209,11 +209,11 @@ public class SpiralStrongholdFloor {
 	}
 	
 	public void overrideFirstRoomType(EStrongholdRoomType type) {
-		roomGrid[entranceIndex.getFirst()][entranceIndex.getSecond()] = type;
+		roomGrid[entranceIndex.getA()][entranceIndex.getB()] = type;
 	}
 	public void overrideLastRoomType(EStrongholdRoomType type) {
 		if(!isLastFloor) {
-			roomGrid[exitIndex.getFirst()][exitIndex.getSecond()] = type;
+			roomGrid[exitIndex.getA()][exitIndex.getB()] = type;
 		}
 	}
 
@@ -226,8 +226,8 @@ public class SpiralStrongholdFloor {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setMirror(Mirror.NONE);
 		settings.setRotation(Rotation.NONE);
-		settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-		settings.setIntegrity(1.0F);
+		//settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+		//settings.setIntegrity(1.0F);
 		for(int iX = 0; iX < sideLength; iX++) {
 			for(int iZ = 0; iZ < sideLength; iZ++) {
 				if((iX == 0 || iX == (sideLength -1)) || (iZ == 0 || iZ == (sideLength -1))) {
@@ -250,7 +250,7 @@ public class SpiralStrongholdFloor {
 		return strongholdParts;
 	}
 	public EStrongholdRoomType getExitRoomType() {
-		return roomGrid[exitIndex.getFirst()][exitIndex.getSecond()];
+		return roomGrid[exitIndex.getA()][exitIndex.getB()];
 	}
 
 }

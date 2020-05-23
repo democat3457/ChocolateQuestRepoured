@@ -87,8 +87,8 @@ public class SpiralStrongholdBuilder {
 			if(i != 0) {
 				floor.overrideFirstRoomType(EStrongholdRoomType.NONE);
 			}
-			entranceX = floor.getExitIndex().getFirst();
-			entranceZ = floor.getExitIndex().getSecond();
+			entranceX = floor.getExitIndex().getA();
+			entranceZ = floor.getExitIndex().getB();
 			if(i == (floors.length -1)) {
 				floor.overrideLastRoomType(EStrongholdRoomType.BOSS);
 			} else {

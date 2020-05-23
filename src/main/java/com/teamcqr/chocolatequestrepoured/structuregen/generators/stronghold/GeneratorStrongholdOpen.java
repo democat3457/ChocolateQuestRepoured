@@ -21,6 +21,7 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.Tuple;
@@ -70,7 +71,7 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 	private void computeNotFittingStructures() {
 		for (File f : this.dungeon.getRoomFolder().listFiles(FileIOUtil.getNBTFileFilter())) {
 			CQStructure struct = new CQStructure(f);
-			if (struct != null && (struct.getSize().getX() != this.structureBounds.getFirst() || struct.getSize().getZ() != this.structureBounds.getSecond())) {
+			if (struct != null && (struct.getSize().getX() != this.structureBounds.getA() || struct.getSize().getZ() != this.structureBounds.getB())) {
 				this.blacklistedRooms.add(f.getParent() + "/" + f.getName());
 			}
 		}
@@ -111,7 +112,7 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 			if(isFirst) {
 				floor = new StrongholdFloorOpen(this, rgd, ((Double)Math.floor(rgd /2)).intValue(), ((Double)Math.floor(rgd /2)).intValue());
 			} else {
-				floor = new StrongholdFloorOpen(this, rgd, prevFloor.getExitStairIndexes().getFirst(), prevFloor.getExitStairIndexes().getSecond());
+				floor = new StrongholdFloorOpen(this, rgd, prevFloor.getExitStairIndexes().getA(), prevFloor.getExitStairIndexes().getB());
 			}
 			File stair = null;
 			if (isFirst) {
@@ -143,11 +144,11 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 				if(isFirst) {
 					floor.setEntranceStairPosition(stair, initPos.getX(), initPos.getY(), initPos.getZ());
 				} else {
-					floor.setEntranceStairPosition(stair, prevFloor.getExitCoordinates().getFirst(), initPos.getY(), prevFloor.getExitCoordinates().getSecond());
+					floor.setEntranceStairPosition(stair, prevFloor.getExitCoordinates().getA(), initPos.getY(), prevFloor.getExitCoordinates().getB());
 				}
 				
 				floor.calculatePositions();
-				initPos = new BlockPos(floor.getExitCoordinates().getFirst(), initPos.getY(), floor.getExitCoordinates().getSecond());
+				initPos = new BlockPos(floor.getExitCoordinates().getA(), initPos.getY(), floor.getExitCoordinates().getB());
 			}
 			prevFloor = floor;
 			this.floors[i] = floor;
@@ -175,7 +176,7 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 		entranceSizeX = structure.getSize().getX();
 		entranceSizeZ = structure.getSize().getX();
 		//structure.addBlocksToWorld(world, new BlockPos(x, y, z), this.settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z);
-		for (List<? extends IStructure> list : structure.addBlocksToWorld(world, new BlockPos(x, y, z), this.settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z)) {
+		for (List<? extends IStructure> list : structure.addBlocksToWorld(world, new BlockPos(x, y, z), this.settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z)) {
 			lists.add(list);
 		}
 		/*
@@ -238,7 +239,7 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 			for (int iX = startX; iX <= endX; iX++) {
 				for (int iZ = startZ; iZ <= endZ; iZ++) {
 					BlockPos pos = new BlockPos(iX, world.getTopSolidOrLiquidBlock(new BlockPos(iX, 0, iZ)).getY(), iZ);
-					if (!Block.isEqualTo(world.getBlockState(pos.subtract(new Vec3i(0, 1, 0))).getBlock(), this.dungeon.getCoverBlock())) {
+					if (world.getBlockState(pos.subtract(new Vec3i(0, 1, 0))).getBlock() != this.dungeon.getCoverBlock()) {
 						stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(this.dungeon.getCoverBlock().getDefaultState(), null));
 					}
 				}

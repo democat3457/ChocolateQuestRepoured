@@ -53,7 +53,7 @@ public class GeneratorStronghold implements IDungeonGenerator {
 	@Override
 	public void preProcess(World world, Chunk chunk, int x, int y, int z, List<List<? extends IStructure>> lists) {
 		// calculates the positions for rooms, stairs, bossroom, entrance, entrance stairs
-		long seed = WorldDungeonGenerator.getSeed(world, chunk.x, chunk.z);
+		long seed = WorldDungeonGenerator.getSeed(world, chunk.getPos().x, chunk.getPos().z);
 		this.rdm = new Random();
 		this.rdm.setSeed(seed);
 		int count = DungeonGenUtils.getIntBetweenBorders(this.dungeon.getMinFloors(), this.dungeon.getMaxFloors(), this.rdm);
@@ -71,8 +71,8 @@ public class GeneratorStronghold implements IDungeonGenerator {
 			floor.generateRoomPattern(sX, sZ, exitDir);
 			this.floors[i] = floor;
 			exitDir = floor.getExitDirection();
-			sX = floor.getLastRoomGridPos().getFirst();
-			sZ = floor.getLastRoomGridPos().getSecond();
+			sX = floor.getLastRoomGridPos().getA();
+			sZ = floor.getLastRoomGridPos().getB();
 		}
 	}
 
@@ -89,8 +89,8 @@ public class GeneratorStronghold implements IDungeonGenerator {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setMirror(Mirror.NONE);
 		settings.setRotation(Rotation.NONE);
-		settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-		settings.setIntegrity(1.0F);
+		//settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+		//settings.setIntegrity(1.0F);
 		
 		CQStructure structureStair = new CQStructure(this.dungeon.getEntranceStairRoom());
 		structureStair.setDungeonMob(mobType);
@@ -123,7 +123,7 @@ public class GeneratorStronghold implements IDungeonGenerator {
 			supportBuilder.load(this.dungeon.getSupportBlock(), this.dungeon.getSupportTopBlock());
 			lists.add(supportBuilder.createSupportHillList(new Random(), world, new BlockPos(x, y + this.dungeon.getUnderGroundOffset(), z), structureEntrance.getSize().getX(), structureEntrance.getSize().getZ(), EPosType.CENTER_XZ_LAYER));
 		}
-		for (List<? extends IStructure> list : structureEntrance.addBlocksToWorld(world, new BlockPos(x, y, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z)) {
+		for (List<? extends IStructure> list : structureEntrance.addBlocksToWorld(world, new BlockPos(x, y, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z)) {
 			lists.add(list);
 		}
 		
@@ -131,7 +131,7 @@ public class GeneratorStronghold implements IDungeonGenerator {
 			while(segCount > 0) {
 				segCount--;
 				y -= stairSeg.getSize().getY();
-				for (List<? extends IStructure> list : stairSeg.addBlocksToWorld(world, new BlockPos(x, y, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z)) {
+				for (List<? extends IStructure> list : stairSeg.addBlocksToWorld(world, new BlockPos(x, y, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z)) {
 					lists.add(list);
 				}
 			}
@@ -139,7 +139,7 @@ public class GeneratorStronghold implements IDungeonGenerator {
 		
 		int yFloor = y;
 		yFloor -= structureStair.getSize().getY();
-		for (List<? extends IStructure> list : structureStair.addBlocksToWorld(world, new BlockPos(x, yFloor, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z)) {
+		for (List<? extends IStructure> list : structureStair.addBlocksToWorld(world, new BlockPos(x, yFloor, z), settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z)) {
 			lists.add(list);
 		}
 		
