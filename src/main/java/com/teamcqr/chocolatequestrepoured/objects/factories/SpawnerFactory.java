@@ -10,13 +10,17 @@ import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
 import com.teamcqr.chocolatequestrepoured.init.ModItems;
 import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +28,7 @@ import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * A static utility class for generating CQR/vanilla spawners and converting them to/from the other
@@ -70,12 +75,12 @@ public abstract class SpawnerFactory {
 	 * @param pos                      Position at which to place spawner
 	 */
 	public static void placeSpawner(CompoundNBT[] entities, boolean multiUseSpawner, @Nullable CompoundNBT spawnerSettingsOverrides, World world, BlockPos pos) {
-		world.setBlockState(pos, (multiUseSpawner == true /* && spawnerSettingsOverrides != null */) ? Blocks.MOB_SPAWNER.getDefaultState() : ModBlocks.SPAWNER.getDefaultState());
+		world.setBlockState(pos, (multiUseSpawner == true /* && spawnerSettingsOverrides != null */) ? Blocks.SPAWNER.getDefaultState() : ModBlocks.SPAWNER.getDefaultState());
 
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (multiUseSpawner) {
-			TileEntityMobSpawner tileEntityMobSpawner = (TileEntityMobSpawner) tileEntity;
-			CompoundNBT compound = tileEntityMobSpawner.writeToNBT(new CompoundNBT());
+			MobSpawnerTileEntity tileEntityMobSpawner = (MobSpawnerTileEntity) tileEntity;
+			CompoundNBT compound = tileEntityMobSpawner.write(new CompoundNBT());
 			ListNBT spawnPotentials = new ListNBT();
 
 			// Store entity ids into NBT tag
@@ -83,37 +88,37 @@ public abstract class SpawnerFactory {
 				if (entities[i] != null) {
 					{
 						// needed because in earlier versions the uuid and pos were not removed when using a soul bottle/mob to spawner on an entity
-						entities[i].removeTag("UUIDLeast");
-						entities[i].removeTag("UUIDMost");
-						entities[i].removeTag("Pos");
-						ListNBT passengers = entities[i].getTagList("Passengers", 10);
-						for (NBTBase passenger : passengers) {
-							((CompoundNBT) passenger).removeTag("UUIDLeast");
-							((CompoundNBT) passenger).removeTag("UUIDMost");
-							((CompoundNBT) passenger).removeTag("Pos");
+						entities[i].remove("UUIDLeast");
+						entities[i].remove("UUIDMost");
+						entities[i].remove("Pos");
+						ListNBT passengers = entities[i].getList("Passengers", 10);
+						for (INBT passenger : passengers) {
+							((CompoundNBT) passenger).remove("UUIDLeast");
+							((CompoundNBT) passenger).remove("UUIDMost");
+							((CompoundNBT) passenger).remove("Pos");
 						}
 					}
 					CompoundNBT spawnPotential = new CompoundNBT();
-					spawnPotential.setInteger("Weight", 1);
-					spawnPotential.setTag("Entity", entities[i]);
-					spawnPotentials.appendTag(spawnPotential);
+					spawnPotential.putInt("Weight", 1);
+					spawnPotential.put("Entity", entities[i]);
+					spawnPotentials.add(spawnPotential);
 				}
 			}
-			compound.setTag("SpawnPotentials", spawnPotentials);
-			compound.removeTag("SpawnData");
+			compound.put("SpawnPotentials", spawnPotentials);
+			compound.remove("SpawnData");
 
 			// Store default settings into NBT
 			if (spawnerSettingsOverrides != null) {
-				compound.setInteger("MinSpawnDelay", spawnerSettingsOverrides.getInteger("MinSpawnDelay"));
-				compound.setInteger("MaxSpawnDelay", spawnerSettingsOverrides.getInteger("MaxSpawnDelay"));
-				compound.setInteger("SpawnCount", spawnerSettingsOverrides.getInteger("SpawnCount"));
-				compound.setInteger("MaxNearbyEntities", spawnerSettingsOverrides.getInteger("MaxNearbyEntities"));
-				compound.setInteger("SpawnRange", spawnerSettingsOverrides.getInteger("SpawnRange"));
-				compound.setInteger("RequiredPlayerRange", spawnerSettingsOverrides.getInteger("RequiredPlayerRange"));
+				compound.putInt("MinSpawnDelay", spawnerSettingsOverrides.getInt("MinSpawnDelay"));
+				compound.putInt("MaxSpawnDelay", spawnerSettingsOverrides.getInt("MaxSpawnDelay"));
+				compound.putInt("SpawnCount", spawnerSettingsOverrides.getInt("SpawnCount"));
+				compound.putInt("MaxNearbyEntities", spawnerSettingsOverrides.getInt("MaxNearbyEntities"));
+				compound.putInt("SpawnRange", spawnerSettingsOverrides.getInt("SpawnRange"));
+				compound.putInt("RequiredPlayerRange", spawnerSettingsOverrides.getInt("RequiredPlayerRange"));
 			}
 
 			// Read data from modified nbt
-			tileEntityMobSpawner.readFromNBT(compound);
+			tileEntityMobSpawner.read(compound);
 
 			tileEntityMobSpawner.markDirty();
 		} else {
@@ -134,18 +139,19 @@ public abstract class SpawnerFactory {
 	 * the entity that it should spawn.
 	 */
 	public static void createSimpleMultiUseSpawner(World world, BlockPos pos, ResourceLocation entityResLoc) {
-		world.setBlockState(pos, Blocks.MOB_SPAWNER.getDefaultState());
-		TileEntityMobSpawner spawner = (TileEntityMobSpawner) world.getTileEntity(pos);
+		world.setBlockState(pos, Blocks.SPAWNER.getDefaultState());
+		MobSpawnerTileEntity spawner = (MobSpawnerTileEntity) world.getTileEntity(pos);
 
-		spawner.getSpawnerBaseLogic().setEntityId(entityResLoc);
+		spawner.getSpawnerBaseLogic().setEntityType(ForgeRegistries.ENTITIES.getValue(entityResLoc));
 
 		spawner.updateContainingBlockInfo();
-		spawner.update();
+		//Is validate the correct replacement for update?!
+		spawner.validate();
 	}
 	
-	public static TileEntityMobSpawner getSpawnerTile(World world, ResourceLocation entity, BlockPos pos) {
-		TileEntityMobSpawner spawner = (TileEntityMobSpawner) world.getTileEntity(pos);
-		spawner.getSpawnerBaseLogic().setEntityId(entity);
+	public static MobSpawnerTileEntity getSpawnerTile(World world, ResourceLocation entity, BlockPos pos) {
+		MobSpawnerTileEntity spawner = (MobSpawnerTileEntity) world.getTileEntity(pos);
+		spawner.getSpawnerBaseLogic().setEntityType(ForgeRegistries.ENTITIES.getValue(entity));
 		return spawner;
 	}
 
@@ -154,7 +160,7 @@ public abstract class SpawnerFactory {
 	 * resource location in its parameter
 	 */
 	public static void createSimpleMultiUseSpawner(World world, BlockPos pos, Entity entity) {
-		createSimpleMultiUseSpawner(world, pos, EntityList.getKey(entity));
+		createSimpleMultiUseSpawner(world, pos, entity.getType().getRegistryName()/*EntityList.getKey(entity)*/);
 	}
 
 	/*
@@ -179,10 +185,10 @@ public abstract class SpawnerFactory {
 				ItemStack stack = spawner.inventory.extractItem(i, spawner.inventory.getStackInSlot(i).getCount(), false);// getStackInSlot(i);
 				if (stack != null && !stack.isEmpty() && stack.getCount() >= 1) {
 					try {
-						CompoundNBT tag = stack.getTagCompound();
+						CompoundNBT tag = stack.getTag();
 
 						// CompoundNBT entityTag = (CompoundNBT)tag.getTag("EntityIn");
-						entities[i] = tag.getCompoundTag("EntityIn");
+						entities[i] = tag.getCompound("EntityIn");
 						/*
 						 * entities[i] = createEntityFromNBTWithoutSpawningIt(entityTag, world);
 						 * 
@@ -194,7 +200,7 @@ public abstract class SpawnerFactory {
 					entities[i] = null;
 				}
 			}
-			world.setBlockToAir(pos);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 
 			placeSpawner(entities, true, spawnerSettings, world, pos);
 		}
@@ -205,8 +211,8 @@ public abstract class SpawnerFactory {
 	 */
 	public static void convertVanillaSpawnerToCQSpawner(World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile != null && tile instanceof TileEntityMobSpawner) {
-			TileEntityMobSpawner spawnerMultiUseTile = (TileEntityMobSpawner) tile;
+		if (tile != null && tile instanceof MobSpawnerTileEntity) {
+			MobSpawnerTileEntity spawnerMultiUseTile = (MobSpawnerTileEntity) tile;
 
 			List<WeightedSpawnerEntity> spawnerEntries = new ArrayList<WeightedSpawnerEntity>();
 			spawnerEntries = ObfuscationReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, spawnerMultiUseTile.getSpawnerBaseLogic(), 1 /* It is an array index of getDeclaredFields() */);
@@ -242,22 +248,22 @@ public abstract class SpawnerFactory {
 	 */
 	public static Entity createEntityFromNBTWithoutSpawningIt(CompoundNBT tag, World worldIn) {
 		Entity entity = EntityList.createEntityFromNBT(tag, worldIn);
-		entity.readFromNBT(tag);
+		entity.read(tag);
 
 		return entity;
 	}
 
 	public static CompoundNBT createSpawnerNBTFromEntity(Entity entity) {
 		CompoundNBT entityCompound = new CompoundNBT();
-		entity.writeToNBTOptional(entityCompound);
-		entityCompound.removeTag("UUIDLeast");
-		entityCompound.removeTag("UUIDMost");
-		entityCompound.removeTag("Pos");
-		ListNBT passengerList = entityCompound.getTagList("Passengers", 10);
-		for (NBTBase passengerTag : passengerList) {
-			((CompoundNBT) passengerTag).removeTag("UUIDLeast");
-			((CompoundNBT) passengerTag).removeTag("UUIDMost");
-			((CompoundNBT) passengerTag).removeTag("Pos");
+		entity.writeAdditional(entityCompound);
+		entityCompound.remove("UUIDLeast");
+		entityCompound.remove("UUIDMost");
+		entityCompound.remove("Pos");
+		ListNBT passengerList = entityCompound.getList("Passengers", 10);
+		for (INBT passengerTag : passengerList) {
+			((CompoundNBT) passengerTag).remove("UUIDLeast");
+			((CompoundNBT) passengerTag).remove("UUIDMost");
+			((CompoundNBT) passengerTag).remove("Pos");
 		}
 
 		return entityCompound;
@@ -271,7 +277,7 @@ public abstract class SpawnerFactory {
 			return null;
 		}
 		CompoundNBT entityTag = new CompoundNBT();
-		if (entity.writeToNBTOptional(entityTag)) {
+		if (entity.writeAdditional(entityTag)) {
 			return getSoulBottleItemStackForEntity(entityTag);
 		}
 		return null;
@@ -283,8 +289,8 @@ public abstract class SpawnerFactory {
 		bottle.setCount(1);
 		CompoundNBT mobToSpawnerItem = new CompoundNBT();
 
-		mobToSpawnerItem.setTag("EntityIn", entityTag);
-		bottle.setTagCompound(mobToSpawnerItem);
+		mobToSpawnerItem.put("EntityIn", entityTag);
+		bottle.setTag(mobToSpawnerItem);
 		return bottle;
 	}
 
