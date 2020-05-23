@@ -8,9 +8,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.teamcqr.chocolatequestrepoured.CQRMain;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Copyright (c) 29.04.2019
@@ -125,7 +125,7 @@ public class PropertyFileHelper {
 			return defVal;
 		}
 
-		Block retBlock = Block.getBlockFromName(s);
+		Block retBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s));
 		if (retBlock == null) {
 			retBlock = defVal;
 		}
@@ -146,8 +146,8 @@ public class PropertyFileHelper {
 			if (tmp.isEmpty()) {
 				retVal = ArrayUtils.remove(retVal, i - removed);
 				removed++;
-			} else if(Block.getBlockFromName(tmp) != null){
-				retVal[i - removed] = Block.getBlockFromName(tmp);
+			} else if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(tmp))){
+				retVal[i - removed] = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tmp));
 			}
 		}
 
@@ -155,12 +155,12 @@ public class PropertyFileHelper {
 	}
 
 	public static BlockState getDefaultStateBlockProperty(Properties prop, String key, BlockState defVal) {
-		String s = prop.getProperty(key);
+		/*String s = prop.getProperty(key);
 		if (s == null || s.isEmpty()) {
 			return defVal;
 		}
 
-		Block retBlock = Block.getBlockFromName(s);
+		Block retBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s));
 		if (retBlock == null) {
 			//Try one last thing - to see if the block exists only as a block variant in forge 1.12
 			BlockState variantState = EnumForgeBlockVariant.getVariantStateFromName(s);
@@ -171,7 +171,8 @@ public class PropertyFileHelper {
 			}
 		} else {
 			return retBlock.getDefaultState();
-		}
+		}*/
+		return getBlockProperty(prop, key, defVal.getBlock()).getDefaultState();
 	}
 
 	public static File getFileProperty(Properties prop, String key, String defVal) {
