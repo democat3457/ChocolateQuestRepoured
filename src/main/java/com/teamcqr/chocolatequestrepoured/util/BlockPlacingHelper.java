@@ -18,6 +18,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockS
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -84,10 +85,10 @@ public class BlockPlacingHelper {
 							BlockPos position = pos.add(x, y, z);
 							TileEntity tileEntity = world.getTileEntity(position);
 							if (tileEntity != null) {
-								tileentitydata.setInteger("x", position.getX());
-								tileentitydata.setInteger("y", position.getY());
-								tileentitydata.setInteger("z", position.getZ());
-								tileEntity.readFromNBT(tileentitydata);
+								tileentitydata.putInt("x", position.getX());
+								tileentitydata.putInt("y", position.getY());
+								tileentitydata.putInt("z", position.getZ());
+								tileEntity.read(tileentitydata);
 							}
 						}
 					}
@@ -101,22 +102,22 @@ public class BlockPlacingHelper {
 
 		for (Template.BlockInfo blockInfo : list) {
 			BlockPos position = pos.add(Template.transformedBlockPos(placementSettings, blockInfo.pos));
-			BlockState state = blockInfo.blockState.withMirror(placementSettings.getMirror()).withRotation(placementSettings.getRotation());
+			BlockState state = blockInfo.state.mirror(placementSettings.getMirror()).rotate(placementSettings.getRotation());
 			map.add(new AbstractMap.SimpleEntry(position, state));
 		}
 
 		BlockPlacingHelper.setBlockStates(world, map, flags, false);
 
 		for (Template.BlockInfo blockInfo : list) {
-			if (blockInfo.tileentityData != null) {
+			if (blockInfo.nbt != null) {
 				BlockPos position = pos.add(Template.transformedBlockPos(placementSettings, blockInfo.pos));
 				TileEntity tileEntity = world.getTileEntity(position);
 
 				if (tileEntity != null) {
-					blockInfo.tileentityData.setInteger("x", position.getX());
-					blockInfo.tileentityData.setInteger("y", position.getY());
-					blockInfo.tileentityData.setInteger("z", position.getZ());
-					tileEntity.readFromNBT(blockInfo.tileentityData);
+					blockInfo.nbt.putInt("x", position.getX());
+					blockInfo.nbt.putInt("y", position.getY());
+					blockInfo.nbt.putInt("z", position.getZ());
+					tileEntity.read(blockInfo.nbt);
 					tileEntity.mirror(placementSettings.getMirror());
 					tileEntity.rotate(placementSettings.getRotation());
 				}
@@ -125,7 +126,7 @@ public class BlockPlacingHelper {
 	}
 
 	public static void setBlockStates(World world, List<Map.Entry<BlockPos, BlockState>> map, int flags, boolean updateLight) {
-		if (!world.isRemote && world.getWorldInfo().getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) {
+		if (!world.isRemote && world.getWorldInfo().getGenerator() == WorldType.DEBUG_ALL_BLOCK_STATES) {
 			return;
 		}
 
@@ -142,15 +143,15 @@ public class BlockPlacingHelper {
 				continue;
 			}
 			pos = pos.toImmutable();
-			Chunk chunk = world.getChunkFromBlockCoords(pos);
+			Chunk chunk = world.getChunkAt(pos);
 			BlockState oldState = chunk.getBlockState(pos);
 			int oldLight = oldState.getLightValue(world, pos);
-			int oldOpacity = oldState.getLightOpacity(world, pos);
+			int oldOpacity = oldState.getOpacity(world, pos);
 
 			BlockState iblockstate = setBlockState(world, chunk, pos, newState, updateLight, generateSkylightMap, relightBlock, propagateSkylightOcclusion);
 
 			if (iblockstate != null) {
-				if (updateLight && (newState.getLightOpacity(world, pos) != oldOpacity || newState.getLightValue(world, pos) != oldLight)) {
+				if (updateLight && (newState.getOpacity(world, pos) != oldOpacity || newState.getLightValue(world, pos) != oldLight)) {
 					lightUpdates.add(pos);
 				}
 
@@ -168,18 +169,18 @@ public class BlockPlacingHelper {
 			}
 
 			for (BlockPos pos : relightBlock) {
-				relightBlock(world.getChunkFromBlockCoords(pos), pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+				relightBlock(world.getChunkAt(pos), pos.getX() & 15, pos.getY(), pos.getZ() & 15);
 			}
 
 			for (BlockPos pos : propagateSkylightOcclusion) {
-				propagateSkylightOcclusion(world.getChunkFromBlockCoords(pos), pos.getX() & 15, pos.getZ() & 15);
+				propagateSkylightOcclusion(world.getChunkAt(pos), pos.getX() & 15, pos.getZ() & 15);
 			}
 
-			world.profiler.startSection("checkLight");
+			world.getProfiler().startSection("checkLight");
 			for (BlockPos pos : lightUpdates) {
 				world.checkLight(pos);
 			}
-			world.profiler.endSection();
+			world.getProfiler().endSection();
 		}
 
 		for (BlockPlacingHelper.BlockUpdate blockUpdate : blockUpdates) {
@@ -207,7 +208,7 @@ public class BlockPlacingHelper {
 		} else {
 			Block block = state.getBlock();
 			Block block1 = iblockstate.getBlock();
-			int k1 = iblockstate.getLightOpacity(world, pos);
+			int k1 = iblockstate.getOpacity(world, pos);
 			ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[j >> 4];
 			boolean flag = false;
 
@@ -225,7 +226,7 @@ public class BlockPlacingHelper {
 
 			if (!world.isRemote) {
 				if (block1 != block) {
-					block1.breakBlock(world, pos, iblockstate);
+					world.destroyBlock(pos, false);
 				}
 				TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
 				if (te != null && te.shouldRefresh(world, pos, iblockstate, state)) {
@@ -245,7 +246,7 @@ public class BlockPlacingHelper {
 					if (flag) {
 						generateSkylightMap.add(chunk);
 					} else {
-						int j1 = state.getLightOpacity(world, pos);
+						int j1 = state.getOpacity(world, pos);
 
 						if (j1 > 0) {
 							if (j >= i1) {
@@ -269,7 +270,7 @@ public class BlockPlacingHelper {
 					TileEntity tileentity1 = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
 
 					if (tileentity1 == null) {
-						tileentity1 = block.createTileEntity(world, state);
+						tileentity1 = block.createTileEntity(state, world);
 						world.setTileEntity(pos, tileentity1);
 					}
 
