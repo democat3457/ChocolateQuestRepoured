@@ -15,7 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -45,7 +45,7 @@ public class ItemBadge extends Item {
 			if (!player.world.isRemote) {
 				if (entity instanceof AbstractEntityCQR) {
 					((AbstractEntityCQR) entity).setItemStackToExtraSlot(EntityEquipmentExtraSlot.BADGE, stack.copy());
-					((WorldServer) player.world).spawnParticle((PlayerEntityMP) player, EnumParticleTypes.SPELL_WITCH, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
+					((WorldServer) player.world).spawnParticle((ServerPlayerEntity) player, EnumParticleTypes.SPELL_WITCH, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
 				} else {
 					IItemHandler capability = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 					ListNBT itemList = new ListNBT();
@@ -58,7 +58,7 @@ public class ItemBadge extends Item {
 					}
 					if (!itemList.hasNoTags()) {
 						entity.getEntityData().setTag("Items", itemList);
-						((WorldServer) player.world).spawnParticle((PlayerEntityMP) player, EnumParticleTypes.SPELL_WITCH, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
+						((WorldServer) player.world).spawnParticle((ServerPlayerEntity) player, EnumParticleTypes.SPELL_WITCH, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
 					}
 				}
 			}

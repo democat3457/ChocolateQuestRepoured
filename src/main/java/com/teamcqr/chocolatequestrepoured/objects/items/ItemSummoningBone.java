@@ -13,7 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,8 +51,8 @@ public class ItemSummoningBone extends Item {
 		if(!worldIn.isRemote && spawnEntity((PlayerEntity) entityLiving, worldIn, stack)) {
 			stack.damageItem(1, entityLiving);
 		}
-		if(entityLiving instanceof PlayerEntityMP) {
-			((PlayerEntityMP) entityLiving).getCooldownTracker().setCooldown(this, 20);
+		if(entityLiving instanceof ServerPlayerEntity) {
+			((ServerPlayerEntity) entityLiving).getCooldownTracker().setCooldown(this, 20);
 		}
 		if(stack.getItemDamage() >= stack.getMaxDamage()) {
 			return ItemStack.EMPTY;

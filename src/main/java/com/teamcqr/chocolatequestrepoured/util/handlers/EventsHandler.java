@@ -19,7 +19,7 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -98,8 +98,8 @@ public class EventsHandler {
 
 			if (tep) {
 				if (world.getBlockState(ep).getBlock().isPassable(world, ep) && world.getBlockState(ep1).getBlock().isPassable(world, ep1)) {
-					if (player instanceof PlayerEntityMP) {
-						PlayerEntityMP playerMP = (PlayerEntityMP) player;
+					if (player instanceof ServerPlayerEntity) {
+						ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
 
 						playerMP.connection.setPlayerLocation(d, d1, d2, playerMP.rotationYaw, playerMP.rotationPitch);
 						if (!world.isRemote) {

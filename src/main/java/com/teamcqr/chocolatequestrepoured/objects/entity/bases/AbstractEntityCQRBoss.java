@@ -4,7 +4,7 @@ import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -74,13 +74,13 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 	}
 
 	@Override
-	public void addTrackingPlayer(PlayerEntityMP player) {
+	public void addTrackingPlayer(ServerPlayerEntity player) {
 		super.addTrackingPlayer(player);
 		this.bossInfoServer.addPlayer(player);
 	}
 
 	@Override
-	public void removeTrackingPlayer(PlayerEntityMP player) {
+	public void removeTrackingPlayer(ServerPlayerEntity player) {
 		super.removeTrackingPlayer(player);
 		this.bossInfoServer.removePlayer(player);
 	}

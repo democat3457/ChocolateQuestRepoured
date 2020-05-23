@@ -17,7 +17,7 @@ import com.teamcqr.chocolatequestrepoured.tileentity.TileEntityExporter;
 import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.Hand;
@@ -81,7 +81,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 
 		if (ID == Reference.REPUTATION_GUI_ID) {
-			return new GuiReputation((PlayerEntitySP) player);
+			return new GuiReputation((ClientPlayerEntity) player);
 		}
 
 		return null;

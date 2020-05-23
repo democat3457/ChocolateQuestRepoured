@@ -18,7 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -58,14 +58,14 @@ public class ProtectedRegionEventHandler {
 	public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.player.world);
 		List<ProtectedRegion> protectedRegions = protectedRegionManager != null ? protectedRegionManager.getProtectedRegions() : Collections.emptyList();
-		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (PlayerEntityMP) event.player);
+		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.player);
 	}
 
 	@SubscribeEvent
 	public static void onPlayerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
 		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.player.world);
 		List<ProtectedRegion> protectedRegions = protectedRegionManager != null ? protectedRegionManager.getProtectedRegions() : Collections.emptyList();
-		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (PlayerEntityMP) event.player);
+		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.player);
 	}
 
 	@SubscribeEvent

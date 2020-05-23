@@ -7,7 +7,7 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -42,7 +42,7 @@ public class ItemPathTool extends Item {
 
 				if (path.length > 0) {
 					((AbstractEntityCQR) entity).setPath(path);
-					((WorldServer) player.world).spawnParticle((PlayerEntityMP) player, EnumParticleTypes.VILLAGER_HAPPY, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
+					((WorldServer) player.world).spawnParticle((ServerPlayerEntity) player, EnumParticleTypes.VILLAGER_HAPPY, false, entity.posX, entity.posY + 0.5D, entity.posZ, 8, 0.5D, 0.5D, 0.5D, 0.1D);
 				}
 			} else {
 				BlockPos[] oldPath = ((AbstractEntityCQR) entity).getGuardPathPoints();

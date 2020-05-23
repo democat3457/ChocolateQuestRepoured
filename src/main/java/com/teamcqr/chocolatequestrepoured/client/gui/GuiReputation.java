@@ -3,7 +3,7 @@ package com.teamcqr.chocolatequestrepoured.client.gui;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.ClientPlayerEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public class GuiReputation extends GuiScreen {
 
 	// Player texture: Player object -> getTexture or similar...
 
-	public GuiReputation(PlayerEntitySP player) {
+	public GuiReputation(ClientPlayerEntity player) {
 		super();
 		this.imgPlayerHead = player.getLocationSkin();
 

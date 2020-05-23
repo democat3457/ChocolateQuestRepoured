@@ -13,7 +13,7 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -166,7 +166,7 @@ public class ItemDungeonPlacer extends Item {
 		@SubscribeEvent
 		public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
 			if (!event.player.world.isRemote) {
-				CQRMain.NETWORK.sendTo(new DungeonSyncPacket(DungeonRegistry.getInstance().getLoadedDungeons()), (PlayerEntityMP) event.player);
+				CQRMain.NETWORK.sendTo(new DungeonSyncPacket(DungeonRegistry.getInstance().getLoadedDungeons()), (ServerPlayerEntity) event.player);
 			}
 		}
 

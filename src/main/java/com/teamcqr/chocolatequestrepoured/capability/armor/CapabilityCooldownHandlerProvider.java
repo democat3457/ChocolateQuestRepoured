@@ -6,7 +6,7 @@ import com.teamcqr.chocolatequestrepoured.network.packets.toClient.ArmorCooldown
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -50,7 +50,7 @@ public class CapabilityCooldownHandlerProvider extends SerializableCapabilityPro
 	public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
 		if (!event.player.world.isRemote) {
 			CapabilityCooldownHandler icapability = event.player.getCapability(CAPABILITY_ITEM_COOLDOWN_CQR, null);
-			CQRMain.NETWORK.sendTo(new ArmorCooldownSyncPacket(icapability.getItemCooldownMap()), (PlayerEntityMP) event.player);
+			CQRMain.NETWORK.sendTo(new ArmorCooldownSyncPacket(icapability.getItemCooldownMap()), (ServerPlayerEntity) event.player);
 		}
 	}
 

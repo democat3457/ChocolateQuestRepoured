@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -137,8 +137,8 @@ public class ProjectileHookShotHook extends ProjectileBase {
 		periodicSaveShooterPosition();
 
 		// Make player move very slowly while the hook is flying
-		if (!isPullingShooter() && this.getThrower() instanceof PlayerEntityMP) {
-			zeroizePlayerVelocity((PlayerEntityMP)this.getThrower());
+		if (!isPullingShooter() && this.getThrower() instanceof ServerPlayerEntity) {
+			zeroizePlayerVelocity((ServerPlayerEntity)this.getThrower());
 		}
 
 		// Remove the projectile if the shooter is dead
@@ -255,7 +255,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 	private void retractPullEntityState() {
 		checkForEntityBlockedPath();
 
-		if (this.pulledEntity instanceof PlayerEntityMP) {
+		if (this.pulledEntity instanceof ServerPlayerEntity) {
 			;
 		} else {
 			if (this.getPositionVector().distanceTo(startLocation) < STOP_PULL_DISTANCE) {
@@ -289,7 +289,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 	}
 
 	private void latchedPullShooterState() {
-	    if (this.getThrower() instanceof PlayerEntityMP) {
+	    if (this.getThrower() instanceof ServerPlayerEntity) {
             checkForShooterBlockedPath();
 
             Vec3d playerPos = this.getThrower().getPositionVector();
@@ -305,7 +305,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 
     private void triggerEntityPull(Entity entityHit) {
 		this.pulledEntity = entityHit;
-		if (this.pulledEntity instanceof PlayerEntityMP) {
+		if (this.pulledEntity instanceof ServerPlayerEntity) {
 			dataManager.set(PULLING_UUID, Optional.of(this.pulledEntity.getUniqueID()));
 		}
 		changeState(EnumHookState.PRE_PULL_ENTITY);
@@ -340,7 +340,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 		this.velocityChanged = true;
 	}
 
-	private void zeroizePlayerVelocity(PlayerEntityMP shootingPlayer) {
+	private void zeroizePlayerVelocity(ServerPlayerEntity shootingPlayer) {
 		if (!this.world.isRemote) {
 			HookShotPlayerStopPacket pullPacket = new HookShotPlayerStopPacket();
 			CQRMain.NETWORK.sendTo(pullPacket, shootingPlayer);
@@ -350,7 +350,7 @@ public class ProjectileHookShotHook extends ProjectileBase {
 	private double getDistanceToHook() {
 	    double result = 0;
 	    if (this.getThrower() != null) {
-            PlayerEntityMP shootingPlayer = (PlayerEntityMP) this.getThrower();
+            ServerPlayerEntity shootingPlayer = (ServerPlayerEntity) this.getThrower();
             Vec3d playerPos = shootingPlayer.getPositionVector();
             result = playerPos.distanceTo(this.getPositionVector());
         }
