@@ -88,9 +88,10 @@ import com.teamcqr.chocolatequestrepoured.objects.items.swords.ItemSwordTurtle;
 import com.teamcqr.chocolatequestrepoured.objects.items.swords.ItemSwordWalker;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Items;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -457,7 +458,7 @@ public class ModItems {
 			return setItemNameAndTab(item, name, CQRMain.CQR_ITEMS_TAB);
 		}
 
-		private static Item setItemNameAndTab(Item item, String name, @Nullable CreativeTabs tab) {
+		private static Item setItemNameAndTab(Item item, String name, @Nullable ItemGroup tab) {
 			return item.setUnlocalizedName(name).setRegistryName(Reference.MODID, name).setCreativeTab(tab);
 		}
 	}
