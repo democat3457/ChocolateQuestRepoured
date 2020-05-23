@@ -1,7 +1,8 @@
 package com.teamcqr.chocolatequestrepoured.util;
 
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -49,7 +50,7 @@ public class SpiralStaircaseBuilder {
 		switch (stairSide) {
 		case NORTH:
 			if (posX == startX && this.inBoundsNoZero(posZ, startZ, -STAIR_WIDTH)) {
-				return this.stairBlockState.withProperty(BlockStairs.FACING, stairFacing);
+				return this.stairBlockState.with(StairsBlock.FACING, stairFacing);
 			} else if (this.inBoundsNoZero(posX, startX, STAIR_WIDTH) && this.inBoundsWithZero(posZ, startZ, -STAIR_WIDTH)) {
 				return this.platformBlockState;
 			}
@@ -57,7 +58,7 @@ public class SpiralStaircaseBuilder {
 
 		case SOUTH:
 			if (posX == startX && this.inBoundsNoZero(posZ, startZ, STAIR_WIDTH)) {
-				return this.stairBlockState.withProperty(BlockStairs.FACING, stairFacing);
+				return this.stairBlockState.with(StairsBlock.FACING, stairFacing);
 			} else if (this.inBoundsNoZero(posX, startX, -STAIR_WIDTH) && this.inBoundsWithZero(posZ, startZ, STAIR_WIDTH)) {
 				return this.platformBlockState;
 			}
@@ -65,7 +66,7 @@ public class SpiralStaircaseBuilder {
 
 		case WEST:
 			if (this.inBoundsNoZero(posX, startX, -STAIR_WIDTH) && posZ == startZ) {
-				return this.stairBlockState.withProperty(BlockStairs.FACING, stairFacing);
+				return this.stairBlockState.with(StairsBlock.FACING, stairFacing);
 			} else if (this.inBoundsWithZero(posX, startX, -STAIR_WIDTH) && this.inBoundsNoZero(posZ, startZ, -STAIR_WIDTH)) {
 				return this.platformBlockState;
 			}
@@ -73,7 +74,7 @@ public class SpiralStaircaseBuilder {
 
 		case EAST:
 			if (this.inBoundsNoZero(posX, startX, STAIR_WIDTH) && posZ == startZ) {
-				return this.stairBlockState.withProperty(BlockStairs.FACING, stairFacing);
+				return this.stairBlockState.with(StairsBlock.FACING, stairFacing);
 			} else if (this.inBoundsWithZero(posX, startX, STAIR_WIDTH) && this.inBoundsNoZero(posZ, startZ, STAIR_WIDTH)) {
 				return this.platformBlockState;
 			}
