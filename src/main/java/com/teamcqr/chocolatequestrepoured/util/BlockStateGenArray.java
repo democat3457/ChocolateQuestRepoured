@@ -8,9 +8,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.EntityDataPart
 import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockStatePart;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.Direction;
@@ -48,8 +48,8 @@ public class BlockStateGenArray {
     public boolean addChestWithLootTable(World world, BlockPos pos, Direction facing, ResourceLocation lootTable, GenerationPhase phase) {
         if (lootTable != null) {
             Block chestBlock = Blocks.CHEST;
-            BlockState state = Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, facing);
-            ChestTileEntity chest = (ChestTileEntity) chestBlock.createTileEntity(world, state);
+            BlockState state = Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, facing);
+            ChestTileEntity chest = (ChestTileEntity) chestBlock.createTileEntity(state, world);
             if (chest != null) {
                 ResourceLocation resLoc = null;
                 try {
@@ -61,7 +61,7 @@ public class BlockStateGenArray {
                     long seed = WorldDungeonGenerator.getSeed(world, pos.getX() + pos.getY(), pos.getZ() + pos.getY());
                     chest.setLootTable(resLoc, seed);
                 }
-                CompoundNBT nbt = chest.writeToNBT(new CompoundNBT());
+                CompoundNBT nbt = chest.write(new CompoundNBT());
                 return this.addBlockState(pos, state, nbt, phase);
             }
         } else {
