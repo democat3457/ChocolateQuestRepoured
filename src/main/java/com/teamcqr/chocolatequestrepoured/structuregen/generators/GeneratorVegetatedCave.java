@@ -26,10 +26,12 @@ import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHugeMushroom;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockVine;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.HugeMushroomBlock;
+import net.minecraft.block.VineBlock;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -185,7 +187,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 		for (BlockPos pos : this.chests) {
 			Block block = Blocks.CHEST;
 			BlockState state = block.getDefaultState();
-			TileEntityChest chest = (TileEntityChest) block.createTileEntity(world, state);
+			ChestTileEntity chest = (ChestTileEntity) block.createTileEntity(state, world);
 
 			if (chest != null) {
 				ResourceLocation resLoc = chestIDs[random.nextInt(chestIDs.length)];
@@ -195,7 +197,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 				}
 			}
 
-			CompoundNBT nbt = chest.writeToNBT(new CompoundNBT());
+			CompoundNBT nbt = chest.write(new CompoundNBT());
 			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(state, nbt));
 		}
 		lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
@@ -206,13 +208,13 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 		// DONE: Place spawners
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
 		for (BlockPos pos : this.spawners) {
-			Block block = Blocks.MOB_SPAWNER;
+			Block block = Blocks.SPAWNER;
 			BlockState state = block.getDefaultState();
-			TileEntityMobSpawner spawner = (TileEntityMobSpawner) block.createTileEntity(world, state);
-			spawner.getSpawnerBaseLogic().setEntityId(mobtype.getEntityResourceLocation());
+			MobSpawnerTileEntity spawner = (MobSpawnerTileEntity) block.createTileEntity(state, world);
+			spawner.getSpawnerBaseLogic().setEntityType(mobtype.getEntityResourceLocation());
 			spawner.updateContainingBlockInfo();
 
-			CompoundNBT nbt = spawner.writeToNBT(new CompoundNBT());
+			CompoundNBT nbt = spawner.write(new CompoundNBT());
 			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(state, nbt));
 		}
 		lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
@@ -228,9 +230,9 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 			PlacementSettings settings = new PlacementSettings();
 			settings.setMirror(Mirror.NONE);
 			settings.setRotation(Rotation.NONE);
-			settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-			settings.setIntegrity(1.0F);
-			for (List<? extends IStructure> list : this.core.addBlocksToWorld(world, pastePos, settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z)) {
+			//settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+			//settings.setIntegrity(1.0F);
+			for (List<? extends IStructure> list : this.core.addBlocksToWorld(world, pastePos, settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z)) {
 				lists.add(list);
 			}
 		}
@@ -465,10 +467,10 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 					this.blocks.put(vineStart, new ExtendedBlockState(this.dungeon.getVineLatchBlock().getDefaultState(), null));
 				}
 				ExtendedBlockState airState = new ExtendedBlockState(dungeon.getAirBlock().getDefaultState(), null);
-				ExtendedBlockState sState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().withProperty(BlockVine.NORTH, true), null) : null;
-				ExtendedBlockState wState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().withProperty(BlockVine.EAST, true), null) : null;
-				ExtendedBlockState nState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().withProperty(BlockVine.SOUTH, true), null) : null;
-				ExtendedBlockState eState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().withProperty(BlockVine.WEST, true), null) : null;
+				ExtendedBlockState sState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().with(VineBlock.NORTH, true), null) : null;
+				ExtendedBlockState wState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().with(VineBlock.EAST, true), null) : null;
+				ExtendedBlockState nState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().with(VineBlock.SOUTH, true), null) : null;
+				ExtendedBlockState eState = dungeon.isVineShapeCross() ? new ExtendedBlockState(dungeon.getVineBlock().getDefaultState().with(VineBlock.WEST, true), null) : null;
 				while(vineLength >= 0) {
 					if(this.dungeon.isVineShapeCross()) {
 						this.blocks.put(vN, nState);
@@ -545,7 +547,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 							j2 += 3;
 						}
 
-						BlockHugeMushroom.EnumType blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.byMetadata(j2);
+						HugeMushroomBlock.EnumType blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.byMetadata(j2);
 
 						if (block == Blocks.BROWN_MUSHROOM_BLOCK || l2 < position.getY() + i) {
 							if ((l1 == k3 || l1 == l3) && (i2 == j1 || i2 == k1)) {
@@ -553,49 +555,49 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 							}
 
 							if (l1 == position.getX() - (j3 - 1) && i2 == j1) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.NORTH_WEST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.NORTH_WEST;
 							}
 
 							if (l1 == k3 && i2 == position.getZ() - (j3 - 1)) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.NORTH_WEST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.NORTH_WEST;
 							}
 
 							if (l1 == position.getX() + (j3 - 1) && i2 == j1) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.NORTH_EAST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.NORTH_EAST;
 							}
 
 							if (l1 == l3 && i2 == position.getZ() - (j3 - 1)) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.NORTH_EAST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.NORTH_EAST;
 							}
 
 							if (l1 == position.getX() - (j3 - 1) && i2 == k1) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.SOUTH_WEST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.SOUTH_WEST;
 							}
 
 							if (l1 == k3 && i2 == position.getZ() + (j3 - 1)) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.SOUTH_WEST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.SOUTH_WEST;
 							}
 
 							if (l1 == position.getX() + (j3 - 1) && i2 == k1) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.SOUTH_EAST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.SOUTH_EAST;
 							}
 
 							if (l1 == l3 && i2 == position.getZ() + (j3 - 1)) {
-								blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.SOUTH_EAST;
+								blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.SOUTH_EAST;
 							}
 						}
 
-						if (blockhugemushroom$enumtype == BlockHugeMushroom.EnumType.CENTER && l2 < position.getY() + i) {
-							blockhugemushroom$enumtype = BlockHugeMushroom.EnumType.ALL_INSIDE;
+						if (blockhugemushroom$enumtype == HugeMushroomBlock.EnumType.CENTER && l2 < position.getY() + i) {
+							blockhugemushroom$enumtype = HugeMushroomBlock.EnumType.ALL_INSIDE;
 						}
 
-						if (position.getY() >= position.getY() + i - 1 || blockhugemushroom$enumtype != BlockHugeMushroom.EnumType.ALL_INSIDE) {
+						if (position.getY() >= position.getY() + i - 1 || blockhugemushroom$enumtype != HugeMushroomBlock.EnumType.ALL_INSIDE) {
 							BlockPos blockpos = new BlockPos(l1, l2, i2);
 							//BlockState state = worldIn.getBlockState(blockpos);
 
 							// PUT IN MAP
 							//this.setBlockAndNotifyAdequately(worldIn, blockpos, block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, blockhugemushroom$enumtype));
-							stateMap.put(blockpos, new ExtendedBlockState(block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, blockhugemushroom$enumtype), null));
+							stateMap.put(blockpos, new ExtendedBlockState(block.getDefaultState().withProperty(HugeMushroomBlock.VARIANT, blockhugemushroom$enumtype), null));
 						}
 					}
 				}
@@ -605,7 +607,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 				//BlockState iblockstate = worldIn.getBlockState(position.up(i3));
 				// PUT IN MAP
 				//this.setBlockAndNotifyAdequately(worldIn, position.up(i3), block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM));
-				stateMap.put(position.up(i3), new ExtendedBlockState(block.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM), null));
+				stateMap.put(position.up(i3), new ExtendedBlockState(block.getDefaultState().withProperty(HugeMushroomBlock.VARIANT, HugeMushroomBlock.EnumType.STEM), null));
 			}
 
 		}

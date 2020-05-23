@@ -60,8 +60,8 @@ public class GeneratorStrongholdOpen implements IDungeonGenerator {
 
 		this.settings.setMirror(Mirror.NONE);
 		this.settings.setRotation(Rotation.NONE);
-		this.settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-		this.settings.setIntegrity(1.0F);
+		//this.settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+		//this.settings.setIntegrity(1.0F);
 
 		this.floors = new StrongholdFloorOpen[dungeon.getRandomFloorCount()];
 		this.searchStructureBounds();

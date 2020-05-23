@@ -18,6 +18,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -46,7 +47,7 @@ public class GeneratorHangingCity implements IDungeonGenerator {
 	@Override
 	public void preProcess(World world, Chunk chunk, int x, int y, int z, List<List<? extends IStructure>> lists) {
 		Random rdm = new Random();
-		long seed = WorldDungeonGenerator.getSeed(world, chunk.x + y * x - z, chunk.z + y * z + x);
+		long seed = WorldDungeonGenerator.getSeed(world, chunk.getPos().x + y * x - z, chunk.getPos().z + y * z + x);
 		rdm.setSeed(seed);
 		this.islandCount = this.dungeon.getBuildingCount(rdm);
 		// Calculates the positions and creates the island objects
@@ -164,12 +165,12 @@ public class GeneratorHangingCity implements IDungeonGenerator {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setMirror(Mirror.NONE);
 		settings.setRotation(Rotation.NONE);
-		settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-		settings.setIntegrity(1.0F);
+		//settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+		//settings.setIntegrity(1.0F);
 
 		centeredPos = centeredPos.add(0, 1, 0);
 
-		for (List<? extends IStructure> list : structure.addBlocksToWorld(world, centeredPos, settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.x, chunk.z))
+		for (List<? extends IStructure> list : structure.addBlocksToWorld(world, centeredPos, settings, EPosType.CENTER_XZ_LAYER, this.dungeon, chunk.getPos().x, chunk.getPos().z))
 			lists.add(list);
 
 		/*

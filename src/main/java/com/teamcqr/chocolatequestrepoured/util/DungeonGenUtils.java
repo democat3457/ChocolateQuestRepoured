@@ -44,6 +44,9 @@ public class DungeonGenUtils {
 		return false;
 	}
 
+	/*
+	 * x and z are x and z inside the chunk
+	 */
 	public static int getHighestYAt(Chunk chunk, int x, int z, boolean countWaterAsAir) {
 		int y = 255;
 		Block block = chunk.getBlockState(new BlockPos(x, y, z)).getBlock();

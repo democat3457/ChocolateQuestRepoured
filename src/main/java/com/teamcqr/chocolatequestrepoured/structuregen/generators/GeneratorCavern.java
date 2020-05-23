@@ -15,9 +15,10 @@ import com.teamcqr.chocolatequestrepoured.util.Perlin3D;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -114,7 +115,7 @@ public class GeneratorCavern implements IDungeonGenerator {
 		BlockPos start = new BlockPos(x, y, z);
 		BlockState state = Blocks.CHEST.getDefaultState();
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
-		TileEntityChest chest = (TileEntityChest) Blocks.CHEST.createTileEntity(world, state);
+		ChestTileEntity chest = (ChestTileEntity) Blocks.CHEST.createTileEntity(state, world);
 		ResourceLocation[] chestIDs = this.dungeon.getChestIDs();
 		if (chest != null) {
 			ResourceLocation resLoc = chestIDs[new Random().nextInt(chestIDs.length)];
@@ -122,7 +123,7 @@ public class GeneratorCavern implements IDungeonGenerator {
 				long seed = WorldDungeonGenerator.getSeed(world, x, z);
 				chest.setLootTable(resLoc, seed);
 			}
-			stateMap.put(start, new ExtendedBlockStatePart.ExtendedBlockState(state, chest.writeToNBT(new CompoundNBT())));
+			stateMap.put(start, new ExtendedBlockStatePart.ExtendedBlockState(state, chest.write(new CompoundNBT())));
 		}
 		lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
 	}
@@ -132,11 +133,11 @@ public class GeneratorCavern implements IDungeonGenerator {
 		BlockPos spawnerPos = new BlockPos(x, y, z);
 		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
 		
-		BlockState state = Blocks.MOB_SPAWNER.getDefaultState();
-		TileEntityMobSpawner spawner = (TileEntityMobSpawner)Blocks.MOB_SPAWNER.createTileEntity(world, state);
-		spawner.getSpawnerBaseLogic().setEntityId(dungeon.getMob());
+		BlockState state = Blocks.SPAWNER.getDefaultState();
+		MobSpawnerTileEntity spawner = (MobSpawnerTileEntity)Blocks.SPAWNER.createTileEntity(state, world);
+		spawner.getSpawnerBaseLogic().setEntityType(dungeon.getMob());
 		spawner.updateContainingBlockInfo();
-		stateMap.put(spawnerPos, new ExtendedBlockStatePart.ExtendedBlockState(state, spawner.writeToNBT(new CompoundNBT())));
+		stateMap.put(spawnerPos, new ExtendedBlockStatePart.ExtendedBlockState(state, spawner.write(new CompoundNBT())));
 		
 		lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
 	}

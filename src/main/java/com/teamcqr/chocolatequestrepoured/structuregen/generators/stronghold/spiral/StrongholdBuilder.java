@@ -16,6 +16,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.volcano.StairC
 import com.teamcqr.chocolatequestrepoured.util.ESkyDirection;
 
 import net.minecraft.block.BlockRotatedPillar;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;

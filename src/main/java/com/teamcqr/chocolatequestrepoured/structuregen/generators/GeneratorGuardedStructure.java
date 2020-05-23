@@ -202,7 +202,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 			if (this.dungeon.rotateDungeon()) {
 				plcmnt.setRotation(this.getRandomRotation());
 			}
-			plcmnt.setIntegrity(1.0f);
+			//plcmnt.setIntegrity(1.0f);
 
 			int index = 1;
 			BlockPos posLower = new BlockPos(x, y, z);

@@ -49,7 +49,7 @@ public class GeneratorOceanFloor implements IDungeonGenerator {
 	@Override
 	public void buildStructure(World world, Chunk chunk, int x, int y, int z, List<List<? extends IStructure>> lists) {
 		// Simply puts the structure at x,y,z
-		for (List<? extends IStructure> list : this.structure.addBlocksToWorld(world, new BlockPos(x, y, z), this.placeSettings, EPosType.DEFAULT, this.dungeon, chunk.x, chunk.z))
+		for (List<? extends IStructure> list : this.structure.addBlocksToWorld(world, new BlockPos(x, y, z), this.placeSettings, EPosType.DEFAULT, this.dungeon, chunk.getPos().x, chunk.getPos().z))
 			lists.add(list);
 
 		/*
