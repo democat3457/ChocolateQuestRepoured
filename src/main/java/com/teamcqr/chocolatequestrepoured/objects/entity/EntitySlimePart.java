@@ -7,11 +7,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
 
-public class EntitySlimePart extends EntitySlime {
+public class EntitySlimePart extends SlimeEntity {
 
 	private UUID ownerUuid;
 

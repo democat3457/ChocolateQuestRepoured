@@ -15,16 +15,22 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class BlockExporter extends Block implements ITileEntityProvider {
 
 	public BlockExporter() {
-		super(Material.IRON);
+		/*super(Material.IRON);
 
 		this.setSoundType(SoundType.METAL);
 		this.setBlockUnbreakable();
-		this.setResistance(Float.MAX_VALUE);
+		this.setResistance(Float.MAX_VALUE);*/
+		super(Properties.create(Material.IRON)
+				.hardnessAndResistance(50.0F, 1200.0F).sound(SoundType.STONE)
+				.noDrops()
+				.sound(SoundType.METAL)
+			);
 	}
 
 	@Override
@@ -36,13 +42,18 @@ public class BlockExporter extends Block implements ITileEntityProvider {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityExporter();
-	}
+	}*/
 
 	public TileEntityExporter getTileEntity(IBlockAccess world, BlockPos pos) {
 		return (TileEntityExporter) world.getTileEntity(pos);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(IBlockReader worldIn) {
+		return new TileEntityExporter();
 	}
 
 }

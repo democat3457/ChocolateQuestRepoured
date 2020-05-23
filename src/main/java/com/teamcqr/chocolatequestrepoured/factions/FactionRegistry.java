@@ -27,7 +27,6 @@ import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
@@ -43,13 +42,14 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class FactionRegistry {
 
@@ -221,8 +221,8 @@ public class FactionRegistry {
 		}
 		
 		//Faction overriding
-		if(EntityList.getKey(entity) != null && entityFactionMap.containsKey(EntityList.getKey(entity))) {
-			return entityFactionMap.get(EntityList.getKey(entity));
+		if(ForgeRegistries.ENTITIES.containsValue(entity.getType()) && entityFactionMap.containsKey(ForgeRegistries.ENTITIES.getKey(entity.getType()))) {
+			return entityFactionMap.get(ForgeRegistries.ENTITIES.getKey(entity.getType()));
 		}
 		//Overriding end
 		
@@ -351,31 +351,31 @@ public class FactionRegistry {
 
 	public void handlePlayerLogin(PlayerLoggedInEvent event) {
 		String path = FileIOUtil.getAbsoluteWorldPath() + "/data/CQR/reputation/";
-		File f = new File(path, event.player.getUniqueID() + ".nbt");
+		File f = new File(path, event.getPlayer().getUniqueID() + ".nbt");
 		if (f.exists()) {
 			CQRMain.logger.info("Loading player reputation...");
 			Thread t = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					final UUID uuid = event.player.getUniqueID();
+					final UUID uuid = event.getPlayer().getUniqueID();
 					CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
 					ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
-					if (!repuDataList.hasNoTags()) {
+					if (!repuDataList.isEmpty()) {
 						while(FactionRegistry.this.uuidsBeingLoaded.contains(uuid)) {
 							//Wait until the uuid isnt active	
 						}
 						FactionRegistry.this.uuidsBeingLoaded.add(uuid);
 						try {
-							Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.player.getUniqueID());
-							repuDataList.forEach(new Consumer<NBTBase>() {
+							Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.getPlayer().getUniqueID());
+							repuDataList.forEach(new Consumer<INBT>() {
 
 								@Override
-								public void accept(NBTBase t) {
+								public void accept(INBT t) {
 									CompoundNBT tag = (CompoundNBT) t;
 									String fac = tag.getString("factionName");
 									if (FactionRegistry.this.factions.containsKey(fac)) {
-										int reputation = tag.getInteger("reputation");
+										int reputation = tag.getInt("reputation");
 										mapping.put(fac, reputation);
 									}
 								}
@@ -392,15 +392,15 @@ public class FactionRegistry {
 	}
 
 	public void handlePlayerLogout(PlayerLoggedOutEvent event) {
-		if (this.playerFactionRepuMap.containsKey(event.player.getUniqueID())) {
+		if (this.playerFactionRepuMap.containsKey(event.getPlayer().getUniqueID())) {
 			CQRMain.logger.info("Saving player reputation...");
 			Thread t = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.player.getUniqueID());
+					Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.getPlayer().getUniqueID());
 					Map<String, Integer> entryMapping = new HashMap<>();
-					final UUID uuid = event.player.getUniqueID();
+					final UUID uuid = event.getPlayer().getUniqueID();
 					String path = FileIOUtil.getAbsoluteWorldPath() + "/data/CQR/reputation/";
 					File f = FileIOUtil.getOrCreateFile(path, uuid + ".nbt");
 					if (f != null) {
@@ -411,23 +411,23 @@ public class FactionRegistry {
 						try {
 							CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
 							ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
-							for (int i = 0; i < repuDataList.tagCount(); i++) {
-								CompoundNBT tag = repuDataList.getCompoundTagAt(i);
+							for (int i = 0; i < repuDataList.size(); i++) {
+								CompoundNBT tag = repuDataList.getCompound(i);
 								if (mapping.containsKey(tag.getString("factionName"))) {
 									entryMapping.put(tag.getString("factionName"), i);
 								}
 							}
 							for (Map.Entry<String, Integer> entry : mapping.entrySet()) {
 								if (entryMapping.containsKey(entry.getKey())) {
-									repuDataList.removeTag(entryMapping.get(entry.getKey()));
+									repuDataList.remove(entryMapping.get(entry.getKey()));
 								}
 								CompoundNBT tag = new CompoundNBT();
-								tag.setString("factionName", entry.getKey());
-								tag.setInteger("reputation", entry.getValue());
-								repuDataList.appendTag(tag);
+								tag.putString("factionName", entry.getKey());
+								tag.putInt("reputation", entry.getValue());
+								repuDataList.add(tag);
 							}
-							root.removeTag("reputationdata");
-							root.setTag("reputationdata", repuDataList);
+							root.remove("reputationdata");
+							root.put("reputationdata", repuDataList);
 
 							FileIOUtil.saveNBTCompoundToFile(root, f);
 						} finally {

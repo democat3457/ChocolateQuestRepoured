@@ -9,12 +9,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockTNT;
+import net.minecraft.block.FireBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockFireCQR extends BlockFire {
+public class BlockFireCQR extends FireBlock {
 
 	public BlockFireCQR() {
 		this.setRegistryName("fire");

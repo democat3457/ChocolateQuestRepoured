@@ -1,32 +1,28 @@
 package com.teamcqr.chocolatequestrepoured.objects.blocks;
 
-import java.util.Random;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockBossBlock extends Block {
 
 	public BlockBossBlock() {
-		super(Material.ROCK);
-
-		this.setSoundType(SoundType.STONE);
+		super(Properties.create(Material.ROCK)
+				.hardnessAndResistance(50.0F, 1200.0F)
+				.sound(SoundType.STONE)
+				.noDrops()
+			);
+		
+		/*this.setSoundType(SoundType.STONE);
 		this.setBlockUnbreakable();
-		this.setResistance(Float.MAX_VALUE);
+		this.setResistance(Float.MAX_VALUE);*/
 	}
 
-	@Override
+	/*@Override
 	public boolean isFullCube(BlockState state) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(BlockState state) {
 		return false;
@@ -42,10 +38,10 @@ public class BlockBossBlock extends Block {
 		return EnumBlockRenderType.MODEL;
 	}
 
-	@OnlyIn(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;
-	}
+	}*/
 
 }
