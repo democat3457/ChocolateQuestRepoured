@@ -1,12 +1,13 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
@@ -22,14 +23,15 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 
 	public EntityAIIdleSit(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(2);
+		//this.setMutexBits(2);
+		setMutexFlags(EnumSet.of(Flag.LOOK));
 		this.predicate = new Predicate<AbstractEntityCQR>() {
 			@Override
 			public boolean apply(AbstractEntityCQR input) {
 				if (input == null) {
 					return false;
 				}
-				if (!EntitySelectors.IS_ALIVE.apply(input)) {
+				if (!EntityPredicates.IS_ALIVE.test(input)) {
 					return false;
 				}
 				return EntityAIIdleSit.this.isEntityAlly(input);
@@ -45,7 +47,7 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 		if (this.entity.isBurning()) {
 			return false;
 		}
-		if (this.entity.isRiding()) {
+		if (this.entity.getRidingEntity() != null) {
 			return false;
 		}
 		if (this.isEntityMoving(this.entity)) {
@@ -83,7 +85,7 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 			if (this.talkingPartner == null || this.cooldwonForPartnerCycle >= COOLDOWN_FOR_PARTNER_CYCLE_BORDER) {
 				if (this.entity.ticksExisted % 4 == 0) {
 					Vec3d vec1 = this.entity.getPositionVector().subtract(6.0D, 3.0D, 6.0D);
-					Vec3d vec2 = this.entity.getPositionVector().addVector(6.0D, 3.0D, 6.0D);
+					Vec3d vec2 = this.entity.getPositionVector().add(6.0D, 3.0D, 6.0D);
 					AxisAlignedBB aabb = new AxisAlignedBB(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
 					List<AbstractEntityCQR> friends = this.entity.world.getEntitiesWithinAABB(AbstractEntityCQR.class, aabb, this.predicate);
 					if (!friends.isEmpty()) {
@@ -95,7 +97,7 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 
 			// check if talking partner is valid and either talk to him or stop talking
 			if (this.talkingPartner != null) {
-				if (this.talkingPartner.isEntityAlive() && this.entity.getDistance(this.talkingPartner) < 8.0D) {
+				if (this.talkingPartner.isAlive() && this.entity.getDistance(this.talkingPartner) < 8.0D) {
 					this.entity.setChatting(true);
 					this.entity.getLookController().setLookPositionWithEntity(this.talkingPartner, 15.0F, 15.0F);
 				} else {
@@ -120,7 +122,7 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 
 	private boolean isEntityMoving(Entity entity) {
 		// motion <= 0.03 is set to 0 but gravity always pulls entities downwards
-		return entity.motionX != 0.0D || Math.abs(entity.motionY) > 0.1D || entity.motionZ != 0.0D;
+		return entity.getMotion().length() > 0;
 	}
 
 }
