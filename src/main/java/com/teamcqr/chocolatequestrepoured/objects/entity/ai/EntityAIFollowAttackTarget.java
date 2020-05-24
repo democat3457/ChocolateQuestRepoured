@@ -1,5 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
+
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.util.math.Vec3d;
@@ -8,7 +10,8 @@ public class EntityAIFollowAttackTarget extends AbstractCQREntityAI<AbstractEnti
 
 	public EntityAIFollowAttackTarget(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
 	}
 
 	@Override
