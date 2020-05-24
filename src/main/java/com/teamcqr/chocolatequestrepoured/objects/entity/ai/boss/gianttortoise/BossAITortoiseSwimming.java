@@ -34,7 +34,7 @@ public class BossAITortoiseSwimming extends EntityAISwimming {
 	public void updateTask() {
 		super.updateTask();
 		if(boss.getAttackTarget() != null) {
-			boss.getNavigator().tryMoveToLivingEntity(boss.getAttackTarget(), 3);
+			boss.getNavigator().tryMoveToEntityLiving(boss.getAttackTarget(), 3);
 		}
 	}
 	

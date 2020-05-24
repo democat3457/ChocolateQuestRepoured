@@ -73,14 +73,14 @@ public class EntityAISearchMount extends AbstractCQREntityAI<AbstractEntityCQR> 
 	@Override
 	public void startExecuting() {
 		if (this.entity.getDistance(this.entityToMount) > DISTANCE_TO_MOUNT) {
-			this.entity.getNavigator().tryMoveToLivingEntity(this.entityToMount, WALK_SPEED_TO_MOUNT);
+			this.entity.getNavigator().tryMoveToEntityLiving(this.entityToMount, WALK_SPEED_TO_MOUNT);
 		}
 	}
 
 	@Override
 	public void updateTask() {
 		if (this.entity.getDistance(this.entityToMount) > DISTANCE_TO_MOUNT) {
-			this.entity.getNavigator().tryMoveToLivingEntity(this.entityToMount, WALK_SPEED_TO_MOUNT);
+			this.entity.getNavigator().tryMoveToEntityLiving(this.entityToMount, WALK_SPEED_TO_MOUNT);
 		} else {
 			if (this.entityToMount instanceof AbstractHorse) {
 				AbstractHorse horse = (AbstractHorse) this.entityToMount;

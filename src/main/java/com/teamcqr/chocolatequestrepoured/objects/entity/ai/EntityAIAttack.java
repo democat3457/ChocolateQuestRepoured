@@ -1,5 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.HashSet;
+
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.LivingEntity;
@@ -37,7 +39,7 @@ public class EntityAIAttack extends AbstractCQREntityAI<AbstractEntityCQR> {
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		LivingEntity attackTarget = this.entity.getAttackTarget();
 
 		if (attackTarget != null) {
@@ -55,7 +57,7 @@ public class EntityAIAttack extends AbstractCQREntityAI<AbstractEntityCQR> {
 	}
 
 	protected void updatePath(LivingEntity target) {
-		this.entity.getNavigator().tryMoveToLivingEntity(target, 1.0D);
+		this.entity.getNavigator().tryMoveToEntityLiving(target, 1.0D);
 	}
 
 	protected void checkAndPerformBlock() {

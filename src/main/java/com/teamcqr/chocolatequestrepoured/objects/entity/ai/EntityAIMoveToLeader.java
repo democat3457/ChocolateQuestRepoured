@@ -36,7 +36,7 @@ public class EntityAIMoveToLeader extends AbstractCQREntityAI<AbstractEntityCQR>
 	@Override
 	public void startExecuting() {
 		LivingEntity leader = this.entity.getLeader();
-		this.entity.getNavigator().tryMoveToLivingEntity(leader, 1.0D);
+		this.entity.getNavigator().tryMoveToEntityLiving(leader, 1.0D);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class EntityAIMoveToLeader extends AbstractCQREntityAI<AbstractEntityCQR>
 			PathPoint target = this.entity.getNavigator().getPath().getFinalPathPoint();
 
 			if (leader.getDistanceSq(target.x + 0.5D, target.y, target.z + 0.5D) > 16.0D) {
-				this.entity.getNavigator().tryMoveToLivingEntity(leader, 1.0D);
+				this.entity.getNavigator().tryMoveToEntityLiving(leader, 1.0D);
 			}
 		}
 	}

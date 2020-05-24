@@ -85,7 +85,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 					}
 				}
 				if (count >= 5) {
-					this.entity.getNavigator().tryMoveToLivingEntity(e1, 1.0D);
+					this.entity.getNavigator().tryMoveToEntityLiving(e1, 1.0D);
 					flag = false;
 				}
 			}
