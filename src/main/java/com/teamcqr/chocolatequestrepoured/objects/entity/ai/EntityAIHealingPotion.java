@@ -1,5 +1,6 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.ai.target.TargetUtil;
@@ -11,7 +12,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +25,8 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 
 	public EntityAIHealingPotion(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Flag.MOVE));
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 		boolean flag = true;
 		if (attackTarget != null) {
 			int alertRadius = CQRConfig.mobs.alertRadius;
-			Vec3d vec1 = this.entity.getPositionVector().addVector(alertRadius, alertRadius * 0.5D, alertRadius);
+			Vec3d vec1 = this.entity.getPositionVector().add(alertRadius, alertRadius * 0.5D, alertRadius);
 			Vec3d vec2 = this.entity.getPositionVector().subtract(alertRadius, alertRadius * 0.5D, alertRadius);
 			AxisAlignedBB aabb = new AxisAlignedBB(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
 			List<Entity> possibleEnts = this.entity.world.getEntitiesInAABBexcluding(this.entity, aabb, TargetUtil.createPredicateAlly(this.entity.getFaction()));
@@ -75,7 +76,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 				int count = -1;
 				double distance = Double.MAX_VALUE;
 				for (Entity e2 : possibleEnts) {
-					AxisAlignedBB aabb1 = new AxisAlignedBB(e2.posX - 4, e2.posY - 2, e2.posZ - 4, e2.posX + 4, e2.posY + 2, e2.posZ + 4);
+					AxisAlignedBB aabb1 = new AxisAlignedBB(e2.getPosX() - 4, e2.getPosY() - 2, e2.getPosZ() - 4, e2.getPosX() + 4, e2.getPosY() + 2, e2.getPosZ() + 4);
 					List<Entity> list = e2.world.getEntitiesInAABBexcluding(e2, aabb1, TargetUtil.createPredicateAlly(this.entity.getFaction()));
 					double d = this.entity.getDistanceSq(e2);
 					if (list.size() > count || (list.size() == count && d < distance)) {
@@ -97,7 +98,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 				this.updateRotation(attackTarget, 2.5F, 2.5F);
 
 				if (canMoveBackwards) {
-					EntityUtil.move2D(this.entity, 0.0D, -0.2D, this.entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue() * 1.5, this.entity.rotationYawHead);
+					EntityUtil.move2D(this.entity, 0.0D, -0.2D, this.entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue() * 1.5, this.entity.rotationYawHead);
 				}
 			}
 
@@ -112,9 +113,9 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 	}
 
 	private void updateRotation(Entity entity, float deltaYaw, float deltaPitch) {
-		double x = entity.posX - this.entity.posX;
-		double y = entity.posY - this.entity.posY;
-		double z = entity.posZ - this.entity.posZ;
+		double x = entity.getPosX() - this.entity.getPosX();
+		double y = entity.getPosY() - this.entity.getPosY();
+		double z = entity.getPosZ() - this.entity.getPosZ();
 		double d = Math.sqrt(x * x + z * z);
 
 		float yaw = (float) Math.toDegrees(Math.atan2(-x, z));
@@ -139,9 +140,9 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 	private boolean canMoveBackwards() {
 		double sin = -Math.sin(Math.toRadians(this.entity.rotationYaw));
 		double cos = Math.cos(Math.toRadians(this.entity.rotationYaw));
-		BlockPos pos = new BlockPos(this.entity.posX - sin, this.entity.posY - 0.001D, this.entity.posZ - cos);
+		BlockPos pos = new BlockPos(this.entity.getPosX() - sin, this.entity.getPosY() - 0.001D, this.entity.getPosZ() - cos);
 		BlockState state = this.entity.world.getBlockState(pos);
-		return state.isSideSolid(this.entity.world, pos, Direction.UP);
+		return state.isTopSolid(this.entity.world, pos, this.entity);
 	}
 
 	public void startHealing() {
