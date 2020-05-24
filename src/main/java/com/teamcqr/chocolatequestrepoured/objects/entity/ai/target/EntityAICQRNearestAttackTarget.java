@@ -9,7 +9,7 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.ai.AbstractCQREntityAI;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.Difficulty;
 
@@ -19,7 +19,7 @@ public class EntityAICQRNearestAttackTarget extends AbstractCQREntityAI<Abstract
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(input)) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(input)) {
+		if (!EntityPredicates.IS_ALIVE.test(input)) {
 			return false;
 		}
 		return EntityAICQRNearestAttackTarget.this.isSuitableTarget(input);
@@ -49,7 +49,7 @@ public class EntityAICQRNearestAttackTarget extends AbstractCQREntityAI<Abstract
 
 	@Override
 	public void startExecuting() {
-		AxisAlignedBB aabb = this.entity.getEntityBoundingBox().grow(32.0D);
+		AxisAlignedBB aabb = this.entity.getBoundingBox().grow(32.0D);
 		List<LivingEntity> possibleTargets = this.entity.world.getEntitiesWithinAABB(LivingEntity.class, aabb, this.predicate);
 		if (!possibleTargets.isEmpty()) {
 			this.entity.setAttackTarget(TargetUtil.getNearestEntity(this.entity, possibleTargets));
@@ -92,7 +92,7 @@ public class EntityAICQRNearestAttackTarget extends AbstractCQREntityAI<Abstract
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(possibleTarget)) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(possibleTarget)) {
+		if (!EntityPredicates.IS_ALIVE.test(possibleTarget)) {
 			return false;
 		}
 		if (possibleTarget == this.entity) {
