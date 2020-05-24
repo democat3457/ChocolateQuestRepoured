@@ -9,9 +9,8 @@ import com.teamcqr.chocolatequestrepoured.objects.items.staves.ItemStaffHealing;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
@@ -22,7 +21,7 @@ public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR>
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(input)) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(input)) {
+		if (!EntityPredicates.IS_ALIVE.test(input)) {
 			return false;
 		}
 		return EntityAIHurtByTarget.this.isSuitableAlly(input);
@@ -46,7 +45,7 @@ public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR>
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(revengeTarget)) {
 			return false;
 		}
-		if (!revengeTarget.isEntityAlive()) {
+		if (!revengeTarget.isAlive()) {
 			return false;
 		}
 		if (this.entity.getFaction().isAlly(revengeTarget)) {
@@ -68,9 +67,9 @@ public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	protected void callForHelp() {
 		double radius = CQRConfig.mobs.alertRadius;
-		Vec3d eyeVec = this.entity.getPositionEyes(1.0F);
+		Vec3d eyeVec = this.entity.getEyePosition(1.0F);
 		Vec3d vec1 = eyeVec.subtract(radius, radius * 0.5D, radius);
-		Vec3d vec2 = eyeVec.addVector(radius, radius * 0.5D, radius);
+		Vec3d vec2 = eyeVec.add(radius, radius * 0.5D, radius);
 		AxisAlignedBB aabb = new AxisAlignedBB(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
 		List<LivingEntity> allies = this.entity.world.getEntitiesWithinAABB(LivingEntity.class, aabb, this.predicateAlly);
 		for (LivingEntity ally : allies) {
