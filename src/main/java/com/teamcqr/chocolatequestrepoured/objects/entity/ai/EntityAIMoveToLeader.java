@@ -1,5 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
+
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.LivingEntity;
@@ -9,7 +11,8 @@ public class EntityAIMoveToLeader extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	public EntityAIMoveToLeader(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Flag.MOVE));
 	}
 
 	@Override
