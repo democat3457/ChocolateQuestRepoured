@@ -1,10 +1,14 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
+
 import javax.annotation.Nullable;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvents;
@@ -27,7 +31,8 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 
 	public EntityAIFireFighter(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 	}
 
 	@Override
