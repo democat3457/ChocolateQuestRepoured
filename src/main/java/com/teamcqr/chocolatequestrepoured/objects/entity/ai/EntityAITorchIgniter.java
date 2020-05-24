@@ -1,5 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
+
 import javax.annotation.Nullable;
 
 import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
@@ -7,7 +9,7 @@ import com.teamcqr.chocolatequestrepoured.objects.blocks.BlockUnlitTorch;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockTorch;
+import net.minecraft.block.TorchBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -26,7 +28,8 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	public EntityAITorchIgniter(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 	}
 
 	@Override
@@ -37,7 +40,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 
 		if (this.entity.ticksExisted % 4 == 0) {
 			BlockPos pos = new BlockPos(this.entity);
-			this.nearestTorch = this.getNearestUnlitTorch(this.entity.world, pos.getX(), pos.getY() + ((int) this.entity.height >> 1), pos.getZ(), SEARCH_RADIUS_HORIZONTAL, SEARCH_RADIUS_VERTICAL);
+			this.nearestTorch = this.getNearestUnlitTorch(this.entity.world, pos.getX(), pos.getY() + ((int) this.entity.getHeight() >> 1), pos.getZ(), SEARCH_RADIUS_HORIZONTAL, SEARCH_RADIUS_VERTICAL);
 		}
 
 		return this.nearestTorch != null;
@@ -56,7 +59,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	@Override
 	public void startExecuting() {
-		if (this.entity.getDistanceSqToCenter(this.nearestTorch) > REACH_DISTANCE_SQ) {
+		if (this.entity.getDistanceSq(this.nearestTorch.getX(), this.nearestTorch.getY(), this.nearestTorch.getZ()) > REACH_DISTANCE_SQ) {
 			this.entity.getNavigator().tryMoveToXYZ(this.nearestTorch.getX(), this.nearestTorch.getY(), this.nearestTorch.getZ(), 1.0D);
 		}
 	}
@@ -69,10 +72,10 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	@Override
 	public void tick() {
-		if (this.entity.getDistanceSqToCenter(this.nearestTorch) <= REACH_DISTANCE_SQ) {
+		if (this.entity.getDistanceSq(this.nearestTorch.getX(), this.nearestTorch.getY(), this.nearestTorch.getZ()) <= REACH_DISTANCE_SQ) {
 			BlockState state = this.entity.world.getBlockState(this.nearestTorch);
 			if (state.getBlock() == ModBlocks.UNLIT_TORCH) {
-				BlockUnlitTorch.lightUp(this.entity.world, this.nearestTorch, state.getValue(BlockTorch.FACING));
+				BlockUnlitTorch.lightUp(this.entity.world, this.nearestTorch, state.getValue(TorchBlock.FACING));
 			}
 			this.nearestTorch = null;
 		}
@@ -89,8 +92,8 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 		int x2 = Math.min(x + horizontalRadius, 30000000);
 		int y2 = Math.min(y + vertialRadius, 255);
 		int z2 = Math.min(z + horizontalRadius, 30000000);
-		BlockPos.MutableBlockPos pos1 = null;
-		BlockPos.MutableBlockPos pos2 = new BlockPos.MutableBlockPos();
+		BlockPos.Mutable pos1 = null;
+		BlockPos.Mutable pos2 = new BlockPos.Mutable();
 		double min = Double.MAX_VALUE;
 		int oldChunkX = x1 >> 4;
 		int oldChunkY = y1 >> 4;
@@ -99,7 +102,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 		Chunk chunk = null;
 		ExtendedBlockStorage extendedBlockStorage = Chunk.NULL_BLOCK_STORAGE;
 		if (isLoaded) {
-			chunk = world.getChunkAt(oldChunkX, oldChunkZ);
+			chunk = world.getChunk(oldChunkX, oldChunkZ);
 			extendedBlockStorage = chunk.getBlockStorageArray()[oldChunkY];
 		}
 		for (int x3 = x1; x3 <= x2; x3++) {
@@ -111,7 +114,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 				oldChunkZ = z1 >> 4;
 				isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z1));
 				if (isLoaded) {
-					chunk = world.getChunkAt(chunkX, z1 >> 4);
+					chunk = world.getChunk(chunkX, z1 >> 4);
 					extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 				}
 			}
@@ -125,7 +128,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 					oldChunkZ = chunkZ;
 					isLoaded = world.isBlockLoaded(pos2.setPos(x3, 0, z3));
 					if (isLoaded) {
-						chunk = world.getChunkAt(chunkX, chunkZ);
+						chunk = world.getChunk(chunkX, chunkZ);
 						extendedBlockStorage = chunk.getBlockStorageArray()[y1 >> 4];
 					}
 				}
@@ -152,7 +155,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 								double distance = this.entity.getDistanceSqToCenter(pos2.setPos(x3, y3, z3));
 
 								if (distance < min) {
-									pos1 = pos1 != null ? pos1.setPos(x3, y3, z3) : new BlockPos.MutableBlockPos(x3, y3, z3);
+									pos1 = pos1 != null ? pos1.setPos(x3, y3, z3) : new BlockPos.Mutable(x3, y3, z3);
 									min = distance;
 								}
 							}
