@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 
 public class EntityAISpellWalker extends AbstractEntityAISpell<AbstractEntityCQR> implements IEntityAISpellAnimatedVanilla {
 
@@ -35,8 +37,8 @@ public class EntityAISpellWalker extends AbstractEntityAISpell<AbstractEntityCQR
 	public void startCastingSpell() {
 		super.startCastingSpell();
 		LivingEntity attackTarget = this.entity.getAttackTarget();
-		EntityColoredLightningBolt coloredLightningBolt = new EntityColoredLightningBolt(this.world, attackTarget.posX, attackTarget.posY, attackTarget.posZ, true, false, 0.8F, 0.35F, 0.1F, 0.3F);
-		this.world.spawnEntity(coloredLightningBolt);
+		EntityColoredLightningBolt coloredLightningBolt = new EntityColoredLightningBolt(this.world, attackTarget.getPosX(), attackTarget.getPosY(), attackTarget.getPosZ(), true, false, 0.8F, 0.35F, 0.1F, 0.3F);
+		this.world.addEntity(coloredLightningBolt);
 	}
 
 	@Override
@@ -71,7 +73,7 @@ public class EntityAISpellWalker extends AbstractEntityAISpell<AbstractEntityCQR
 		if (entity.collided) {
 			return false;
 		}
-		if (entity.motionY < -0.1D) {
+		if (entity.getMotion().y < -0.1D) {
 			return false;
 		}
 		BlockPos pos = new BlockPos(entity);
@@ -79,21 +81,21 @@ public class EntityAISpellWalker extends AbstractEntityAISpell<AbstractEntityCQR
 		int count = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(pos.getX() + i, 255, pos.getZ() + j);
+				BlockPos.Mutable mutablePos = new BlockPos.Mutable(pos.getX() + i, 255, pos.getZ() + j);
 				if (!this.world.isBlockLoaded(mutablePos)) {
 					continue;
 				}
-				while (mutablePos.getY() > 0 && this.world.getBlockState(mutablePos).getCollisionBoundingBox(this.world, mutablePos) == Block.NULL_AABB) {
+				while (mutablePos.getY() > 0 && this.world.getBlockState(mutablePos).getCollisionShape(this.world, mutablePos) == VoxelShapes.empty()) {
 					mutablePos.setY(mutablePos.getY() - 1);
 				}
 				y += mutablePos.getY();
 				count++;
 			}
 		}
-		y = count > 0 ? y / count : (int) this.entity.posY;
-		if (entity.posY < y + 8) {
+		y = count > 0 ? y / count : (int) this.entity.getPosY();
+		if (entity.getPosY() < y + 8) {
 			return false;
 		}
-		return !this.world.checkBlockCollision(entity.getEntityBoundingBox());
+		return !this.world.checkBlockCollision(entity.getBoundingBox());
 	}
 }
