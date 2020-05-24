@@ -1,12 +1,13 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.ai.target.TargetUtil;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.item.ItemLead;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.item.LeadItem;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
@@ -18,11 +19,12 @@ public class EntityAITameAndLeashPet extends AbstractCQREntityAI<AbstractEntityC
 	protected static final double DISTANCE_TO_PET = 2.0D;
 	protected static final double WALK_SPEED_TO_PET = 1.0D;
 
-	protected EntityTameable entityToTame = null;
+	protected TameableEntity entityToTame = null;
 
 	public EntityAITameAndLeashPet(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 	}
 
 	@Override
@@ -30,14 +32,14 @@ public class EntityAITameAndLeashPet extends AbstractCQREntityAI<AbstractEntityC
 		if (!this.entity.canTameEntity()) {
 			return false;
 		}
-		if (!(this.entity.getHeldItemMainhand().getItem() instanceof ItemLead || this.entity.getHeldItemOffhand().getItem() instanceof ItemLead)) {
+		if (!(this.entity.getHeldItemMainhand().getItem() instanceof LeadItem || this.entity.getHeldItemOffhand().getItem() instanceof LeadItem)) {
 			return false;
 		}
 		if (this.entity.ticksExisted % 4 == 0) {
-			Vec3d vec1 = this.entity.getPositionVector().addVector(PET_SEARCH_RADIUS, PET_SEARCH_RADIUS * 0.5D, PET_SEARCH_RADIUS);
+			Vec3d vec1 = this.entity.getPositionVector().add(PET_SEARCH_RADIUS, PET_SEARCH_RADIUS * 0.5D, PET_SEARCH_RADIUS);
 			Vec3d vec2 = this.entity.getPositionVector().subtract(PET_SEARCH_RADIUS, PET_SEARCH_RADIUS * 0.5D, PET_SEARCH_RADIUS);
 			AxisAlignedBB aabb = new AxisAlignedBB(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
-			List<EntityTameable> possiblePets = this.entity.world.getEntitiesWithinAABB(EntityTameable.class, aabb, TargetUtil.PREDICATE_PETS);
+			List<TameableEntity> possiblePets = this.entity.world.getLoadedEntitiesWithinAABB(TameableEntity.class, aabb, TargetUtil.PREDICATE_PETS);
 			if (!possiblePets.isEmpty()) {
 				this.entityToTame = TargetUtil.getNearestEntity(this.entity, possiblePets);
 				return true;
@@ -48,13 +50,13 @@ public class EntityAITameAndLeashPet extends AbstractCQREntityAI<AbstractEntityC
 
 	@Override
 	public boolean shouldContinueExecuting() {
-		if (!(this.entity.getHeldItemMainhand().getItem() instanceof ItemLead || this.entity.getHeldItemOffhand().getItem() instanceof ItemLead)) {
+		if (!(this.entity.getHeldItemMainhand().getItem() instanceof LeadItem || this.entity.getHeldItemOffhand().getItem() instanceof LeadItem)) {
 			return false;
 		}
 		if (this.entityToTame == null) {
 			return false;
 		}
-		if (!this.entityToTame.isEntityAlive()) {
+		if (!this.entityToTame.isAlive()) {
 			return false;
 		}
 		if (this.entityToTame.getOwnerId() != null) {
