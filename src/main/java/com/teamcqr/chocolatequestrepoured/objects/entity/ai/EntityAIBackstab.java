@@ -5,7 +5,7 @@ import com.teamcqr.chocolatequestrepoured.objects.items.swords.ItemDagger;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigator;
 
 public class EntityAIBackstab extends EntityAIAttack {
 
@@ -44,15 +44,15 @@ public class EntityAIBackstab extends EntityAIAttack {
 
 	@Override
 	protected void updatePath(LivingEntity target) {
-		double distance = Math.min(4.0D, this.entity.getDistance(target.posX, target.posY, target.posZ) * 0.5D);
+		double distance = Math.min(4.0D, this.entity.getDistance(target.getPosX(), target.getPosY(), target.getPosZ()) * 0.5D);
 		double rad = Math.toRadians(target.rotationYaw);
 		double sin = Math.sin(rad);
 		double cos = Math.cos(rad);
-		PathNavigate navigator = this.entity.getNavigator();
+		PathNavigator navigator = this.entity.getNavigator();
 		Path path = null;
 		for (int i = 4; path == null && i >= 0; i--) {
 			double d = distance * (double) i / 4.0D;
-			path = navigator.getPathToXYZ(target.posX + sin * d, target.posY, target.posZ - cos * d);
+			path = navigator.getPathToPos(target.getPosX() + sin * d, target.getPosY(), target.getPosZ() - cos * d, 1);
 		}
 		navigator.setPath(path, 1.0D);
 	}
