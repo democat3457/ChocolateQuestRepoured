@@ -1184,4 +1184,8 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		return this.lastTimeHitByAxeWhileBlocking;
 	}
 
+	public double getDistance(double posX, double posY, double posZ) {
+		return Math.sqrt(getDistanceSq(posX, posY, posZ));
+	}
+
 }
