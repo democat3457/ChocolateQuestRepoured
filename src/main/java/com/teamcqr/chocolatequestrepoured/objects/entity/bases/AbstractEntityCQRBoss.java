@@ -6,18 +6,23 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerBossInfo;
 
 public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 
 	protected String assignedRegionID = null;
 
-	protected final BossInfo bossInfoServer = new BossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.NOTCHED_10);
+	protected final ServerBossInfo bossInfoServer = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.NOTCHED_10);
 
 	public AbstractEntityCQRBoss(World worldIn) {
 		super(worldIn);
@@ -27,7 +32,7 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount, boolean sentFromPart) {
 		int nearbyPlayerCount = 0;
-		for (PlayerEntity player : this.world.playerEntities) {
+		for (PlayerEntity player : this.world.getPlayers()) {
 			if (this.getDistanceSq(player) < 100.0D * 100.0D) {
 				nearbyPlayerCount++;
 			}
@@ -92,8 +97,8 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 	}
 
 	@Override
-	public void setCustomNameTag(String name) {
-		super.setCustomNameTag(name);
+	public void setCustomName(ITextComponent name) {
+		super.setCustomName(name);
 		this.bossInfoServer.setName(this.getDisplayName());
 	}
 
@@ -109,18 +114,18 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 				float f = (this.rand.nextFloat() - 0.5F) * 8.0F;
 				float f1 = (this.rand.nextFloat() - 0.5F) * 4.0F;
 				float f2 = (this.rand.nextFloat() - 0.5F) * 8.0F;
-				this.world.spawnParticle(this.getDeathAnimParticles(), this.posX + (double) f, this.posY + 2.0D + (double) f1, this.posZ + (double) f2, 0.0D, 0.0D, 0.0D);
+				this.world.addParticle(this.getDeathAnimParticles(), this.getPosX() + (double) f, this.getPosY() + 2.0D + (double) f1, this.getPosZ() + (double) f2, 0.0D, 0.0D, 0.0D);
 			}
 			this.setNoGravity(true);
-			this.move(MoverType.SELF, 0, 10 / MAX_DEATH_TICKS / 3, 0);
+			this.move(MoverType.SELF, new Vec3d(0, 10 / MAX_DEATH_TICKS / 3, 0));
 			if (this.deathTicks == MAX_DEATH_TICKS && !this.world.isRemote) {
-				this.world.playSound(this.posX, this.posY, this.posZ, this.getFinalDeathSound(), SoundCategory.MASTER, 1, 1, false);
+				this.world.playSound(this.getPosX(), this.getPosY(), this.getPosZ(), this.getFinalDeathSound(), SoundCategory.MASTER, 1, 1, false);
 				this.setDead();
 				
 				onFinalDeath();
 				
 				if (this.doesExplodeOnDeath()) {
-					this.world.createExplosion(this, this.posX, this.posY, this.posZ, 8.0F, true);
+					this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 8.0F, true, Mode.NONE);
 				}
 			}
 		} else {
@@ -144,8 +149,8 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 		return false;
 	}
 
-	protected EnumParticleTypes getDeathAnimParticles() {
-		return EnumParticleTypes.EXPLOSION_HUGE;
+	protected IParticleData getDeathAnimParticles() {
+		return ParticleTypes.EXPLOSION;
 	}
 
 	@Override
