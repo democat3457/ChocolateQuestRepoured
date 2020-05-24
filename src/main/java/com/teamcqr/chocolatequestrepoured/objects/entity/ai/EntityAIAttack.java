@@ -1,10 +1,11 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.ai;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 
@@ -15,7 +16,9 @@ public class EntityAIAttack extends AbstractCQREntityAI<AbstractEntityCQR> {
 
 	public EntityAIAttack(AbstractEntityCQR entity) {
 		super(entity);
-		this.setMutexBits(3);
+		
+		//this.setMutexBits(3);
+		setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.TARGET));
 	}
 
 	@Override
