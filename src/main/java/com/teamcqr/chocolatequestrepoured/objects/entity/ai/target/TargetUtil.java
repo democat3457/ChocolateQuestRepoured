@@ -9,13 +9,10 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.EntityCQRMountBas
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.AbstractHorse;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.util.EntityPredicates;
 
 public class TargetUtil {
 
@@ -23,43 +20,43 @@ public class TargetUtil {
 		if (input == null) {
 			return false;
 		}
-		return EntitySelectors.CAN_AI_TARGET.apply(input);
+		return EntityPredicates.CAN_AI_TARGET.test(input);
 	};
 
 	public static final Predicate<LivingEntity> PREDICATE_MOUNTS = input -> {
 		if (input == null) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(input)) {
+		if (!EntityPredicates.IS_ALIVE.test(input)) {
 			return false;
 		}
 		if (input.isBeingRidden()) {
 			return false;
 		}
-		if (input instanceof AbstractHorse && ((AbstractHorse) input).isTame()) {
+		if (input instanceof AbstractHorseEntity && ((AbstractHorseEntity) input).isTame()) {
 			return false;
 		}
-		return input.canBeSteered() || input instanceof EntityCQRMountBase || input instanceof AbstractHorse || input instanceof EntityPig;
+		return input.canBeSteered() || input instanceof EntityCQRMountBase || input instanceof AbstractHorseEntity || input instanceof PigEntity;
 	};
 
-	public static final Predicate<EntityTameable> PREDICATE_PETS = input -> {
+	public static final Predicate<TameableEntity> PREDICATE_PETS = input -> {
 		if (input == null) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(input)) {
+		if (!EntityPredicates.IS_ALIVE.test(input)) {
 			return false;
 		}
 		if (input.getOwnerId() != null) {
 			return false;
 		}
-		return input instanceof EntityOcelot || input instanceof EntityWolf;
+		return input instanceof TameableEntity;//EntityOcelot || input instanceof EntityWolf;
 	};
 
 	public static final Predicate<Entity> PREDICATE_LIVING = input -> {
 		if (input == null) {
 			return false;
 		}
-		if (!EntitySelectors.IS_ALIVE.apply(input)) {
+		if (!EntityPredicates.IS_ALIVE.test(input)) {
 			return false;
 		}
 		return input instanceof LivingEntity;
