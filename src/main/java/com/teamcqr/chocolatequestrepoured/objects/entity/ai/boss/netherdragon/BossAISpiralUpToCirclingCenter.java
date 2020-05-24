@@ -44,8 +44,8 @@ public class BossAISpiralUpToCirclingCenter extends AbstractCQREntityAI<EntityCQ
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		if(entity.getPositionVector().distanceTo(targetPos) <= MIN_DISTANCE_TO_NODE) {
 			v = VectorUtil.rotateVectorAroundY(v, angleIncrement);
 			center = center.addVector(0, v.y, 0);

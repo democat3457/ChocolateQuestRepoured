@@ -78,7 +78,7 @@ public class EntityAIAttackRangedStrafing extends EntityAIAttack {
     /**
      * Keep ticking a continuous task that has already been started
      */
-    public void updateTask()
+    public void tick()
     {
         LivingEntity entitylivingbase = this.entity.getAttackTarget();
 

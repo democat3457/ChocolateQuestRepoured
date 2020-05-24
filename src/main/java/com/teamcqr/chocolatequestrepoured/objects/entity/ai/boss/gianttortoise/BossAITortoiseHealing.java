@@ -50,7 +50,7 @@ public class BossAITortoiseHealing extends AbstractCQREntityAI<EntityCQRGiantTor
 		this.getBoss().setCanBeStunned(false);
 		this.getBoss().setStunned(false);
 		this.currHealTicks = 0;
-		updateTask();
+		tick();
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class BossAITortoiseHealing extends AbstractCQREntityAI<EntityCQRGiantTor
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		((EntityCQRGiantTortoise) this.entity).setHealing(true);
 		if (this.healingActive) {
 			((EntityCQRGiantTortoise) this.entity).setInShell(true);

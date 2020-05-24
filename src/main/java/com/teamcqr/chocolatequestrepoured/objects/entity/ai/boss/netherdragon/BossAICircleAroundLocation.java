@@ -62,8 +62,8 @@ public class BossAICircleAroundLocation extends AbstractCQREntityAI<EntityCQRNet
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		double dist = this.entity.getDistance(targetPosition.x, targetPosition.y, targetPosition.z);
 		if(dist <= MIN_DISTANCE_TO_TARGET) {
 			calculateTargetPositions();

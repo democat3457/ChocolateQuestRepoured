@@ -30,8 +30,8 @@ public class EntityAIBackstab extends EntityAIAttack {
 	}
 
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 
 		LivingEntity attackTarget = this.entity.getAttackTarget();
 

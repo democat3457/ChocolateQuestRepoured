@@ -31,8 +31,8 @@ public class BossAIFlyToLocation extends AbstractCQREntityAI<EntityCQRNetherDrag
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		if(cooldown <= 0) {
 			cooldown = 10;
 			this.entity.getNavigator().tryMoveToXYZ(getTargetLocation().x, getTargetLocation().y, getTargetLocation().z, getMovementSpeed());

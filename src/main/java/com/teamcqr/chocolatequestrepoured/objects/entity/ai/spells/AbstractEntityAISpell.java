@@ -72,7 +72,7 @@ public abstract class AbstractEntityAISpell<T extends AbstractEntityCQR> impleme
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.tick < this.chargingTicks) {
 			if (this.tick == 0) {
 				this.startChargingSpell();

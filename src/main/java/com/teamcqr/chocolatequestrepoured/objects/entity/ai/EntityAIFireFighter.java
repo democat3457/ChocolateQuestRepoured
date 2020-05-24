@@ -69,7 +69,7 @@ public class EntityAIFireFighter extends AbstractCQREntityAI<AbstractEntityCQR> 
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.entity.getDistanceSqToCenter(this.nearestFire) <= REACH_DISTANCE_SQ) {
 			if (this.entity.world.getBlockState(this.nearestFire).getBlock() == Blocks.FIRE) {
 				this.entity.world.setBlockToAir(this.nearestFire);

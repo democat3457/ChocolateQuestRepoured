@@ -78,7 +78,7 @@ public class EntityAISearchMount extends AbstractCQREntityAI<AbstractEntityCQR> 
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.entity.getDistance(this.entityToMount) > DISTANCE_TO_MOUNT) {
 			this.entity.getNavigator().tryMoveToEntityLiving(this.entityToMount, WALK_SPEED_TO_MOUNT);
 		} else {

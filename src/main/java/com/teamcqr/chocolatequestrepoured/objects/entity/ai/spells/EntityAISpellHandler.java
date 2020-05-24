@@ -98,8 +98,8 @@ public class EntityAISpellHandler extends AbstractCQREntityAI<AbstractEntityCQR>
 	}
 
 	@Override
-	public void updateTask() {
-		this.activeSpell.updateTask();
+	public void tick() {
+		this.activeSpell.tick();
 	}
 
 	@Nullable

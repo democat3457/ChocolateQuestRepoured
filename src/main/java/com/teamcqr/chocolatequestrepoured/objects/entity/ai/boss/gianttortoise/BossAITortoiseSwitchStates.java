@@ -36,8 +36,8 @@ public class BossAITortoiseSwitchStates extends AnimationAI<EntityCQRGiantTortoi
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 	}
 	
 	@Override

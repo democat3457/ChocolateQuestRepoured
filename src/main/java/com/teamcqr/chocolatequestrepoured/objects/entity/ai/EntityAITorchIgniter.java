@@ -68,7 +68,7 @@ public class EntityAITorchIgniter extends AbstractCQREntityAI<AbstractEntityCQR>
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.entity.getDistanceSqToCenter(this.nearestTorch) <= REACH_DISTANCE_SQ) {
 			BlockState state = this.entity.world.getBlockState(this.nearestTorch);
 			if (state.getBlock() == ModBlocks.UNLIT_TORCH) {

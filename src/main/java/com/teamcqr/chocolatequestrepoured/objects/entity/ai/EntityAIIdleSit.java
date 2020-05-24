@@ -64,7 +64,7 @@ public class EntityAIIdleSit extends AbstractCQREntityAI<AbstractEntityCQR> {
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.cooldown < COOLDOWN_BORDER) {
 			this.cooldown++;
 		}

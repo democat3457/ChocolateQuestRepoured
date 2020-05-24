@@ -51,7 +51,7 @@ public class EntityAIHealingPotion extends AbstractCQREntityAI<AbstractEntityCQR
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		Entity attackTarget = this.entity.getAttackTarget();
 
 		if (this.isHealing) {

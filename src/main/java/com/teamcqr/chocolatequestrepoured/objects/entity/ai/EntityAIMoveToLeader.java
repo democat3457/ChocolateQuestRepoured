@@ -40,7 +40,7 @@ public class EntityAIMoveToLeader extends AbstractCQREntityAI<AbstractEntityCQR>
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.entity.hasPath()) {
 			LivingEntity leader = this.entity.getLeader();
 			PathPoint target = this.entity.getNavigator().getPath().getFinalPathPoint();

@@ -12,7 +12,7 @@ public interface IEntityAISpell {
 
 	public void resetTask();
 
-	public void updateTask();
+	public void tick();
 
 	public void startChargingSpell();
 

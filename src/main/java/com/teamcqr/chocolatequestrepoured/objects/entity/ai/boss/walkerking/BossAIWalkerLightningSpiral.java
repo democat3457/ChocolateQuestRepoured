@@ -49,8 +49,8 @@ public class BossAIWalkerLightningSpiral extends AbstractCQREntityAI<EntityCQRWa
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		cooldown_circle--;
 		if(cooldown_circle <= 0) {
 			spawnLightning();

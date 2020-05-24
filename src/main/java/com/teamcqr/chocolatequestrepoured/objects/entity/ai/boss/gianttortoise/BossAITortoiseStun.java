@@ -46,8 +46,8 @@ public class BossAITortoiseStun extends AnimationAI<EntityCQRGiantTortoise> {
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		getBoss().setStunned(true);
 		getBoss().setCanBeStunned(false);
 		

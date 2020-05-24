@@ -52,7 +52,7 @@ public class EntityAIPotionThrower extends EntityAIAttack {
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		LivingEntity attackTarget = this.entity.getAttackTarget();
 
 		if (attackTarget != null) {

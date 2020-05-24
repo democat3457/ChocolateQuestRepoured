@@ -30,12 +30,12 @@ public class BossAIFlyToTarget extends BossAIFlyToLocation {
 	}
 	
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if(entity.getPositionVector().distanceTo(getTargetLocation()) <= 4 ) {
 			entity.attackEntityAsMob(entity.getAttackTarget());
 			resetTask();
 		}
-		super.updateTask();
+		super.tick();
 		attackCooldown--;
 		if(attackCooldown <= 0) {
 			attackCooldown = 30 + entity.getRNG().nextInt(41);

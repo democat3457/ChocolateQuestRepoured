@@ -40,9 +40,9 @@ public class BossAITortoiseMoveToLeader extends EntityAIMoveToLeader {
 	}
 	
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if(!getBoss().isInShell()) {
-			super.updateTask();
+			super.tick();
 		}
 	}
 

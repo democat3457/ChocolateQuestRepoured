@@ -99,8 +99,8 @@ public class BossAITortoiseSpinAttack extends AnimationAI<EntityCQRGiantTortoise
 	}
 	
 	@Override
-	public void updateTask() {
-		super.updateTask();
+	public void tick() {
+		super.tick();
 		//this.getBoss().setSpinning(false);
 		if(getBoss().getSpinsBlocked() >= MAX_BLOCKED_SPINS) {
 			this.getBoss().setSpinning(false);

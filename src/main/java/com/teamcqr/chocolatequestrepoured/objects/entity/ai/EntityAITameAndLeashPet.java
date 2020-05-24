@@ -74,7 +74,7 @@ public class EntityAITameAndLeashPet extends AbstractCQREntityAI<AbstractEntityC
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (this.entity.getDistance(this.entityToTame) > DISTANCE_TO_PET) {
 			this.entity.getNavigator().tryMoveToEntityLiving(this.entityToTame, WALK_SPEED_TO_PET);
 		} else {

@@ -27,7 +27,7 @@ public class EntityAIFollowPath extends AbstractCQREntityAI<AbstractEntityCQR> {
 	}
 
 	@Override
-	public void updateTask() {
+	public void tick() {
 		if (!this.entity.hasPath() && entity.hasHomePositionCQR() && entity.getGuardPathPoints() != null) {
 			int index = this.getNextPathIndex();
 			this.entity.setCurrentGuardPathTargetPoint(index);
