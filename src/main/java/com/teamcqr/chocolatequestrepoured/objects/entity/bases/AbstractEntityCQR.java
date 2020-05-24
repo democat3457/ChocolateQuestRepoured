@@ -51,7 +51,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -59,22 +58,23 @@ import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.ShieldItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Hand;
@@ -94,11 +94,11 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -145,7 +145,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public static float MAX_DEATH_TICKS = 200.0F;
 
 	// Client only
-	@OnlyIn(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	protected int currentSpeechBubbleID;
 
 	public AbstractEntityCQR(World worldIn) {
@@ -177,21 +177,21 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getBaseHealth());
+		this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getBaseHealth());
 	}
 
 	@Override
-	protected PathNavigate createNavigator(World worldIn) {
-		PathNavigate navigator = new PathNavigateGround(this, worldIn) {
+	protected PathNavigator createNavigator(World worldIn) {
+		PathNavigator navigator = new GroundPathNavigator(this, worldIn) {
 			@Override
 			public float getPathSearchRange() {
 				return 256.0F;
 			}
 		};
-		((PathNavigateGround) navigator).setEnterDoors(this.canOpenDoors());
-		((PathNavigateGround) navigator).setBreakDoors(this.canOpenDoors());
+		((GroundPathNavigator) navigator).setEnterDoors(this.canOpenDoors());
+		((GroundPathNavigator) navigator).setBreakDoors(this.canOpenDoors());
 		return navigator;
 	}
 
@@ -203,7 +203,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public boolean attackEntityFrom(DamageSource source, float amount, boolean sentFromPart) {
 		// Start IceAndFire compatibility
 		if (CQRConfig.advanced.enableSpecialFeatures && source.getTrueSource() != null) {
-			ResourceLocation resLoc = EntityList.getKey(source.getTrueSource());
+			ResourceLocation resLoc = source.getTrueSource().getType().getRegistryName();
 			if (resLoc != null && resLoc.getNamespace().equalsIgnoreCase("iceandfire")) {
 				amount *= 0.5F;
 			}
@@ -322,9 +322,9 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			boolean flag = d0 > 1.0D;
 
 			if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack) && (wasRecentlyHit || flag) && (double) (this.rand.nextFloat() - (float) lootingModifier * 0.01F) < d0) {
-				if (!flag && itemstack.isItemStackDamageable()) {
+				if (!flag && itemstack.isDamageable()) {
 					double durability = modalValue + MathHelper.clamp(this.rand.nextGaussian() * standardDeviation, min - modalValue, max - modalValue);
-					itemstack.setItemDamage((int) ((double) itemstack.getMaxDamage() * (1.0D - durability)));
+					itemstack.setDamage((int) ((double) itemstack.getMaxDamage() * (1.0D - durability)));
 				}
 
 				this.entityDropItem(itemstack, 0.0F);
@@ -337,32 +337,32 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		super.writeEntityToNBT(compound);
 
 		if (this.homePosition != null) {
-			compound.putTag("home", NBTUtil.createPosTag(this.homePosition));
+			compound.put("home", NBTUtil.writeBlockPos(this.homePosition));
 		}
 
 		if (this.leaderUUID != null) {
-			compound.putTag("leader", NBTUtil.createUUIDTag(this.leaderUUID));
+			compound.put("leader", NBTUtil.writeUniqueId(this.leaderUUID));
 		}
 		if (this.factionName != null && !this.factionName.equalsIgnoreCase(this.getDefaultFaction().name())) {
 			compound.putString("factionOverride", this.factionName);
 		}
-		compound.setInteger("textureIndex", this.dataManager.get(TEXTURE_INDEX));
-		compound.setByte("usedHealingPotions", this.usedPotions);
-		compound.setFloat("sizeScaling", this.sizeScaling);
-		compound.setBoolean("isSitting", this.dataManager.get(IS_SITTING));
-		compound.setBoolean("holdingPotion", this.holdingPotion);
-		compound.setDouble("healthScale", this.healthScale);
+		compound.putInt("textureIndex", this.dataManager.get(TEXTURE_INDEX));
+		compound.putByte("usedHealingPotions", this.usedPotions);
+		compound.putFloat("sizeScaling", this.sizeScaling);
+		compound.putBoolean("isSitting", this.dataManager.get(IS_SITTING));
+		compound.putBoolean("holdingPotion", this.holdingPotion);
+		compound.putDouble("healthScale", this.healthScale);
 
 		if (this.pathPoints.length > 0) {
 			CompoundNBT pathTag = new CompoundNBT();
-			pathTag.setBoolean("isLoop", this.pathIsLoop);
-			pathTag.setInteger("currentPathPoint", this.currentTargetPoint);
+			pathTag.putBoolean("isLoop", this.pathIsLoop);
+			pathTag.putInt("currentPathPoint", this.currentTargetPoint);
 			ListNBT nbtTagList = new ListNBT();
 			for (int i = 0; i < this.pathPoints.length; i++) {
-				nbtTagList.appendTag(NBTUtil.createPosTag(this.pathPoints[i]));
+				nbtTagList.add(NBTUtil.writeBlockPos(this.pathPoints[i]));
 			}
-			pathTag.setTag("pathPoints", nbtTagList);
-			compound.setTag("pathingAI", pathTag);
+			pathTag.put("pathPoints", nbtTagList);
+			compound.put("pathingAI", pathTag);
 		}
 	}
 
@@ -370,21 +370,21 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public void readEntityFromNBT(CompoundNBT compound) {
 		super.readEntityFromNBT(compound);
 
-		if (compound.hasKey("home")) {
-			this.homePosition = NBTUtil.getPosFromTag(compound.getCompoundTag("home"));
+		if (compound.contains("home")) {
+			this.homePosition = NBTUtil.readBlockPos(compound.getCompound("home"));
 		}
 
-		if (compound.hasKey("leader")) {
-			this.leaderUUID = NBTUtil.getUUIDFromTag(compound.getCompoundTag("leader"));
+		if (compound.contains("leader")) {
+			this.leaderUUID = NBTUtil.readUniqueId(compound.getCompound("leader"));
 		}
 
-		if (compound.hasKey("factionOverride")) {
+		if (compound.contains("factionOverride")) {
 			this.setFaction(compound.getString("factionOverride"));
 		}
 
-		this.dataManager.set(TEXTURE_INDEX, compound.getInteger("textureIndex"));
+		this.dataManager.set(TEXTURE_INDEX, compound.getInt("textureIndex"));
 		this.usedPotions = compound.getByte("usedHealingPotions");
-		this.sizeScaling = compound.hasKey("sizeScaling") ? compound.getFloat("sizeScaling") : 1.0F;
+		this.sizeScaling = compound.contains("sizeScaling") ? compound.getFloat("sizeScaling") : 1.0F;
 		this.dataManager.set(IS_SITTING, compound.getBoolean("isSitting"));
 		this.holdingPotion = compound.getBoolean("holdingPotion");
 		this.healthScale = compound.getDouble("healthScale");
@@ -392,14 +392,14 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			this.healthScale = 1.0D;
 		}
 
-		if (compound.hasKey("pathingAI", Constants.NBT.TAG_COMPOUND)) {
-			CompoundNBT pathTag = compound.getCompoundTag("pathingAI");
+		if (compound.contains("pathingAI", Constants.NBT.TAG_COMPOUND)) {
+			CompoundNBT pathTag = compound.getCompound("pathingAI");
 			this.pathIsLoop = pathTag.getBoolean("isLoop");
-			this.currentTargetPoint = pathTag.getInteger("currentPathPoint") -1;
-			ListNBT nbtTagList = pathTag.getTagList("pathPoints", Constants.NBT.TAG_COMPOUND);
-			this.pathPoints = new BlockPos[nbtTagList.tagCount()];
-			for (int i = 0; i < nbtTagList.tagCount(); i++) {
-				this.pathPoints[i] = NBTUtil.getPosFromTag(nbtTagList.getCompoundTagAt(i));
+			this.currentTargetPoint = pathTag.getInt("currentPathPoint") -1;
+			ListNBT nbtTagList = pathTag.getList("pathPoints", Constants.NBT.TAG_COMPOUND);
+			this.pathPoints = new BlockPos[nbtTagList.size()];
+			for (int i = 0; i < nbtTagList.size(); i++) {
+				this.pathPoints[i] = NBTUtil.readBlockPos(nbtTagList.getCompound(i));
 			}
 		}
 	}
@@ -410,7 +410,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			if (!this.world.isRemote) {
 				ItemStack stack = player.getHeldItem(hand);
 
-				if (stack.getItem() instanceof ItemArmor) {
+				if (stack.getItem() instanceof ArmorItem) {
 					EquipmentSlotType slot = getSlotForItemStack(stack);
 
 					player.setHeldItem(hand, this.getItemStackFromSlot(slot));
@@ -418,21 +418,21 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 					return true;
 				}
 
-				if (stack.getItem() instanceof ItemSword) {
+				if (stack.getItem() instanceof SwordItem) {
 					player.setHeldItem(hand, this.getHeldItemMainhand());
 					this.setHeldItem(Hand.MAIN_HAND, stack);
 					return true;
 				}
 
-				if (stack.getItem() instanceof ItemShield) {
+				if (stack.getItem() instanceof ShieldItem) {
 					player.setHeldItem(hand, this.getHeldItemOffhand());
 					this.setHeldItem(Hand.OFF_HAND, stack);
 					return true;
 				}
 
 				if (!this.getLookController().getIsLooking() && !this.hasPath()) {
-					double x1 = player.posX - this.posX;
-					double z1 = player.posZ - this.posZ;
+					double x1 = player.getPosX() - this.getPosX();
+					double z1 = player.getPosZ() - this.getPosZ();
 					float yaw = (float) Math.toDegrees(Math.atan2(-x1, z1));
 					this.rotationYaw = yaw;
 					this.rotationYawHead = yaw;
@@ -545,8 +545,8 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 				float f = this.renderYawOffset * 0.017453292F + MathHelper.cos((float) this.ticksExisted * 0.6662F) * 0.25F;
 				float f1 = MathHelper.cos(f);
 				float f2 = MathHelper.sin(f);
-				this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (double) f1 * (double) this.width, this.posY + (double) this.height, this.posZ + (double) f2 * (double) this.width, red, green, blue);
-				this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX - (double) f1 * (double) this.width, this.posY + (double) this.height, this.posZ - (double) f2 * (double) this.width, red, green, blue);
+				this.world.addParticle(ParticleTypes.EFFECT, this.getPosX() + (double) f1 * (double) this.getWidth(), this.getPosY() + (double) this.getHeight(), this.getPosZ() + (double) f2 * (double) this.getWidth(), red, green, blue);
+				this.world.addParticle(ParticleTypes.EFFECT, this.getPosX() - (double) f1 * (double) this.getWidth(), this.getPosY() + (double) this.getHeight(), this.getPosZ() - (double) f2 * (double) this.getWidth(), red, green, blue);
 			}
 			if (this.isChatting() && this.ticksExisted % LayerCQRSpeechbubble.CHANGE_BUBBLE_INTERVAL == 0) {
 				this.chooseNewRandomSpeechBubble();
@@ -604,7 +604,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 			}
 			return false;
 		}
-		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+		float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 		int i = 0;
 
 		if (entityIn instanceof LivingEntity) {
@@ -613,7 +613,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		}
 		// Start IceAndFire compatibility
 		if (CQRConfig.advanced.enableSpecialFeatures) {
-			ResourceLocation resLoc = EntityList.getKey(entityIn);
+			ResourceLocation resLoc = entityIn.getType().getRegistryName();//EntityList.getKey(entityIn);
 			if (resLoc != null && resLoc.getNamespace().equalsIgnoreCase("iceandfire")) {
 				f *= 2.0F;
 			}
@@ -690,7 +690,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public LivingEntity getLeader() {
 		if (this.leaderUUID != null) {
 			if (this.leader != null) {
-				if (this.leader.isEntityAlive()) {
+				if (this.leader.isAlive()) {
 					return this.leader;
 				}
 				this.leader = null;
@@ -710,7 +710,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	}
 
 	public void setLeader(LivingEntity leader) {
-		if (leader != null && leader.isEntityAlive()) {
+		if (leader != null && leader.isAlive()) {
 			if (this.dimension == leader.dimension) {
 				this.leader = leader;
 			}
@@ -750,7 +750,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 
 	public void setBaseHealth(BlockPos pos, float health) {
 		health = this.calculateBaseHealth(pos.getX(), pos.getZ(), health);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
 		this.setHealth(health);
 	}
 
@@ -872,12 +872,12 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		if (cause.getTrueSource() instanceof PlayerEntity && this.hasFaction()) {
 			PlayerEntity player = (PlayerEntity) cause.getTrueSource();
 			int range = CQRConfig.mobs.factionUpdateRadius;
-			double x1 = player.posX - range;
-			double y1 = player.posY - range;
-			double z1 = player.posZ - range;
-			double x2 = player.posX + range;
-			double y2 = player.posY + range;
-			double z2 = player.posZ + range;
+			double x1 = player.getPosX() - range;
+			double y1 = player.getPosY() - range;
+			double z1 = player.getPosZ() - range;
+			double x2 = player.getPosX() + range;
+			double y2 = player.getPosY() + range;
+			double z2 = player.getPosZ() + range;
 			AxisAlignedBB aabb = new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
 
 			List<CQRFaction> checkedFactions = new ArrayList<>();
@@ -967,17 +967,17 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 		return false;
 	}
 
-	@OnlyIn(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public ESpeechBubble getCurrentSpeechBubble() {
 		return ESpeechBubble.values()[this.currentSpeechBubbleID];
 	}
 
-	@OnlyIn(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void chooseNewRandomSpeechBubble() {
 		this.currentSpeechBubbleID = this.rand.nextInt(ESpeechBubble.values().length);
 	}
 
-	@OnlyIn(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getTextureIndex() {
 		return this.dataManager.get(TEXTURE_INDEX);
 	}
@@ -987,7 +987,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	}
 
 	public double getAttackReach(LivingEntity target) {
-		return this.width + target.width + 0.25D;
+		return this.getWidth() + target.getWidth() + 0.25D;
 	}
 
 	public boolean isInAttackReach(LivingEntity target) {
@@ -1018,13 +1018,13 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	}
 
 	public boolean isEntityInFieldOfView(LivingEntity target) {
-		double x = target.posX - this.posX;
-		double z = target.posZ - this.posZ;
+		double x = target.getPosX() - this.getPosX();
+		double z = target.getPosZ() - this.getPosZ();
 		double d = Math.toDegrees(Math.atan2(-x, z));
 		if (!ItemUtil.compareRotations(this.rotationYawHead, d, 80.0D)) {
 			return false;
 		}
-		double y = target.posY + target.getEyeHeight() - this.posY - this.getEyeHeight();
+		double y = target.getPosY() + target.getEyeHeight() - this.getPosY() - this.getEyeHeight();
 		double xz = Math.sqrt(x * x + z * z);
 		double d1 = Math.toDegrees(Math.atan2(y, xz));
 		return ItemUtil.compareRotations(this.rotationPitch, d1, 50.0D);
@@ -1052,7 +1052,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public boolean isInSightRange(Entity target) {
 		double sightRange = 32.0D;
 		sightRange *= 0.6D + 0.4D * (double) this.world.getLight(new BlockPos(target)) / 15.0D;
-		sightRange *= this.isPotionActive(MobEffects.BLINDNESS) ? 0.5D : 1.0D;
+		sightRange *= this.isPotionActive(Effects.BLINDNESS) ? 0.5D : 1.0D;
 		return this.getDistance(target) <= sightRange;
 	}
 
@@ -1074,7 +1074,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	public void setMagicArmorActive(boolean val) {
 		if (val != this.armorActive) {
 			this.armorActive = val;
-			this.setEntityInvulnerable(this.armorActive);
+			this.setInvulnerable(this.armorActive);
 			this.dataManager.set(MAGIC_ARMOR_ACTIVE, val);
 		}
 	}
@@ -1100,7 +1100,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	}
 
 	public void resize(float widthScale, float heightSacle) {
-		this.setSize(this.width * widthScale, this.height * heightSacle);
+		this.setSize(this.getWidth() * widthScale, this.getHeight() * heightSacle);
 		if (this.stepHeight * heightSacle >= 1.0) {
 			this.stepHeight *= heightSacle;
 		}
