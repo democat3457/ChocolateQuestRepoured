@@ -12,17 +12,14 @@ import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -247,7 +244,7 @@ public abstract class SpawnerFactory {
 	 * @return Generated entity object
 	 */
 	public static Entity createEntityFromNBTWithoutSpawningIt(CompoundNBT tag, World worldIn) {
-		Entity entity = EntityList.createEntityFromNBT(tag, worldIn);
+		Entity entity = EntityType.loadEntityUnchecked(tag, worldIn).get();//EntityList.createEntityFromNBT(tag, worldIn);
 		entity.read(tag);
 
 		return entity;
@@ -255,7 +252,7 @@ public abstract class SpawnerFactory {
 
 	public static CompoundNBT createSpawnerNBTFromEntity(Entity entity) {
 		CompoundNBT entityCompound = new CompoundNBT();
-		entity.writeAdditional(entityCompound);
+		entity.writeUnlessPassenger(entityCompound);
 		entityCompound.remove("UUIDLeast");
 		entityCompound.remove("UUIDMost");
 		entityCompound.remove("Pos");
@@ -277,7 +274,7 @@ public abstract class SpawnerFactory {
 			return null;
 		}
 		CompoundNBT entityTag = new CompoundNBT();
-		if (entity.writeAdditional(entityTag)) {
+		if (entity.writeUnlessPassenger(entityTag)) {
 			return getSoulBottleItemStackForEntity(entityTag);
 		}
 		return null;
