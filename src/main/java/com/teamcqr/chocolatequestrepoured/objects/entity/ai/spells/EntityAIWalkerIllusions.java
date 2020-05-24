@@ -10,8 +10,8 @@ import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -32,7 +32,7 @@ public class EntityAIWalkerIllusions extends AbstractEntityAISpell<AbstractEntit
 					@Override
 					public void accept(Entity t) {
 						if (t instanceof LivingEntity) {
-							((LivingEntity) t).addPotionEffect(new PotionEffect(Potion.getPotionById(15), 40));
+							((LivingEntity) t).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 40));
 						}
 					}
 				});
@@ -41,7 +41,7 @@ public class EntityAIWalkerIllusions extends AbstractEntityAISpell<AbstractEntit
 			Vec3d pos = this.entity.getPositionVector().add(VectorUtil.rotateVectorAroundY(v, 120 * i));
 			EntityWalkerKingIllusion illusion = new EntityWalkerKingIllusion(1200, (EntityCQRWalkerKing) this.entity, this.entity.getEntityWorld());
 			illusion.setPosition(pos.x, pos.y, pos.z);
-			this.entity.world.spawnEntity(illusion);
+			this.entity.world.addEntity(illusion);
 		}
 	}
 
@@ -52,7 +52,7 @@ public class EntityAIWalkerIllusions extends AbstractEntityAISpell<AbstractEntit
 
 	@Override
 	protected SoundEvent getStartCastingSound() {
-		return SoundEvents.ENTITY_ILLAGER_CAST_SPELL;
+		return SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL;
 	}
 
 	@Override
