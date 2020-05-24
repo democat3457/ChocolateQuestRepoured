@@ -4,12 +4,13 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR
 import com.teamcqr.chocolatequestrepoured.util.IRangedWeapon;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityAIAttackRangedStrafing extends EntityAIAttack {
 
@@ -42,7 +43,7 @@ public class EntityAIAttackRangedStrafing extends EntityAIAttack {
     protected boolean isWeaponEquipped()
     {
     	Item item = entity.getHeldItemMainhand().getItem();
-        return item instanceof ItemBow || item instanceof IRangedWeapon;
+        return item instanceof BowItem || item instanceof IRangedWeapon;
     }
     
     /**
@@ -83,7 +84,7 @@ public class EntityAIAttackRangedStrafing extends EntityAIAttack {
 
         if (entitylivingbase != null)
         {
-            double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
+            double d0 = this.entity.getDistanceSq(entitylivingbase.getPosX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getPosZ());
             boolean flag = this.entity.getEntitySenses().canSee(entitylivingbase);
             boolean flag1 = this.seeTime > 0;
 
@@ -174,19 +175,23 @@ public class EntityAIAttackRangedStrafing extends EntityAIAttack {
 	private void performAttack(LivingEntity attackTarget) {
 		ItemStack stack = this.entity.getHeldItemMainhand();
 		this.entity.isSwingInProgress = false;
-		if (stack.getItem() instanceof ItemBow) {
-			EntityTippedArrow arrow = new EntityTippedArrow(this.entity.world, this.entity);
-			double x = attackTarget.posX - this.entity.posX;
-			double y = attackTarget.posY + (double) attackTarget.height * 0.5D - arrow.posY;
-			double z = attackTarget.posZ - this.entity.posZ;
+		if (stack.getItem() instanceof BowItem) {
+			ArrowEntity arrow = new ArrowEntity(this.entity.world, this.entity);
+			double x = attackTarget.getPosX() - this.entity.getPosX();
+			double y = attackTarget.getPosY() + (double) attackTarget.getHeight() * 0.5D - arrow.getPosY();
+			double z = attackTarget.getPosZ() - this.entity.getPosZ();
 			double distance = Math.sqrt(x * x + z * z);
 			arrow.shoot(x, y + distance * 0.06D, z, 3.0F, 0.0F);
-			arrow.motionX += this.entity.motionX;
-			arrow.motionX += this.entity.motionX;
+			double vx = arrow.getMotion().x;
+			double vy = arrow.getMotion().y;
+			double vz = arrow.getMotion().z;
+			vx += this.entity.getMotion().x;
+			vz += this.entity.getMotion().z;
 			if (!this.entity.onGround) {
-				arrow.motionY += this.entity.motionY;
+				vy += this.entity.getMotion().y;
 			}
-			this.entity.world.spawnEntity(arrow);
+			arrow.setMotion(new Vec3d(vx,vy,vz));
+			this.entity.world.addEntity(arrow);
 			this.entity.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
 		} else if (stack.getItem() instanceof IRangedWeapon) {
 			IRangedWeapon weapon = (IRangedWeapon) stack.getItem();
