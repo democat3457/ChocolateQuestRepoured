@@ -16,30 +16,30 @@ import com.teamcqr.chocolatequestrepoured.objects.items.armor.ItemArmorDyable;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEvokerFangs;
 import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -47,7 +47,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BossInfo.Color;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.WorldServer;
 
 public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	
@@ -78,7 +78,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	}
 	
 	@Override
-	public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata) {
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
 		setEquipmentBasedOnDifficulty(difficulty);
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
@@ -97,7 +97,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 				v = v.subtract(0, v.y, 0);
 				v = v.scale(3);
 				teleportPos = new BlockPos(getAttackTarget().getPositionVector().subtract(v));
-				if(world.isBlockFullCube(teleportPos) || world.isBlockFullCube(teleportPos.offset(Direction.UP)) || world.isAirBlock(teleportPos.offset(Direction.DOWN))) {
+				if(world.isBlockFullCube(teleportPos) || world.isBlockFullCube(teleportPos.offset(EnumFacing.UP)) || world.isAirBlock(teleportPos.offset(EnumFacing.DOWN))) {
 					teleportPos = getAttackTarget().getPosition();
 				}
 			} else if(getHomePositionCQR() != null && !world.isRemote) {
@@ -107,7 +107,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 				//spawn cloud
 				for(int ix = -1; ix <= 1; ix++) {
 					for(int iz = -1; iz <= 1; iz++) {
-						((ServerWorld)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
+						((WorldServer)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
 					}
 				}
 				world.playSound(posX, posY, posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.AMBIENT, 1, 1, true);
@@ -170,7 +170,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 		if(getNavigator().canEntityStandOnPos(new BlockPos(p.x,p.y,p.z))) {
 			for(int ix = -1; ix <= 1; ix++) {
 				for(int iz = -1; iz <= 1; iz++) {
-					((ServerWorld)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
+					((WorldServer)world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + ix, posY +2, posZ +iz, 10, 0, 0, 0, 0.25, 0, 0, 0);
 				}
 			}
 			world.playSound(posX, posY, posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.AMBIENT, 1, 1, true);
@@ -181,9 +181,9 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 
 	private void handleAttackedByDragon(Entity dragon) {
 		if (CQRConfig.advanced.enableSpecialFeatures && dragon.getControllingPassenger() != null /*&& (getRNG().nextInt(100) +1) > 95*/) {
-			if(dragon instanceof LivingEntity && dragon.getControllingPassenger() instanceof LivingEntity) {
+			if(dragon instanceof EntityLiving && dragon.getControllingPassenger() instanceof EntityLivingBase) {
 				dragon.getControllingPassenger().dismountRidingEntity();
-				//((LivingEntity)dragon).setAttackTarget((LivingEntity) dragon.getControllingPassenger());
+				//((EntityLiving)dragon).setAttackTarget((EntityLivingBase) dragon.getControllingPassenger());
 				/*if(dragon instanceof EntityTameable) {
 					try {
 						((EntityTameable)dragon).setOwnerId(null);
@@ -236,7 +236,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 			return true;
 		}
 		
-		if(!(source.getImmediateSource() != null && source.getImmediateSource() instanceof EntitySpectralArrow)) {
+		if(!(source.getImmediateSource() != null && source.getImmediateSource() instanceof EntitySpectralArrow) && CQRConfig.bosses.harderWalkerKing) {
 			amount *= 0.5F;
 		}
 		
@@ -259,7 +259,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 			ResourceLocation resLoc = EntityList.getKey(source.getTrueSource());
 			if(resLoc != null) {
 				// Start IceAndFire compatibility
-				boolean flag = resLoc.getNamespace().equalsIgnoreCase("iceandfire") && CQRConfig.advanced.enableSpecialFeatures;
+				boolean flag = resLoc.getResourceDomain().equalsIgnoreCase("iceandfire") && CQRConfig.advanced.enableSpecialFeatures;
 				if (flag) {
 					amount /= 2;
 				}
@@ -329,7 +329,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 		while (true) {
 			if (!this.world.isBlockNormalCube(blockpos, true) && this.world.isBlockNormalCube(blockpos.down(), true)) {
 				if (!this.world.isAirBlock(blockpos)) {
-					BlockState iblockstate = this.world.getBlockState(blockpos);
+					IBlockState iblockstate = this.world.getBlockState(blockpos);
 					AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.world, blockpos);
 
 					if (axisalignedbb != null) {
@@ -402,16 +402,16 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
 		
-		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, getSword());
-		this.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(ModItems.SHIELD_WALKER_KING, 1));
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getSword());
+		this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, new ItemStack(ModItems.SHIELD_WALKER_KING, 1));
 		this.setItemStackToExtraSlot(EntityEquipmentExtraSlot.POTION, new ItemStack(ModItems.POTION_HEALING, 3));
 		
-		this.setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(ModItems.KING_CROWN, 1));
+		this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.KING_CROWN, 1));
 		
 		//Give him some armor...
 		if(CQRConfig.bosses.armorForTheWalkerKing) {
-			CompoundNBT nbttagcompound = new CompoundNBT();
-			CompoundNBT nbttagcompound1 = nbttagcompound.getCompoundTag("display");
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
+			NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
 
 			if (!nbttagcompound.hasKey("display", 10)) {
 				nbttagcompound.setTag("display", nbttagcompound1);
@@ -420,15 +420,15 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 			nbttagcompound1.setInteger("color", 9437439);
 			ItemStack chest = new ItemStack(ModItems.CHESTPLATE_DIAMOND_DYABLE, 1, 0, nbttagcompound);
 			((ItemArmorDyable) ModItems.CHESTPLATE_DIAMOND_DYABLE).setColor(chest, 9437439);
-			setItemStackToSlot(EquipmentSlotType.CHEST, chest);
+			setItemStackToSlot(EntityEquipmentSlot.CHEST, chest);
 			
 			ItemStack legs = new ItemStack(ModItems.LEGGINGS_DIAMOND_DYABLE, 1, 0, nbttagcompound);
 			((ItemArmorDyable) ModItems.LEGGINGS_DIAMOND_DYABLE).setColor(legs, 9437439);
-			setItemStackToSlot(EquipmentSlotType.LEGS, legs);
+			setItemStackToSlot(EntityEquipmentSlot.LEGS, legs);
 			
 			ItemStack boobs = new ItemStack(ModItems.BOOTS_DIAMOND_DYABLE, 1, 0, nbttagcompound);
 			((ItemArmorDyable) ModItems.BOOTS_DIAMOND_DYABLE).setColor(boobs, 9437439);
-			setItemStackToSlot(EquipmentSlotType.FEET, boobs);
+			setItemStackToSlot(EntityEquipmentSlot.FEET, boobs);
 		}
 	}
 	
@@ -488,7 +488,7 @@ public class EntityCQRWalkerKing extends AbstractEntityCQRBoss {
 	}
 	
 	@Override
-	protected int getExperiencePoints(PlayerEntity player) {
+	protected int getExperiencePoints(EntityPlayer player) {
 		return super.getExperiencePoints(player);
 	}
 	

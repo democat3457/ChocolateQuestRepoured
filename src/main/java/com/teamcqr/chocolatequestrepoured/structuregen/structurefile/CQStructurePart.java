@@ -28,16 +28,17 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBanner;
@@ -48,10 +49,10 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
+import net.minecraft.world.gen.structure.template.Template;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Copyright (c) 29.04.2019
@@ -81,7 +82,7 @@ public class CQStructurePart extends Template {
 
 			for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos1, blockpos2)) {
 				BlockPos blockpos3 = blockpos$mutableblockpos.subtract(blockpos1);
-				BlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos);
+				IBlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos);
 				Block block = iblockstate.getBlock();
 
 				if (block != Blocks.STRUCTURE_VOID && block != ModBlocks.NULL_BLOCK && takeSpecialBlocks == SPECIAL_BLOCKS.contains(block)) {
@@ -121,15 +122,15 @@ public class CQStructurePart extends Template {
 					}
 
 					if (tileentity != null) {
-						CompoundNBT nbttagcompound = tileentity.writeToNBT(new CompoundNBT());
+						NBTTagCompound nbttagcompound = tileentity.writeToNBT(new NBTTagCompound());
 						nbttagcompound.removeTag("x");
 						nbttagcompound.removeTag("y");
 						nbttagcompound.removeTag("z");
 						list1.add(new Template.BlockInfo(blockpos3, iblockstate, nbttagcompound));
 					} else if (!iblockstate.isFullBlock() && !iblockstate.isFullCube()) {
-						list2.add(new Template.BlockInfo(blockpos3, iblockstate, (CompoundNBT) null));
+						list2.add(new Template.BlockInfo(blockpos3, iblockstate, (NBTTagCompound) null));
 					} else {
-						list.add(new Template.BlockInfo(blockpos3, iblockstate, (CompoundNBT) null));
+						list.add(new Template.BlockInfo(blockpos3, iblockstate, (NBTTagCompound) null));
 					}
 				}
 			}
@@ -296,10 +297,10 @@ public class CQStructurePart extends Template {
 			BlockPos blockpos = transformedBlockPos(template$entityinfo.blockPos, mirrorIn, rotationIn).add(pos);
 
 			if (aabb == null || aabb.isVecInside(blockpos)) {
-				CompoundNBT nbttagcompound = template$entityinfo.entityData;
+				NBTTagCompound nbttagcompound = template$entityinfo.entityData;
 				Vec3d vec3d = transformedVec3d(template$entityinfo.pos, mirrorIn, rotationIn);
 				Vec3d vec3d1 = vec3d.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
-				ListNBT nbttaglist = new ListNBT();
+				NBTTagList nbttaglist = new NBTTagList();
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.x));
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.y));
 				nbttaglist.appendTag(new NBTTagDouble(vec3d1.z));
@@ -361,7 +362,7 @@ public class CQStructurePart extends Template {
 			BlockPos transformedPos = transformedBlockPos(placementIn, lootChestInfo.getPosition()).add(pos);
 
 			if (!worldIn.isOutsideBuildHeight(transformedPos)) {
-				worldIn.setBlockState(transformedPos, Blocks.CHEST.getDefaultState().withMirror(placementIn.getMirror()).withRotation(placementIn.getRotation()).withProperty(BlockHorizontal.FACING, lootChestInfo.getFacing()), 2);
+				worldIn.setBlockState(transformedPos, Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, lootChestInfo.getFacing()).withMirror(placementIn.getMirror()).withRotation(placementIn.getRotation()), 2);
 				TileEntityChest tileEntityChest = (TileEntityChest) worldIn.getTileEntity(transformedPos);
 
 				long seed = WorldDungeonGenerator.getSeed(worldIn, transformedPos.getX(), transformedPos.getZ());
@@ -400,14 +401,14 @@ public class CQStructurePart extends Template {
 						((AbstractEntityCQRBoss) entity).onSpawnFromCQRSpawnerInDungeon(placementIn, dungeonMob);
 						((AbstractEntityCQRBoss) entity).setHealingPotions(CQRConfig.mobs.defaultHealingPotionCount);
 					}
-					if (entity instanceof LivingEntity) {
-						((LivingEntity) entity).enablePersistence();
-						((LivingEntity) entity).onInitialSpawn(worldIn.getDifficultyForLocation(transformedPos), (ILivingEntityData) null);
+					if (entity instanceof EntityLiving) {
+						((EntityLiving) entity).enablePersistence();
+						((EntityLiving) entity).onInitialSpawn(worldIn.getDifficultyForLocation(transformedPos), (IEntityLivingData) null);
 					}
 					worldIn.spawnEntity(entity);
 
 					if (protectedRegion != null) {
-						protectedRegion.addEntityDependency(entity.getUniqueID());
+						protectedRegion.addEntityDependency(entity.getPersistentID());
 					}
 				} else {
 					EntityArmorStand indicator = new EntityArmorStand(worldIn);
@@ -428,32 +429,32 @@ public class CQStructurePart extends Template {
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT nbt) {
-		CompoundNBT tag = super.writeToNBT(nbt);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		NBTTagCompound tag = super.writeToNBT(nbt);
 
 		tag.removeTag("author");
 
-		ListNBT bannerTagList = new ListNBT();
+		NBTTagList bannerTagList = new NBTTagList();
 		for (BlockPos pos : this.banners) {
 			bannerTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		ListNBT spawnerTagList = new ListNBT();
+		NBTTagList spawnerTagList = new NBTTagList();
 		for (BlockPos pos : this.spawners) {
 			spawnerTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		ListNBT chestTagList = new ListNBT();
+		NBTTagList chestTagList = new NBTTagList();
 		for (LootChestInfo lootChestInfo : this.chests) {
 			chestTagList.appendTag(lootChestInfo.getAsNBTTag());
 		}
 
-		ListNBT forceFieldNexusTagList = new ListNBT();
+		NBTTagList forceFieldNexusTagList = new NBTTagList();
 		for (BlockPos pos : this.forceFieldCores) {
 			forceFieldNexusTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
 
-		ListNBT bossTagList = new ListNBT();
+		NBTTagList bossTagList = new NBTTagList();
 		for (BlockPos pos : this.bosses) {
 			bossTagList.appendTag(NBTUtil.createPosTag(pos));
 		}
@@ -468,7 +469,7 @@ public class CQStructurePart extends Template {
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
+	public void read(NBTTagCompound compound) {
 		super.read(compound);
 
 		this.banners.clear();
@@ -477,33 +478,33 @@ public class CQStructurePart extends Template {
 		this.forceFieldCores.clear();
 		this.bosses.clear();
 
-		ListNBT bannerTagList = compound.getTagList("banners", 10);
+		NBTTagList bannerTagList = compound.getTagList("banners", 10);
 		for (int i = 0; i < bannerTagList.tagCount(); i++) {
-			CompoundNBT tag = bannerTagList.getCompoundTagAt(i);
+			NBTTagCompound tag = bannerTagList.getCompoundTagAt(i);
 			this.banners.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		ListNBT spawnerTagList = compound.getTagList("spawners", 10);
+		NBTTagList spawnerTagList = compound.getTagList("spawners", 10);
 		for (int i = 0; i < spawnerTagList.tagCount(); i++) {
-			CompoundNBT tag = spawnerTagList.getCompoundTagAt(i);
+			NBTTagCompound tag = spawnerTagList.getCompoundTagAt(i);
 			this.spawners.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		ListNBT chestTagList = compound.getTagList("chests", 10);
+		NBTTagList chestTagList = compound.getTagList("chests", 10);
 		for (int i = 0; i < chestTagList.tagCount(); i++) {
-			CompoundNBT tag = chestTagList.getCompoundTagAt(i);
+			NBTTagCompound tag = chestTagList.getCompoundTagAt(i);
 			this.chests.add(new LootChestInfo(tag));
 		}
 
-		ListNBT coresTagList = compound.getTagList("forcefieldcores", 10);
+		NBTTagList coresTagList = compound.getTagList("forcefieldcores", 10);
 		for (int i = 0; i < coresTagList.tagCount(); i++) {
-			CompoundNBT tag = coresTagList.getCompoundTagAt(i);
+			NBTTagCompound tag = coresTagList.getCompoundTagAt(i);
 			this.forceFieldCores.add(NBTUtil.getPosFromTag(tag));
 		}
 
-		ListNBT bossTagList = compound.getTagList("bosses", 10);
+		NBTTagList bossTagList = compound.getTagList("bosses", 10);
 		for (int i = 0; i < bossTagList.tagCount(); i++) {
-			CompoundNBT tag = bossTagList.getCompoundTagAt(i);
+			NBTTagCompound tag = bossTagList.getCompoundTagAt(i);
 			this.bosses.add(NBTUtil.getPosFromTag(tag));
 		}
 	}

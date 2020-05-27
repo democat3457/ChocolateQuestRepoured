@@ -1,14 +1,14 @@
 package com.teamcqr.chocolatequestrepoured.client.models.entities;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemMusket;
 import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemRevolver;
 
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.HandSide;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 
 public class ModelCQRBiped extends ModelBiped {
@@ -95,15 +95,15 @@ public class ModelCQRBiped extends ModelBiped {
 			if (cqrEnt.isSpellCharging() && cqrEnt.isSpellAnimated()) {
 				this.renderSpellAnimation(cqrEnt, ageInTicks);
 			} else {
-				boolean flagSide = cqrEnt.getPrimaryHand() == HandSide.LEFT;
-				if (cqrEnt.getHeldItemMainhand().getItem() instanceof ItemRevolver && !(cqrEnt.getHeldItemMainhand().getItem() instanceof ItemMusket)) {
+				boolean flagSide = cqrEnt.getPrimaryHand() == EnumHandSide.LEFT;
+				if (cqrEnt.hasAttackTarget() && cqrEnt.getHeldItemMainhand().getItem() instanceof ItemRevolver && !(cqrEnt.getHeldItemMainhand().getItem() instanceof ItemMusket)) {
 					if (flagSide) {
 						this.bipedLeftArm.rotateAngleX -= new Float(Math.toRadians(90F));
 					} else {
 						this.bipedRightArm.rotateAngleX -= new Float(Math.toRadians(90F));
 					}
 				}
-				if (cqrEnt.getHeldItemOffhand().getItem() instanceof ItemRevolver && !(cqrEnt.getHeldItemOffhand().getItem() instanceof ItemMusket)) {
+				if (cqrEnt.hasAttackTarget() && cqrEnt.getHeldItemOffhand().getItem() instanceof ItemRevolver && !(cqrEnt.getHeldItemOffhand().getItem() instanceof ItemMusket)) {
 					if (flagSide) {
 						this.bipedRightArm.rotateAngleX -= new Float(Math.toRadians(90F));
 					} else {

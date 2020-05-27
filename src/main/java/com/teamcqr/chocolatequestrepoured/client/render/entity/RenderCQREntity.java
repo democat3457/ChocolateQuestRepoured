@@ -2,13 +2,13 @@ package com.teamcqr.chocolatequestrepoured.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.teamcqr.chocolatequestrepoured.client.models.entities.ModelCQRBiped;
 import com.teamcqr.chocolatequestrepoured.client.render.EntityRenderManager;
 import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerCQREntityCape;
 import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerCQREntityPotion;
 import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerCQRLeaderFeather;
 import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerCQRSpeechbubble;
+import com.teamcqr.chocolatequestrepoured.client.render.entity.layers.LayerShoulderEntity;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemMusket;
 import com.teamcqr.chocolatequestrepoured.objects.items.guns.ItemMusketKnife;
@@ -17,6 +17,8 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelBiped.ArmPose;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerArrow;
@@ -27,7 +29,7 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.HandSide;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderCQREntity<T extends AbstractEntityCQR> extends RenderLiving<T> {
@@ -73,6 +75,7 @@ public class RenderCQREntity<T extends AbstractEntityCQR> extends RenderLiving<T
 			this.addLayer(new LayerCQRLeaderFeather(this, ((ModelCQRBiped) model).bipedHead));
 			this.addLayer(new LayerCQRSpeechbubble(this));
 			this.addLayer(new LayerCustomHead(((ModelCQRBiped) model).bipedHead));
+			this.addLayer(new LayerShoulderEntity(this));
 		}
 	}
 
@@ -167,7 +170,7 @@ public class RenderCQREntity<T extends AbstractEntityCQR> extends RenderLiving<T
 
 			}
 
-			if (entity.getPrimaryHand() == HandSide.LEFT) {
+			if (entity.getPrimaryHand() == EnumHandSide.LEFT) {
 				ArmPose tmp = armPoseMain;
 				armPoseMain = armPoseOff;
 				armPoseOff = tmp;
