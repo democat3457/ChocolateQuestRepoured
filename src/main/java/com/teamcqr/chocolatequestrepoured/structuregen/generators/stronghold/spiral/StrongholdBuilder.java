@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Random;
 
 import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
-import com.teamcqr.chocolatequestrepoured.objects.blocks.BlockUnlitTorch;
 import com.teamcqr.chocolatequestrepoured.structuregen.WorldDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonVolcano;
 import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockStatePart;
@@ -15,8 +14,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generation.IStructure;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.volcano.StairCaseHelper;
 import com.teamcqr.chocolatequestrepoured.util.ESkyDirection;
 
-import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.block.TorchBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
@@ -139,7 +139,7 @@ public class StrongholdBuilder {
 			break;
 		}
 		if (corner1 != null && corner2 != null && pillar1 != null && pillar2 != null) {
-			for (BlockPos airPos : BlockPos.getAllInBox(air1, air2)) {
+			for (BlockPos airPos : BlockPos.getAllInBoxMutable(air1, air2)) {
 				//this.world.setBlockToAir(airPos);
 				stateMap.put(airPos, new ExtendedBlockStatePart.ExtendedBlockState(Blocks.AIR.getDefaultState(), new CompoundNBT()));
 			}
@@ -148,11 +148,11 @@ public class StrongholdBuilder {
 			// Left torch -> Facing side: rotate right (90.0°)
 			this.buildPillar(pillar1, stateMap);
 			//this.world.setBlockState(torch1, ModBlocks.UNLIT_TORCH.getDefaultState().withProperty(BlockUnlitTorch.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.COUNTERCLOCKWISE_90)));
-			stateMap.put(torch1, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.UNLIT_TORCH.getDefaultState().withProperty(BlockUnlitTorch.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.COUNTERCLOCKWISE_90)), new CompoundNBT()));
+			stateMap.put(torch1, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.UNLIT_TORCH.getDefaultState().with(TorchBlock.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.COUNTERCLOCKWISE_90)), new CompoundNBT()));
 			// Right torch -> Facing side: rotate left (-90.0°)
 			this.buildPillar(pillar2, stateMap);
 			//this.world.setBlockState(torch2, ModBlocks.UNLIT_TORCH.getDefaultState().withProperty(BlockUnlitTorch.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.CLOCKWISE_90)));
-			stateMap.put(torch2, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.UNLIT_TORCH.getDefaultState().withProperty(BlockUnlitTorch.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.CLOCKWISE_90)), new CompoundNBT()));
+			stateMap.put(torch2, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.UNLIT_TORCH.getDefaultState().with(TorchBlock.FACING, StairCaseHelper.getFacingWithRotation(this.direction, Rotation.CLOCKWISE_90)), new CompoundNBT()));
 		}
 	}
 
@@ -160,7 +160,7 @@ public class StrongholdBuilder {
 		for (int iY = 1; iY <= 4; iY++) {
 			BlockPos pos = bottom.add(0, iY, 0);
 			//this.world.setBlockState(pos, ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, Direction.Axis.Y));
-			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_PILLAR.getDefaultState().withProperty(BlockRotatedPillar.AXIS, Direction.Axis.Y), new CompoundNBT()));
+			stateMap.put(pos, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_PILLAR.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y), new CompoundNBT()));
 		}
 		//this.world.setBlockState(bottom.add(0, 5, 0), ModBlocks.GRANITE_CARVED.getDefaultState());
 		stateMap.put(bottom.add(0, 5, 0), new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_CARVED.getDefaultState(), new CompoundNBT()));
@@ -170,13 +170,13 @@ public class StrongholdBuilder {
 		BlockPos endP = new BlockPos(end.getX(), start.getY(), end.getZ());
 
 		// Floor
-		for (BlockPos p : BlockPos.getAllInBox(start, endP)) {
+		for (BlockPos p : BlockPos.getAllInBoxMutable(start, endP)) {
 			//this.world.setBlockState(p, ModBlocks.GRANITE_SMALL.getDefaultState());
 			stateMap.put(p, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_SMALL.getDefaultState(), new CompoundNBT()));
 		}
 
 		// Ceiling
-		for (BlockPos p : BlockPos.getAllInBox(start.add(0, ceilingHeight + 1, 0), endP.add(0, ceilingHeight + 1, 0))) {
+		for (BlockPos p : BlockPos.getAllInBoxMutable(start.add(0, ceilingHeight + 1, 0), endP.add(0, ceilingHeight + 1, 0))) {
 			//this.world.setBlockState(p, ModBlocks.GRANITE_SQUARE.getDefaultState());
 			stateMap.put(p, new ExtendedBlockStatePart.ExtendedBlockState(ModBlocks.GRANITE_SQUARE.getDefaultState(), new CompoundNBT()));
 		}
