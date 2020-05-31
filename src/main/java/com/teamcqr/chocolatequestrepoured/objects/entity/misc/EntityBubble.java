@@ -1,47 +1,53 @@
 package com.teamcqr.chocolatequestrepoured.objects.entity.misc;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityBubble extends Entity {
+public class EntityBubble extends LivingEntity {
 
 	private static final int FLY_TIME_MAX = 160;
 
 	private int flyTicks = 0;
 
-	public EntityBubble(World worldIn) {
-		super(worldIn);
+	public EntityBubble(World worldIn, EntityType<? extends EntityBubble> type) {
+		super(type, worldIn);
 		this.isImmuneToFire = true;
 		this.setNoGravity(true);
 	}
 
 	@Override
-	protected void entityInit() {
+	protected void registerData() {
 
 	}
 
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
+	public void tick() {
+		super.tick();
 
 		if (!this.world.isRemote) {
 			if (!this.isBeingRidden() || this.isInLava() || (this.collidedVertically && !this.onGround) || this.flyTicks > FLY_TIME_MAX) {
 				if (this.isBeingRidden()) {
 					Entity entity = this.getPassengers().get(0);
 					entity.dismountRidingEntity();
-					entity.setPositionAndUpdate(this.posX, this.posY + 0.5D * (double) (this.height - entity.height), this.posZ);
+					entity.setPositionAndUpdate(this.getPosX(), this.getPosY() + 0.5D * (double) (this.getHeight() - entity.getHeight()), this.getPosZ());
 				}
-				this.setDead();
+				this.remove();
 				return;
 			}
 
 			this.flyTicks++;
 		}
 
-		this.move(MoverType.SELF, 0.0D, 0.05D, 0.0D);
+		this.move(MoverType.SELF, new Vec3d(0.0D, 0.05D, 0.0D));
 	}
 
 	@Override
@@ -56,20 +62,20 @@ public class EntityBubble extends Entity {
 	}
 
 	@Override
-	protected void readEntityFromNBT(CompoundNBT compound) {
-		this.flyTicks = compound.getInteger("flyTicks");
+	public void readAdditional(CompoundNBT compound) {
+		this.flyTicks = compound.getInt("flyTicks");
 	}
 
 	@Override
-	protected void writeEntityToNBT(CompoundNBT compound) {
-		compound.setInteger("flyTicks", this.flyTicks);
+	public void writeAdditional(CompoundNBT compound) {
+		compound.putInt("flyTicks", this.flyTicks);
 	}
 
 	@Override
 	public double getMountedYOffset() {
 		if (this.isBeingRidden()) {
 			Entity entity = this.getPassengers().get(0);
-			return 0.5D * (double) (this.height - entity.height) - entity.getYOffset();
+			return 0.5D * (double) (this.getHeight() - entity.getHeight()) - entity.getYOffset();
 		}
 		return 0.0D;
 	}
@@ -77,7 +83,7 @@ public class EntityBubble extends Entity {
 	@Override
 	protected void addPassenger(Entity passenger) {
 		super.addPassenger(passenger);
-		float size = Math.max(passenger.width, passenger.height) + 0.1F;
+		float size = Math.max(passenger.getWidth(), passenger.getWidth()) + 0.1F;
 		this.setSize(size, size);
 	}
 
@@ -99,6 +105,26 @@ public class EntityBubble extends Entity {
 	@Override
 	public boolean shouldDismountInWater(Entity rider) {
 		return false;
+	}
+
+	@Override
+	public Iterable<ItemStack> getArmorInventoryList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
+	}
+
+	@Override
+	public HandSide getPrimaryHand() {
+		return HandSide.LEFT;
 	}
 
 }
