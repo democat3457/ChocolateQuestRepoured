@@ -19,7 +19,6 @@ import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -118,7 +117,7 @@ public class GeneratorGridCity implements IDungeonGenerator {
 		}
 
 		// Build the roads / bridges and the floors
-		for (BlockPos lavaPos : BlockPos.getAllInBox(this.minX - this.dungeon.getDistanceBetweenBuildingCenters(), y, this.minZ - this.dungeon.getDistanceBetweenBuildingCenters(),
+		for (BlockPos lavaPos : BlockPos.getAllInBoxMutable(this.minX - this.dungeon.getDistanceBetweenBuildingCenters(), y, this.minZ - this.dungeon.getDistanceBetweenBuildingCenters(),
 				this.maxX + this.dungeon.getDistanceBetweenBuildingCenters(), y, this.maxZ + this.dungeon.getDistanceBetweenBuildingCenters())) {
 			this.lavaBlocks.add(lavaPos);
 		}
@@ -185,8 +184,8 @@ public class GeneratorGridCity implements IDungeonGenerator {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setMirror(Mirror.NONE);
 		settings.setRotation(Rotation.NONE);
-		settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
-		settings.setIntegrity(1.0F);
+		//settings.setReplacedBlock(Blocks.STRUCTURE_VOID);
+		//settings.setIntegrity(1.0F);
 
 		CQStructure centralStructure = null;
 		if (this.dungeon.centralBuildingIsSpecial()) {
