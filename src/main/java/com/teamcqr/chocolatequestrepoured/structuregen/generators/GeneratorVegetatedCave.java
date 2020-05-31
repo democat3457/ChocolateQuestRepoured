@@ -28,6 +28,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HugeMushroomBlock;
 import net.minecraft.block.VineBlock;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
@@ -404,7 +405,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 					return true;
 				}
 				if(!dungeon.skipCeilingFiltering()) {
-					return world.getHeight(Type.WORLD_SURFACE, arg0.getX(), arg0.getZ()) <= arg0.getY() || world.getHeight(arg0).getY() <= arg0.getY() || world.canBlockSeeSky(arg0);
+					return world.getHeight(Type.WORLD_SURFACE, arg0.getX(), arg0.getZ()) <= arg0.getY() || world.getHeight(Type.WORLD_SURFACE_WG, arg0).getY() <= arg0.getY() || world.canBlockSeeSky(arg0);
 				}
 				return false;
 			}
@@ -420,7 +421,7 @@ public class GeneratorVegetatedCave implements IDungeonGenerator {
 				// Giant mushroom
 				boolean flag = true;
 				for (BlockPos shroom : giantMushrooms) {
-					if (shroom.getDistance(floorPos.getX(), floorPos.getY(), floorPos.getZ()) < 5) {
+					if (shroom.distanceSq(floorPos.getX(), floorPos.getY(), floorPos.getZ(), false) < 5 * 5) {
 						flag = false;
 						break;
 					}
