@@ -5,7 +5,8 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -14,8 +15,8 @@ import net.minecraft.world.World;
 
 public class EntityCQRSkeleton extends AbstractEntityCQR {
 
-	public EntityCQRSkeleton(World worldIn) {
-		super(worldIn);
+	public EntityCQRSkeleton(World worldIn, EntityType<? extends EntityCQRSkeleton> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -34,8 +35,8 @@ public class EntityCQRSkeleton extends AbstractEntityCQR {
 	}
 
 	@Override
-	public EnumCreatureAttribute getCreatureAttribute() {
-		return EnumCreatureAttribute.UNDEAD;
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.UNDEAD;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -13,8 +14,8 @@ import net.minecraft.world.World;
 
 public class EntityCQRMinotaur extends AbstractEntityCQR {
 
-	public EntityCQRMinotaur(World worldIn) {
-		super(worldIn);
+	public EntityCQRMinotaur(World worldIn, EntityType<? extends EntityCQRMinotaur> type) {
+		super(worldIn, type);
 	}
 
 	@Override

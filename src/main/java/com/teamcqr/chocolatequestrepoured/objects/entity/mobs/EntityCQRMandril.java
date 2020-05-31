@@ -4,20 +4,21 @@ import com.teamcqr.chocolatequestrepoured.factions.EDefaultFaction;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
-import net.minecraft.entity.ai.EntityAILeapAtTarget;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class EntityCQRMandril extends AbstractEntityCQR {
 
-	public EntityCQRMandril(World worldIn) {
-		super(worldIn);
+	public EntityCQRMandril(World worldIn, EntityType<? extends EntityCQRMandril> type) {
+		super(worldIn, type);
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
-		this.tasks.addTask(9, new EntityAILeapAtTarget(this, 0.6F));
+	protected void registerGoals() {
+		super.registerGoals();
+		this.goalSelector.addGoal(9, new LeapAtTargetGoal(this, 0.6F));
 	}
 
 	@Override
@@ -38,11 +39,6 @@ public class EntityCQRMandril extends AbstractEntityCQR {
 	@Override
 	public boolean canMountEntity() {
 		return false;
-	}
-
-	@Override
-	public float getEyeHeight() {
-		return this.height * 0.84F;
 	}
 
 	@Override

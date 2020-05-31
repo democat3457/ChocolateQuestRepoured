@@ -6,6 +6,7 @@ import com.teamcqr.chocolatequestrepoured.init.ModSounds;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -14,8 +15,8 @@ import net.minecraft.world.World;
 
 public class EntityCQRDwarf extends AbstractEntityCQR {
 
-	public EntityCQRDwarf(World worldIn) {
-		super(worldIn);
+	public EntityCQRDwarf(World worldIn, EntityType<? extends EntityCQRDwarf> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -61,10 +62,10 @@ public class EntityCQRDwarf extends AbstractEntityCQR {
 		return 3;
 	}
 
-	@Override
+	/*@Override
 	public float getEyeHeight() {
 		return this.height * 0.85F;
-	}
+	}*/
 
 	@Override
 	public float getDefaultWidth() {

@@ -5,13 +5,14 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class EntityCQRGremlin extends AbstractEntityCQR {
 
-	public EntityCQRGremlin(World worldIn) {
-		super(worldIn);
+	public EntityCQRGremlin(World worldIn, EntityType<? extends EntityCQRGremlin> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -54,10 +55,10 @@ public class EntityCQRGremlin extends AbstractEntityCQR {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public float getEyeHeight() {
 		return this.height * 0.7F;
-	}
+	}*/
 
 	@Override
 	public float getDefaultWidth() {

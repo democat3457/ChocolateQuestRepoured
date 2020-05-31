@@ -5,11 +5,12 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -19,8 +20,8 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 public class EntityCQREnderman extends AbstractEntityCQR {
 
-	public EntityCQREnderman(World worldIn) {
-		super(worldIn);
+	public EntityCQREnderman(World worldIn, EntityType<? extends EntityCQREnderman> type) {
+		super(worldIn, type);
 		this.stepHeight = 1.0F;
 		this.setPathPriority(PathNodeType.WATER, -1.0F);
 	}
@@ -28,7 +29,7 @@ public class EntityCQREnderman extends AbstractEntityCQR {
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (super.attackEntityFrom(source, amount)) {
-			if (source instanceof EntityDamageSourceIndirect) {
+			if (source instanceof IndirectEntityDamageSource) {
 				for (int i = 0; i < 64; ++i) {
 					if (this.teleportRandomly()) {
 						return true;
@@ -42,9 +43,9 @@ public class EntityCQREnderman extends AbstractEntityCQR {
 	}
 
 	protected boolean teleportRandomly() {
-		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * 64.0D;
-		double d1 = this.posY + (double) (this.rand.nextInt(64) - 32);
-		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * 64.0D;
+		double d0 = this.getPosX() + (this.rand.nextDouble() - 0.5D) * 64.0D;
+		double d1 = this.getPosY() + (double) (this.rand.nextInt(64) - 32);
+		double d2 = this.getPosZ() + (this.rand.nextDouble() - 0.5D) * 64.0D;
 		return this.teleportTo(d0, d1, d2);
 	}
 
@@ -53,11 +54,11 @@ public class EntityCQREnderman extends AbstractEntityCQR {
 		if (MinecraftForge.EVENT_BUS.post(event)) {
 			return false;
 		}
-		boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ());
+		boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
 
 		if (flag) {
-			this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
-			this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
+			this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+			this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 		}
 
 		return flag;
@@ -75,24 +76,24 @@ public class EntityCQREnderman extends AbstractEntityCQR {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return /* this.isScreaming() ? SoundEvents.ENTITY_ENDERMEN_SCREAM : */ SoundEvents.ENTITY_ENDERMEN_AMBIENT;
+		return /* this.isScreaming() ? SoundEvents.ENTITY_ENDERMEN_SCREAM : */ SoundEvents.ENTITY_ENDERMAN_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_ENDERMEN_HURT;
+		return SoundEvents.ENTITY_ENDERMAN_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_ENDERMEN_DEATH;
+		return SoundEvents.ENTITY_ENDERMAN_DEATH;
 	}
 
 	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000001192092896D);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0D);
+	protected void registerAttributes() {
+		super.registerAttributes();
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000001192092896D);
+		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0D);
 	}
 
 	@Override
@@ -110,10 +111,10 @@ public class EntityCQREnderman extends AbstractEntityCQR {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public float getEyeHeight() {
 		return this.height * 0.875F;
-	}
+	}*/
 
 	@Override
 	public float getDefaultWidth() {

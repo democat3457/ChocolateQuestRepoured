@@ -5,13 +5,15 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class EntityCQRTriton extends AbstractEntityCQR {
 
-	public EntityCQRTriton(World worldIn) {
-		super(worldIn);
+	public EntityCQRTriton(World worldIn, EntityType<? extends EntityCQRTriton> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -47,6 +49,11 @@ public class EntityCQRTriton extends AbstractEntityCQR {
 	@Override
 	protected float getWaterSlowDown() {
 		return 0.0F;
+	}
+	
+	@Override
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.WATER;
 	}
 
 }

@@ -5,11 +5,12 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -18,8 +19,8 @@ import net.minecraft.world.World;
 
 public class EntityCQRMummy extends AbstractEntityCQR {
 
-	public EntityCQRMummy(World worldIn) {
-		super(worldIn);
+	public EntityCQRMummy(World worldIn, EntityType<? extends EntityCQRMummy> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -27,8 +28,8 @@ public class EntityCQRMummy extends AbstractEntityCQR {
 		boolean flag = super.attackEntityAsMob(entityIn);
 
 		if (flag && this.getHeldItemMainhand().isEmpty() && entityIn instanceof LivingEntity) {
-			int i = this.world.getDifficulty().getDifficultyId();
-			((LivingEntity) entityIn).addPotionEffect(new PotionEffect(MobEffects.HUNGER, 140 * i));
+			int i = this.world.getDifficulty().getId();
+			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.HUNGER, 140 * i));
 		}
 
 		return flag;
@@ -65,8 +66,8 @@ public class EntityCQRMummy extends AbstractEntityCQR {
 	}
 
 	@Override
-	public EnumCreatureAttribute getCreatureAttribute() {
-		return EnumCreatureAttribute.UNDEAD;
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.UNDEAD;
 	}
 
 }

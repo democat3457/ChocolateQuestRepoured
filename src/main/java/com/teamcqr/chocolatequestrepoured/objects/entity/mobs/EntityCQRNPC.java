@@ -5,13 +5,14 @@ import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class EntityCQRNPC extends AbstractEntityCQR {
 
-	public EntityCQRNPC(World worldIn) {
-		super(worldIn);
+	public EntityCQRNPC(World worldIn, EntityType<? extends EntityCQRNPC> type) {
+		super(worldIn, type);
 	}
 
 	@Override

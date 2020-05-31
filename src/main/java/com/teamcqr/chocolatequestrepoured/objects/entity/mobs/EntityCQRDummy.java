@@ -5,14 +5,15 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.EBaseHealths;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 
 public class EntityCQRDummy extends AbstractEntityCQR {
 
-	public EntityCQRDummy(World worldIn) {
-		super(worldIn);
+	public EntityCQRDummy(World worldIn, EntityType<? extends EntityCQRDummy> type) {
+		super(worldIn, type);
 	}
 
 	@Override
@@ -26,7 +27,7 @@ public class EntityCQRDummy extends AbstractEntityCQR {
 	}
 
 	@Override
-	protected void initEntityAI() {
+	protected void registerGoals() {
 
 	}
 
@@ -42,7 +43,7 @@ public class EntityCQRDummy extends AbstractEntityCQR {
 
 	@Override
 	protected ResourceLocation getLootTable() {
-		return LootTableList.EMPTY;
+		return LootTables.EMPTY;
 	}
 
 }
