@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -63,8 +64,8 @@ public class EventsHandler {
 	public static void onDefense(LivingAttackEvent event) {
 		boolean tep = false;
 
-		if (event.getLivingEntity() instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) event.getLivingEntity();
+		if (event.getEntity() instanceof PlayerEntity) {
+			PlayerEntity player = (PlayerEntity) event.getEntity();
 			Entity attacker = event.getSource().getTrueSource();
 			@SuppressWarnings("unused")
 			float amount = event.getAmount();
@@ -91,7 +92,7 @@ public class EventsHandler {
 				} else {
 					tep = false;
 					if (!world.isRemote) {
-						((ServerWorld) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
+						((ServerWorld) world).spawnParticle(ParticleTypes.LARGE_SMOKE, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 					}
 				}
 			}
@@ -103,7 +104,7 @@ public class EventsHandler {
 
 						playerMP.connection.setPlayerLocation(d, d1, d2, playerMP.rotationYaw, playerMP.rotationPitch);
 						if (!world.isRemote) {
-							((ServerWorld) world).spawnParticle(EnumParticleTypes.PORTAL, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
+							((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, player.getPosX(), player.getPosY() + player.getHeight() * 0.5D, player.getPosZ(), 12, 0.25D, 0.25D, 0.25D, 0.0D);
 						}
 						world.playSound(null, d, d1, d2, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.MASTER, 1.0F, 1.0F);
 					}

@@ -1,8 +1,10 @@
 package com.teamcqr.chocolatequestrepoured.capability;
 
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class SerializableCapabilityProvider<C> extends BasicCapabilityProvider<C> implements INBTSerializable<NBTBase> {
 

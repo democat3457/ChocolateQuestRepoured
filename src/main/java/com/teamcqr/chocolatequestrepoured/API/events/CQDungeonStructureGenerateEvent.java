@@ -10,6 +10,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonBase;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Copyright (c) 29.04.2019

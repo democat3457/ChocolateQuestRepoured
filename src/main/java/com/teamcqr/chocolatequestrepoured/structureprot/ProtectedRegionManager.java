@@ -22,6 +22,7 @@ import com.teamcqr.chocolatequestrepoured.network.packets.toClient.SPacketSyncPr
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class ProtectedRegionManager {
 
@@ -33,12 +34,12 @@ public class ProtectedRegionManager {
 
 	public ProtectedRegionManager(World world) {
 		this.world = world;
-		if (world != null) {
+		if (world != null && world instanceof ServerWorld) {
 			int dim = world.getDimension().getType().getId();
 			if (dim == 0) {
-				this.folder = new File(world.getSaveHandler().getWorldDirectory(), "data/CQR/protected_regions");
+				this.folder = new File(((ServerWorld)world).getSaveHandler().getWorldDirectory(), "data/CQR/protected_regions");
 			} else {
-				this.folder = new File(world.getSaveHandler().getWorldDirectory(), "DIM" + dim + "/data/CQR/protected_regions");
+				this.folder = new File(((ServerWorld)world).getSaveHandler().getWorldDirectory(), "DIM" + dim + "/data/CQR/protected_regions");
 			}
 		} else {
 			this.folder = null;

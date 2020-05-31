@@ -27,19 +27,19 @@ public class CapabilityHandler {
 	}
 
 	public static void writeToItemStackNBT(ItemStack stack, String key, CompoundNBT compound) {
-		CompoundNBT stackCompound = stack.getTagCompound();
+		CompoundNBT stackCompound = stack.getTag();
 
 		if (stackCompound == null) {
 			stackCompound = new CompoundNBT();
-			stack.setTagCompound(stackCompound);
+			stack.setTag(stackCompound);
 		}
 
-		stackCompound.setTag(key, compound);
+		stackCompound.put(key, compound);
 	}
 
 	public static CompoundNBT readFromItemStackNBT(ItemStack stack, String key) {
-		CompoundNBT stackCompound = stack.getTagCompound();
-		return stackCompound != null ? stackCompound.getCompoundTag(key) : new CompoundNBT();
+		CompoundNBT stackCompound = stack.getTag();
+		return stackCompound != null ? stackCompound.getCompound(key) : new CompoundNBT();
 	}
 
 }

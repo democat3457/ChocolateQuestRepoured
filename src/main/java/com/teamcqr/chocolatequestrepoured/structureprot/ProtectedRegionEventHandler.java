@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -54,16 +55,16 @@ public class ProtectedRegionEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.player.world);
+		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.getPlayer().world);
 		List<ProtectedRegion> protectedRegions = protectedRegionManager != null ? protectedRegionManager.getProtectedRegions() : Collections.emptyList();
-		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.player);
+		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.getPlayer());
 	}
 
 	@SubscribeEvent
 	public static void onPlayerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.player.world);
+		ProtectedRegionManager protectedRegionManager = ProtectedRegionManager.getInstance(event.getPlayer().world);
 		List<ProtectedRegion> protectedRegions = protectedRegionManager != null ? protectedRegionManager.getProtectedRegions() : Collections.emptyList();
-		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.player);
+		CQRMain.NETWORK.sendTo(new SPacketSyncProtectedRegions(protectedRegions), (ServerPlayerEntity) event.getPlayer());
 	}
 
 	@SubscribeEvent

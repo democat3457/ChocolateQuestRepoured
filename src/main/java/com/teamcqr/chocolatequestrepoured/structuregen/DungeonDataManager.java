@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 
 public class DungeonDataManager {
@@ -98,14 +99,16 @@ public class DungeonDataManager {
 	}
 
 	public DungeonDataManager(World world) {
-		int dim = world.getDimension().getType().getId();
-		String path = world.getSaveHandler().getWorldDirectory().getAbsolutePath();
-		if (dim == 0) {
-			path += "/data/CQR/";
-		} else {
-			path += "/DIM" + dim + "/data/CQR/";
+		if(world instanceof ServerWorld) {
+			int dim = world.getDimension().getType().getId();
+			String path = ((ServerWorld)world).getSaveHandler().getWorldDirectory().getAbsolutePath();
+			if (dim == 0) {
+				path += "/data/CQR/";
+			} else {
+				path += "/DIM" + dim + "/data/CQR/";
+			}
+			this.file = FileIOUtil.getOrCreateFile(path, DATA_FILE_NAME);
 		}
-		this.file = FileIOUtil.getOrCreateFile(path, DATA_FILE_NAME);
 	}
 	
 	public void insertDungeonEntry(String dungeon, BlockPos location) {
