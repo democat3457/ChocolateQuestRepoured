@@ -230,7 +230,7 @@ public class FactionRegistry {
 			return this.factions.get(EDefaultFaction.ALL_ALLY.name());
 		}
 
-		if (entity instanceof VillagerEntity || entity instanceof GolemEntity || entity instanceof EntityCQRNPC) {
+		if (entity instanceof VillagerEntity || entity instanceof GolemEntity) {
 			return this.factions.get(EDefaultFaction.VILLAGERS.name());
 		}
 
