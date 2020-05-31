@@ -2,35 +2,37 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.bases;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.PanicGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public abstract class EntityCQRMountBase extends EntityAnimal {
+public abstract class EntityCQRMountBase extends AnimalEntity {
 
-	public EntityCQRMountBase(World worldIn) {
-		super(worldIn);
+	public EntityCQRMountBase(World worldIn, EntityType<? extends EntityCQRMountBase> type) {
+		super(type, worldIn);
 	}
 
 	@Override
-	protected void initEntityAI() {
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 0.9D));
-		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 0.6D));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this, PlayerEntity.class, 6.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
+	protected void registerGoals() {
+		this.goalSelector.addGoal(0, new SwimGoal(this));
+		this.goalSelector.addGoal(1, new PanicGoal(this, 0.9D));
+		this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6D));
+		this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+		this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public abstract class EntityCQRMountBase extends EntityAnimal {
 	}
 
 	@Override
-	public EntityAgeable createChild(EntityAgeable ageable) {
+	public AgeableEntity createChild(AgeableEntity ageable) {
 		return null;
 	}
 
@@ -73,7 +75,12 @@ public abstract class EntityCQRMountBase extends EntityAnimal {
 	}
 
 	@Override
-	public void travel(float strafe, float vertical, float forward) {
+	public void travel(Vec3d p_213352_1_) {
+		travel(p_213352_1_.x, p_213352_1_.y, p_213352_1_.z);
+	}
+	
+	//@Override
+	public void travel(double x, double y, double z) {
 		if (this.isBeingRidden() && this.canBeSteered()) {
 			LivingEntity entity = (LivingEntity) this.getControllingPassenger();// this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
 			this.rotationYaw = entity.rotationYaw;
@@ -85,24 +92,22 @@ public abstract class EntityCQRMountBase extends EntityAnimal {
 			this.stepHeight = 1.0F;
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 
-			float v = 0.0F;
+			double v = 0.0;
 			if (this.isInWater() || this.isInLava()) {
-				v = vertical * 0.5F;
+				v = y * 0.5;
 			}
 			if (this.canPassengerSteer()) {
-				float f = (float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue() * 0.5F;
+				double f = (float) this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue() * 0.5F;
 
-				this.setAIMoveSpeed(f);
-				super.travel(entity.moveStrafing * f, v, entity.moveForward * f);
+				this.setAIMoveSpeed((float) f);
+				super.travel(new Vec3d(entity.moveStrafing * f, v, entity.moveForward * f));
 			} else {
-				this.motionX = 0.0D;
-				this.motionY = 0.0D;
-				this.motionZ = 0.0D;
+				this.setMotion(Vec3d.ZERO);
 			}
 
 			this.prevLimbSwingAmount = this.limbSwingAmount;
-			double d1 = this.posX - this.prevPosX;
-			double d0 = this.posZ - this.prevPosZ;
+			double d1 = this.getPosX() - this.prevPosX;
+			double d0 = this.getPosZ() - this.prevPosZ;
 			float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 
 			if (f1 > 1.0F) {
@@ -114,7 +119,7 @@ public abstract class EntityCQRMountBase extends EntityAnimal {
 		} else {
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
-			super.travel(strafe, vertical, forward);
+			super.travel(new Vec3d(x, y, z));
 		}
 	}
 

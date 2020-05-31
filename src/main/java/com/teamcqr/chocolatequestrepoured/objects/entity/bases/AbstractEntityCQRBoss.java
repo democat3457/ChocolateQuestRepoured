@@ -2,6 +2,7 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.bases;
 
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,8 +25,8 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 
 	protected final ServerBossInfo bossInfoServer = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.NOTCHED_10);
 
-	public AbstractEntityCQRBoss(World worldIn) {
-		super(worldIn);
+	public AbstractEntityCQRBoss(World worldIn, EntityType<? extends AbstractEntityCQR> type) {
+		super(worldIn, type);
 		this.experienceValue = 50;
 	}
 
@@ -44,16 +45,16 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 	}
 
 	@Override
-	public void readEntityFromNBT(CompoundNBT compound) {
-		super.readEntityFromNBT(compound);
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
 		if (compound.contains("assignedRegion")) {
 			this.assignedRegionID = compound.getString("assignedRegion");
 		}
 	}
 
 	@Override
-	public void writeEntityToNBT(CompoundNBT compound) {
-		super.writeEntityToNBT(compound);
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
 		if (this.assignedRegionID != null) {
 			compound.putString("assignedRegion", this.assignedRegionID);
 		}
@@ -71,8 +72,8 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 
 		this.bossInfoServer.setPercent(this.getHealth() / this.getMaxHealth());
 	}
@@ -120,7 +121,7 @@ public abstract class AbstractEntityCQRBoss extends AbstractEntityCQR {
 			this.move(MoverType.SELF, new Vec3d(0, 10 / MAX_DEATH_TICKS / 3, 0));
 			if (this.deathTicks == MAX_DEATH_TICKS && !this.world.isRemote) {
 				this.world.playSound(this.getPosX(), this.getPosY(), this.getPosZ(), this.getFinalDeathSound(), SoundCategory.MASTER, 1, 1, false);
-				this.setDead();
+				this.remove();
 				
 				onFinalDeath();
 				

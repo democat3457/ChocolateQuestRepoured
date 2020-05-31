@@ -160,7 +160,7 @@ public abstract class AbstractEntityCQR extends CreatureEntity implements IMob, 
 	@OnlyIn(Dist.CLIENT)
 	protected int currentSpeechBubbleID;
 
-	public AbstractEntityCQR(World worldIn, EntityType type) {
+	public AbstractEntityCQR(World worldIn, EntityType<? extends AbstractEntityCQR> type) {
 		super(type, worldIn);
 		if (worldIn.isRemote) {
 			this.currentSpeechBubbleID = this.getRNG().nextInt(ESpeechBubble.values().length);
