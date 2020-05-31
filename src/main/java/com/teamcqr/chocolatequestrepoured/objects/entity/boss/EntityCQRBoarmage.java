@@ -13,8 +13,9 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells.EntityAISummo
 import com.teamcqr.chocolatequestrepoured.objects.entity.ai.spells.EntityAISummonMeteors;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.ISummoner;
 
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -24,23 +25,23 @@ public class EntityCQRBoarmage extends AbstractEntityCQRMageBase implements ISum
 
 	protected List<Entity> summonedMinions = new ArrayList<>();
 
-	public EntityCQRBoarmage(World worldIn) {
-		super(worldIn);
+	public EntityCQRBoarmage(World worldIn, EntityType<? extends EntityCQRBoarmage> type) {
+		super(worldIn, type);
 
 		this.isImmuneToFire = true;
 	}
-
+	
 	@Override
 	public boolean isImmuneToExplosions() {
 		return true;
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		List<Entity> tmp = new ArrayList<>();
 		for (Entity ent : this.summonedMinions) {
-			if (ent == null || ent.isDead) {
+			if (ent == null || !ent.isAlive()) {
 				tmp.add(ent);
 			}
 		}
@@ -53,12 +54,12 @@ public class EntityCQRBoarmage extends AbstractEntityCQRMageBase implements ISum
 	public void onDeath(DamageSource cause) {
 		// Kill minions
 		for (Entity e : this.summonedMinions) {
-			if (e != null && !e.isDead) {
+			if (e != null && e.isAlive()) {
 				if (e instanceof LivingEntity) {
 					((LivingEntity) e).onDeath(cause);
 				}
 				if (e != null) {
-					e.setDead();
+					e.remove();
 				}
 			}
 		}
@@ -68,8 +69,8 @@ public class EntityCQRBoarmage extends AbstractEntityCQRMageBase implements ISum
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		this.spellHandler.addSpell(0, new EntityAISummonMeteors(this, 400, 40));
 		this.spellHandler.addSpell(1, new EntityAIExplosionRay(this, 400, 40));
 		this.spellHandler.addSpell(2, new EntityAIExplosionSpell(this, 400, 40));
@@ -112,8 +113,8 @@ public class EntityCQRBoarmage extends AbstractEntityCQRMageBase implements ISum
 	}
 
 	@Override
-	public EnumCreatureAttribute getCreatureAttribute() {
-		return EnumCreatureAttribute.UNDEAD;
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.UNDEAD;
 	}
 
 	@Override

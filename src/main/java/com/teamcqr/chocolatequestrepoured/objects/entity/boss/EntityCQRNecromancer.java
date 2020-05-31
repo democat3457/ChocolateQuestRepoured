@@ -16,8 +16,9 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.misc.EntityFlyingSkullM
 import com.teamcqr.chocolatequestrepoured.objects.entity.misc.EntitySummoningCircle.ECircleTexture;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -29,13 +30,13 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 	protected List<Entity> summonedMinions = new ArrayList<>();
 	protected List<EntityFlyingSkullMinion> summonedSkulls = new ArrayList<>();
 
-	public EntityCQRNecromancer(World worldIn) {
-		super(worldIn);
+	public EntityCQRNecromancer(World worldIn, EntityType<? extends EntityCQRNecromancer> type) {
+		super(worldIn, type);
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		this.spellHandler.addSpell(0, new EntityAISummonMinionSpell(this, 400, 40, new ResourceLocation(Reference.MODID, "skeleton"), ECircleTexture.SKELETON, true, 2, 2, new Vec3d(0, 0, 0)));
 		this.spellHandler.addSpell(1, new EntityAISummonMinionSpell(this, 400, 40, new ResourceLocation(Reference.MODID, "flying_skull"), ECircleTexture.FLYING_SKULL, false, 4, 2, new Vec3d(0, 2.5, 0)));
 		this.spellHandler.addSpell(2, new EntityAIBlindTargetSpell(this, 400, 40, 40));
@@ -44,8 +45,8 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		this.filterSummonLists();
 
 		if (this.summonedSkulls.size() >= 1) {
@@ -55,7 +56,7 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 			}
 		}
 
-		if (this.getAttackTarget() != null && !this.getAttackTarget().isDead && this.summonedSkulls.size() >= 3) {
+		if (this.getAttackTarget() != null && this.getAttackTarget().isAlive() && this.summonedSkulls.size() >= 3) {
 			for (int i = 2; i < this.summonedSkulls.size(); i++) {
 				EntityFlyingSkullMinion skull = this.summonedSkulls.get(i);
 				if (!skull.hasTarget()) {
@@ -74,7 +75,7 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 	private void filterSummonLists() {
 		List<Entity> tmp = new ArrayList<>();
 		for (Entity ent : this.summonedMinions) {
-			if (ent == null || ent.isDead) {
+			if (ent == null || !ent.isAlive()) {
 				tmp.add(ent);
 			}
 		}
@@ -83,7 +84,7 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 		}
 		tmp.clear();
 		for (Entity ent : this.summonedSkulls) {
-			if (ent == null || ent.isDead) {
+			if (ent == null || !ent.isAlive()) {
 				tmp.add(ent);
 			}
 		}
@@ -96,12 +97,12 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 	public void onDeath(DamageSource cause) {
 		// Kill minions
 		for (Entity e : this.getSummonedEntities()) {
-			if (e != null && !e.isDead) {
+			if (e != null && e.isAlive()) {
 				if (e instanceof LivingEntity) {
 					((LivingEntity) e).onDeath(cause);
 				}
 				if (e != null) {
-					e.setDead();
+					e.remove();
 				}
 			}
 		}
@@ -152,8 +153,8 @@ public class EntityCQRNecromancer extends AbstractEntityCQRMageBase implements I
 	}
 
 	@Override
-	public EnumCreatureAttribute getCreatureAttribute() {
-		return EnumCreatureAttribute.ILLAGER;
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.ILLAGER;
 	}
 	
 }

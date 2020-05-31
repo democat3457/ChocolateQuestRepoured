@@ -99,7 +99,7 @@ public class GeneratorGuardedStructure implements IDungeonGenerator {
 
 	private boolean positionConflicts(BlockPos newPos) {
 		for (BlockPos pIn : this.structurePosList) {
-			if (Math.abs(pIn.getDistance(newPos.getX(), pIn.getY(), newPos.getZ())) < (new Double((new Integer(this.dungeon.getMinDistance()).doubleValue() * 0.9D)))) {
+			if (Math.sqrt(Math.abs(pIn.distanceSq(newPos.getX(), pIn.getY(), newPos.getZ(), false))) < (new Double((new Integer(this.dungeon.getMinDistance()).doubleValue() * 0.9D)))) {
 				return true;
 			}
 		}
