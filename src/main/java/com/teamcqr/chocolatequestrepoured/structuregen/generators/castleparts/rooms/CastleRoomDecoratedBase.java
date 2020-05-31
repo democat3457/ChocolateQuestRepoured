@@ -18,6 +18,7 @@ import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -151,7 +152,7 @@ public abstract class CastleRoomDecoratedBase extends CastleRoomBase {
             {
                 spawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(mobEntity));
 
-                CompoundNBT spawnerCompound = spawner.writeToNBT(new CompoundNBT());
+                CompoundNBT spawnerCompound = spawner.write(new CompoundNBT());
                 genArray.addBlockState(pos, state, spawnerCompound, BlockStateGenArray.GenerationPhase.POST);
 
                 this.usedDecoPositions.add(pos);

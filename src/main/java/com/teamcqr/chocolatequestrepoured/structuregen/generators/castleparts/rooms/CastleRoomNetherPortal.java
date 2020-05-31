@@ -9,8 +9,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.GenerationTemplate;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -60,13 +61,13 @@ public class CastleRoomNetherPortal extends CastleRoomDecoratedBase
 
 
         GenerationTemplate portalRoomTemplate = new GenerationTemplate(getDecorationLengthX(), getDecorationLengthY(), getDecorationLengthZ());
-        portalRoomTemplate.addRule(northEdge, dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, Direction.SOUTH));
-        portalRoomTemplate.addRule(southEdge, dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, Direction.NORTH));
-        portalRoomTemplate.addRule(westEdge, dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, Direction.EAST));
-        portalRoomTemplate.addRule(eastEdge, dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, Direction.WEST));
+        portalRoomTemplate.addRule(northEdge, dungeon.getWoodStairBlockState().with(StairsBlock.FACING, Direction.SOUTH));
+        portalRoomTemplate.addRule(southEdge, dungeon.getWoodStairBlockState().with(StairsBlock.FACING, Direction.NORTH));
+        portalRoomTemplate.addRule(westEdge, dungeon.getWoodStairBlockState().with(StairsBlock.FACING, Direction.EAST));
+        portalRoomTemplate.addRule(eastEdge, dungeon.getWoodStairBlockState().with(StairsBlock.FACING, Direction.WEST));
         portalRoomTemplate.addRule(platform, dungeon.getMainBlockState());
         portalRoomTemplate.addRule(portal, Blocks.OBSIDIAN.getDefaultState());
-        portalRoomTemplate.addRule(portalMid, Blocks.PORTAL.getDefaultState());
+        portalRoomTemplate.addRule(portalMid, Blocks.NETHER_PORTAL.getDefaultState());
 
 
         HashMap<BlockPos, BlockState> genMap = portalRoomTemplate.GetGenerationMap(getDecorationStartPos(), true);

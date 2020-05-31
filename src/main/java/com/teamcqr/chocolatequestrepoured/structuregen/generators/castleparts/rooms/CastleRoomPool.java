@@ -9,8 +9,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.GenerationTemplate;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -37,10 +38,10 @@ public class CastleRoomPool extends CastleRoomDecoratedBase
         Predicate<Vec3i> water = (v -> ((v.getY() == 0) && (v.getX() > 1) && (v.getX() < endX - 1) && (v.getZ() > 1) && (v.getZ() < endZ - 1)));
 
         GenerationTemplate poolRoomTemplate = new GenerationTemplate(getDecorationLengthX(), getDecorationLengthY(), getDecorationLengthZ());
-        poolRoomTemplate.addRule(northRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, Direction.SOUTH));
-        poolRoomTemplate.addRule(southRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, Direction.NORTH));
-        poolRoomTemplate.addRule(westRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, Direction.EAST));
-        poolRoomTemplate.addRule(eastRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, Direction.WEST));
+        poolRoomTemplate.addRule(northRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.SOUTH));
+        poolRoomTemplate.addRule(southRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH));
+        poolRoomTemplate.addRule(westRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.EAST));
+        poolRoomTemplate.addRule(eastRow, Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST));
         poolRoomTemplate.addRule(water, Blocks.WATER.getDefaultState());
 
         HashMap<BlockPos, BlockState> genMap = poolRoomTemplate.GetGenerationMap(getDecorationStartPos(), true);

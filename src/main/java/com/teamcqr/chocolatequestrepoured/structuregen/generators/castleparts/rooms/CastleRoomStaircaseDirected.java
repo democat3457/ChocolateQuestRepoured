@@ -7,8 +7,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -97,7 +98,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 			if (y < stairHeight) {
 				blockToBuild = dungeon.getMainBlockState();
 			} else if (y == stairHeight) {
-				blockToBuild = dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
+				blockToBuild = dungeon.getStairBlockState().with(StairsBlock.FACING, stairFacing);
 			} else {
 				blockToBuild = Blocks.AIR.getDefaultState();
 			}
@@ -113,7 +114,7 @@ public class CastleRoomStaircaseDirected extends CastleRoomBase {
 			if (y < stairHeight) {
 				blockToBuild = dungeon.getMainBlockState();
 			} else if (y == stairHeight) {
-				blockToBuild = dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
+				blockToBuild = dungeon.getStairBlockState().with(StairsBlock.FACING, stairFacing);
 			} else {
 				blockToBuild = Blocks.AIR.getDefaultState();
 			}

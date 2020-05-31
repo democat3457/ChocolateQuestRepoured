@@ -6,6 +6,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
 import net.minecraft.block.BlockGlazedTerracotta;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -61,7 +62,7 @@ public class CastleRoomHallway extends CastleRoomGenericBase {
 						tcFacing = patternStartFacing.rotateY().rotateY();
 					}
 				}
-				tcBlock = tcBlock.withProperty(BlockGlazedTerracotta.FACING, tcFacing);
+				tcBlock = tcBlock.with(BlockGlazedTerracotta.FACING, tcFacing);
 				genArray.addBlockState(pos, tcBlock, BlockStateGenArray.GenerationPhase.MAIN);
 			}
 		}

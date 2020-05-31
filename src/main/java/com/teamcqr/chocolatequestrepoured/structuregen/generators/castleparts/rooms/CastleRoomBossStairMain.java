@@ -4,8 +4,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -122,7 +123,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 			if (x >= this.upperStairXStartIdx && x <= this.upperStairXEndIdx) {
 				if (z == TOP_LANDING_BUFFER_Z) {
 					Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
-					return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
+					return Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, stairFacing);
 				} else if (z < TOP_LANDING_BUFFER_Z) {
 					return dungeon.getMainBlockState();
 				}
@@ -151,9 +152,9 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 	private BlockState getLowerStair1Block(int x, int y, int z) {
 		if (y == this.lowerLandingMaxHeightIdx - (this.lowerStair1XEndIdx - x)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.EAST, this.numRotations);
-			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
+			return Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, stairFacing);
 		} else if (y <= this.lowerLandingMaxHeightIdx - (this.lowerLanding1XEndIdx - x)) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}
@@ -162,9 +163,9 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 	private BlockState getLowerStair2Block(int x, int y, int z) {
 		if (y == this.lowerLandingMaxHeightIdx - (x - this.lowerStair2XStartIdx)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.WEST, this.numRotations);
-			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
+			return Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, stairFacing);
 		} else if (y <= this.lowerLandingMaxHeightIdx - (x - this.lowerStair2XStartIdx)) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}
@@ -172,7 +173,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 
 	private BlockState getLowerLandingBlock(int x, int y, int z) {
 		if (y >= 1 && y <= this.lowerLandingMaxHeightIdx) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}
@@ -181,9 +182,9 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 	private BlockState getMidStairBlock(int x, int y, int z) {
 		if (y == this.mainLandingMaxHeightIdx - (this.endZ - z - MAIN_LANDING_Z)) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.SOUTH, this.numRotations);
-			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
+			return Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, stairFacing);
 		} else if (y < this.mainLandingMaxHeightIdx - (this.endZ - z - MAIN_LANDING_Z)) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}
@@ -192,9 +193,9 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 	private BlockState getUpperStairBlock(int x, int y, int z) {
 		if (y == (this.maxHeightIdx - (z - TOP_LANDING_BUFFER_Z))) {
 			Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.NORTH, this.numRotations);
-			return Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, stairFacing);
+			return Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.FACING, stairFacing);
 		} else if ((y < this.maxHeightIdx - (z - TOP_LANDING_BUFFER_Z))) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}
@@ -202,7 +203,7 @@ public class CastleRoomBossStairMain extends CastleRoomDecoratedBase {
 
 	public BlockState getMainLandingBlock(int x, int y, int z) {
 		if (y >= 1 && y <= this.mainLandingMaxHeightIdx) {
-			return Blocks.STONEBRICK.getDefaultState();
+			return Blocks.STONE_BRICKS.getDefaultState();
 		} else {
 			return Blocks.AIR.getDefaultState();
 		}

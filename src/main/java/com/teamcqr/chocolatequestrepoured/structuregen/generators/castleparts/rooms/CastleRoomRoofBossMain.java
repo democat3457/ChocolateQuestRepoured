@@ -21,9 +21,11 @@ import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockTorch;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -88,12 +90,12 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		BlockPos pos =  this.getBossRoomBuildStartPosition().add(BOSS_ROOM_STATIC_SIZE / 2, 1, BOSS_ROOM_STATIC_SIZE / 2);
 		if(bossResourceLocation == null) {
 			
-			EntityArmorStand indicator = new EntityArmorStand(world);
-			indicator.setCustomNameTag("Oops! We haven't added this boss yet! Treat yourself to some free loot!");
+			ArmorStandEntity indicator = new ArmorStandEntity(world);
+			indicator.setCustomName("Oops! We haven't added this boss yet! Treat yourself to some free loot!");
 			indicator.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-			indicator.setEntityInvulnerable(true);
+			indicator.setInvulnerable(true);
 			indicator.setInvisible(true);
-			indicator.setAlwaysRenderNameTag(true);
+			indicator.setCustomNameVisible(true);
 			indicator.setSilent(true);
 			indicator.setNoGravity(true);
 			CompoundNBT indicatorNbt = indicator.writeToNBT(new CompoundNBT());
@@ -237,7 +239,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				} else if (y == 4) {
 					if (z == 7 || z == 9) {
 						Direction doorFrameFacing = (z == 7) ? Direction.NORTH : Direction.SOUTH;
-						return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, doorFrameFacing);
+						return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.Halfs.TOP).with(StairsBlock.FACING, doorFrameFacing);
 					} else {
 						return Blocks.AIR.getDefaultState();
 					}
@@ -249,10 +251,10 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
 				} else if (y == 1) {
 					Direction windowBotFacing = (x == 0) ? Direction.WEST : Direction.EAST;
-					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);
+					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.BOTTOM).with(StairsBlock.FACING, windowBotFacing);
 				} else if (y == 5) {
 					Direction windowTopFacing = (x == 0) ? Direction.EAST : Direction.WEST;
-					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, windowTopFacing);
+					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, windowTopFacing);
 				}
 			}
 		} else if (z == 0 || z == 16) {
@@ -264,7 +266,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				} else if (y == 4) {
 					if (x == 7 || x == 9) {
 						Direction doorFrameFacing = (x == 7) ? Direction.WEST : Direction.EAST;
-						return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, doorFrameFacing);
+						return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, doorFrameFacing);
 					} else {
 						return Blocks.AIR.getDefaultState();
 					}
@@ -276,10 +278,10 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
 				} else if (y == 1) {
 					Direction windowBotFacing = (z == 0) ? Direction.NORTH : Direction.SOUTH;
-					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);
+					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.BOTTOM).with(StairsBlock.FACING, windowBotFacing);
 				} else if (y == 5) {
 					Direction windowTopFacing = (z == 0) ? Direction.SOUTH : Direction.NORTH;
-					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, windowTopFacing);
+					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, windowTopFacing);
 				}
 			}
 		}

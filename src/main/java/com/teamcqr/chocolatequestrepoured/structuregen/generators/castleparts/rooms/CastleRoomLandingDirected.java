@@ -4,8 +4,9 @@ import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -44,7 +45,7 @@ public class CastleRoomLandingDirected extends CastleRoomBase {
 						} else if (x < this.openingWidth || ((x >= this.openingSeparation + this.openingWidth) && (x < this.openingSeparation + this.openingWidth * 2))) {
 							if (z == this.stairZ) {
 								Direction stairFacing = DungeonGenUtils.rotateFacingNTimesAboutY(Direction.SOUTH, DungeonGenUtils.getCWRotationsBetween(Direction.SOUTH, this.stairStartSide));
-								blockToBuild = dungeon.getWoodStairBlockState().withProperty(BlockStairs.FACING, stairFacing);
+								blockToBuild = dungeon.getWoodStairBlockState().with(StairsBlock.FACING, stairFacing);
 							}
 						} else {
 							blockToBuild = dungeon.getFloorBlockState();

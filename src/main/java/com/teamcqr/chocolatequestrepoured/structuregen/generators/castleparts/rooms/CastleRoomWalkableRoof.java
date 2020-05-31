@@ -5,6 +5,7 @@ import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.ro
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.rooms.segments.WalkableRoofWallBuilder;
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 

@@ -5,6 +5,7 @@ import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
 import com.teamcqr.chocolatequestrepoured.util.SpiralStaircaseBuilder;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
