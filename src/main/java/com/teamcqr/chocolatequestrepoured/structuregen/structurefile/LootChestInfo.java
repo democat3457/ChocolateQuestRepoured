@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -29,9 +29,9 @@ public class LootChestInfo {
 	}
 
 	public LootChestInfo(CompoundNBT compound) {
-		this.position = NBTUtil.getPosFromTag(compound.getCompoundTag("position"));
-		this.facing = Direction.getHorizontal(compound.getInteger("facing"));
-		if (compound.hasKey("loottable", Constants.NBT.TAG_STRING)) {
+		this.position = NBTUtil.readBlockPos(compound.getCompound("position"));
+		this.facing = Direction.getHorizontal(compound.getInt("facing"));
+		if (compound.contains("loottable", Constants.NBT.TAG_STRING)) {
 			this.lootTable = new ResourceLocation(compound.getString("loottable"));
 		} else {
 			this.lootTable = this.getOldLootTable(compound);
@@ -41,9 +41,9 @@ public class LootChestInfo {
 	public CompoundNBT getAsNBTTag() {
 		CompoundNBT compound = new CompoundNBT();
 
-		compound.setTag("position", NBTUtil.createPosTag(this.position));
-		compound.setInteger("facing", this.facing.getHorizontalIndex());
-		compound.setString("loottable", this.lootTable.toString());
+		compound.put("position", NBTUtil.writeBlockPos(this.position));
+		compound.putInt("facing", this.facing.getHorizontalIndex());
+		compound.putString("loottable", this.lootTable.toString());
 
 		return compound;
 	}
@@ -61,7 +61,7 @@ public class LootChestInfo {
 	}
 
 	private ResourceLocation getOldLootTable(CompoundNBT compound) {
-		switch (compound.getInteger("loottable")) {
+		switch (compound.getInt("loottable")) {
 		case 0:
 			return ModLoottables.CHESTS_TREASURE;
 		case 1:
@@ -71,33 +71,33 @@ public class LootChestInfo {
 		case 3:
 			return ModLoottables.CHESTS_MATERIAL;
 		case 4:
-			return LootTableList.CHESTS_ABANDONED_MINESHAFT;
+			return LootTables.CHESTS_ABANDONED_MINESHAFT;
 		case 5:
-			return LootTableList.CHESTS_DESERT_PYRAMID;
+			return LootTables.CHESTS_DESERT_PYRAMID;
 		case 6:
-			return LootTableList.CHESTS_END_CITY_TREASURE;
+			return LootTables.CHESTS_END_CITY_TREASURE;
 		case 7:
-			return LootTableList.CHESTS_IGLOO_CHEST;
+			return LootTables.CHESTS_IGLOO_CHEST;
 		case 8:
-			return LootTableList.CHESTS_JUNGLE_TEMPLE;
+			return LootTables.CHESTS_JUNGLE_TEMPLE;
 		case 9:
-			return LootTableList.CHESTS_JUNGLE_TEMPLE_DISPENSER;
+			return LootTables.CHESTS_JUNGLE_TEMPLE_DISPENSER;
 		case 10:
-			return LootTableList.CHESTS_NETHER_BRIDGE;
+			return LootTables.CHESTS_NETHER_BRIDGE;
 		case 11:
-			return LootTableList.CHESTS_SPAWN_BONUS_CHEST;
+			return LootTables.CHESTS_SPAWN_BONUS_CHEST;
 		case 12:
-			return LootTableList.CHESTS_STRONGHOLD_CORRIDOR;
+			return LootTables.CHESTS_STRONGHOLD_CORRIDOR;
 		case 13:
-			return LootTableList.CHESTS_STRONGHOLD_CROSSING;
+			return LootTables.CHESTS_STRONGHOLD_CROSSING;
 		case 14:
-			return LootTableList.CHESTS_STRONGHOLD_LIBRARY;
+			return LootTables.CHESTS_STRONGHOLD_LIBRARY;
 		case 15:
-			return LootTableList.CHESTS_VILLAGE_BLACKSMITH;
+			return LootTables.CHESTS_VILLAGE_BLACKSMITH;
 		case 16:
-			return LootTableList.CHESTS_WOODLAND_MANSION;
+			return LootTables.CHESTS_WOODLAND_MANSION;
 		default:
-			return new ResourceLocation(Reference.MODID, "custom_" + (compound.getInteger("loottable") - 16));
+			return new ResourceLocation(Reference.MODID, "custom_" + (compound.getInt("loottable") - 16));
 		}
 	}
 

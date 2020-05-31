@@ -145,7 +145,7 @@ public class CQStructure {
 	}
 
 	public void writeToFile(PlayerEntity author) {
-		this.author = author.getName();
+		this.author = author.getName().getString();
 		CompoundNBT compound = CQStructure.this.writeToNBT(new CompoundNBT());
 
 		Thread fileSaveThread = new Thread(() -> {
@@ -189,10 +189,10 @@ public class CQStructure {
 	}
 
 	public CompoundNBT writeToNBT(CompoundNBT compound) {
-		compound.setString("cqr_file_version", CQR_FILE_VERSION);
+		compound.putString("cqr_file_version", CQR_FILE_VERSION);
 
-		compound.setString("author", this.author);
-		compound.setTag("size", NBTUtil.createPosTag(this.size));
+		compound.putString("author", this.author);
+		compound.put("size", NBTUtil.writeBlockPos(this.size));
 
 		ListNBT nbtTagList = new ListNBT();
 		for (List<Entry<BlockPos, CQStructurePart>> list : this.structures) {
@@ -202,13 +202,13 @@ public class CQStructure {
 				CQStructurePart structurePart = entry.getValue();
 				CompoundNBT partCompound = new CompoundNBT();
 
-				partCompound.setTag("offset", NBTUtil.createPosTag(offset));
+				partCompound.put("offset", NBTUtil.writeBlockPos(offset));
 				structurePart.writeToNBT(partCompound);
-				nbtTagList1.appendTag(partCompound);
+				nbtTagList1.add(partCompound);
 			}
-			nbtTagList.appendTag(nbtTagList1);
+			nbtTagList.add(nbtTagList1);
 		}
-		compound.setTag("parts", nbtTagList);
+		compound.put("parts", nbtTagList);
 
 		return compound;
 	}
@@ -219,7 +219,7 @@ public class CQStructure {
 		}
 
 		this.author = compound.getString("author");
-		this.size = NBTUtil.getPosFromTag(compound.getCompound("size"));
+		this.size = NBTUtil.readBlockPos(compound.getCompound("size"));
 		this.structures.clear();
 
 		// compatibility with older version for now
@@ -228,7 +228,7 @@ public class CQStructure {
 			List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList.size());
 			for (int i = 0; i < nbtTagList.size(); i++) {
 				CompoundNBT partCompound = nbtTagList.getCompound(i);
-				BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompound("offset"));
+				BlockPos offset = NBTUtil.readBlockPos(partCompound.getCompound("offset"));
 				CQStructurePart structurePart = new CQStructurePart();
 
 				structurePart.read(partCompound);
@@ -242,7 +242,7 @@ public class CQStructure {
 				List<Entry<BlockPos, CQStructurePart>> list = new ArrayList<>(nbtTagList1.size());
 				for (int j = 0; j < nbtTagList1.size(); j++) {
 					CompoundNBT partCompound = nbtTagList1.getCompound(j);
-					BlockPos offset = NBTUtil.getPosFromTag(partCompound.getCompound("offset"));
+					BlockPos offset = NBTUtil.readBlockPos(partCompound.getCompound("offset"));
 					CQStructurePart structurePart = new CQStructurePart();
 
 					structurePart.read(partCompound);
