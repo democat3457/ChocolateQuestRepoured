@@ -2,22 +2,24 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.misc;
 
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityColoredLightningBolt extends EntityLightningBolt implements IEntityAdditionalSpawnData {
+public class EntityColoredLightningBolt extends LightningBoltEntity implements IEntityAdditionalSpawnData {
 
 	/** Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc. */
 	private int lightningState;
@@ -54,7 +56,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 		this.alpha = alpha;
 		BlockPos blockpos = new BlockPos(this);
 
-		if (spreadFire && !worldIn.isRemote && worldIn.getGameRules().getBoolean("doFireTick") && (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) && worldIn.isAreaLoaded(blockpos, 10)) {
+		if (spreadFire && !worldIn.isRemote && worldIn.getGameRules().getBoolean(GameRules.DO_FIRE_TICK) && (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) && worldIn.isAreaLoaded(blockpos, 10)) {
 			if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos)) {
 				worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 			}
@@ -75,7 +77,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 	}
 
 	@Override
-	public void onUpdate() {
+	public void tick() {
 		if (!this.world.isRemote) {
 			this.setFlag(6, this.isGlowing());
 		}
@@ -83,15 +85,15 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 		this.onEntityUpdate();
 
 		if (this.lightningState == 2) {
-			this.world.playSound((PlayerEntity) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
-			this.world.playSound((PlayerEntity) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
+			this.world.playSound((PlayerEntity) null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
+			this.world.playSound((PlayerEntity) null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
 		}
 
 		--this.lightningState;
 
 		if (this.lightningState < 0) {
 			if (this.boltLivingTime == 0) {
-				this.setDead();
+				this.remove();
 			} else if (this.lightningState < -this.rand.nextInt(10)) {
 				--this.boltLivingTime;
 				this.lightningState = 1;
@@ -100,7 +102,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 					this.boltVertex = this.rand.nextLong();
 					BlockPos blockpos = new BlockPos(this);
 
-					if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos)) {
+					if (this.world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK) && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos)) {
 						this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 					}
 				}
@@ -111,7 +113,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 			if (this.world.isRemote) {
 				this.world.setLastLightningBolt(2);
 			} else if (this.hitEntities) {
-				AxisAlignedBB aabb = new AxisAlignedBB(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D);
+				AxisAlignedBB aabb = new AxisAlignedBB(this.getPosX() - 3.0D, this.getPosY() - 3.0D, this.getPosZ() - 3.0D, this.getPosX() + 3.0D, this.getPosY() + 6.0D + 3.0D, this.getPosZ() + 3.0D);
 				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, aabb);
 
 				for (Entity entity : list) {
@@ -124,17 +126,17 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 	}
 
 	@Override
-	protected void writeEntityToNBT(CompoundNBT compound) {
-		super.writeEntityToNBT(compound);
-		compound.setFloat("red", this.red);
-		compound.setFloat("green", this.green);
-		compound.setFloat("blue", this.blue);
-		compound.setFloat("alpha", this.alpha);
+	protected void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+		compound.putFloat("red", this.red);
+		compound.putFloat("green", this.green);
+		compound.putFloat("blue", this.blue);
+		compound.putFloat("alpha", this.alpha);
 	}
 
 	@Override
-	protected void readEntityFromNBT(CompoundNBT compound) {
-		super.readEntityFromNBT(compound);
+	protected void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
 		this.red = compound.getFloat("red");
 		this.green = compound.getFloat("green");
 		this.blue = compound.getFloat("blue");
@@ -142,7 +144,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 	}
 
 	@Override
-	public void writeSpawnData(ByteBuf buffer) {
+	public void writeSpawnData(PacketBuffer buffer) {
 		buffer.writeFloat(this.red);
 		buffer.writeFloat(this.green);
 		buffer.writeFloat(this.blue);
@@ -150,7 +152,7 @@ public class EntityColoredLightningBolt extends EntityLightningBolt implements I
 	}
 
 	@Override
-	public void readSpawnData(ByteBuf additionalData) {
+	public void readSpawnData(PacketBuffer additionalData) {
 		this.red = additionalData.readFloat();
 		this.green = additionalData.readFloat();
 		this.blue = additionalData.readFloat();
