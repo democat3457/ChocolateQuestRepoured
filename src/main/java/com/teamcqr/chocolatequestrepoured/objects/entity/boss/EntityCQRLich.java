@@ -16,8 +16,9 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.ISummoner;
 import com.teamcqr.chocolatequestrepoured.objects.entity.misc.EntitySummoningCircle.ECircleTexture;
 import com.teamcqr.chocolatequestrepoured.util.Reference;
 
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -32,16 +33,16 @@ public class EntityCQRLich extends AbstractEntityCQRMageBase implements ISummone
 	protected List<Entity> summonedMinions = new ArrayList<>();
 	protected BlockPos currentPhylacteryPosition = null;
 
-	public EntityCQRLich(World worldIn) {
-		super(worldIn);
+	public EntityCQRLich(World worldIn, EntityType<? extends EntityCQRLich> type) {
+		super(worldIn, type);
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		List<Entity> tmp = new ArrayList<>();
 		for (Entity ent : this.summonedMinions) {
-			if (ent == null || ent.isDead) {
+			if (ent == null || !ent.isAlive()) {
 				tmp.add(ent);
 			}
 		}
@@ -65,8 +66,8 @@ public class EntityCQRLich extends AbstractEntityCQRMageBase implements ISummone
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		this.spellHandler.addSpell(0, new EntityAIArmorSpell(this, 400, 40));
 		this.spellHandler.addSpell(1, new EntityAISummonMinionSpell(this, 400, 40, new ResourceLocation(Reference.MODID, "zombie"), ECircleTexture.ZOMBIE, true, 12, 4, new Vec3d(0,0,0)));
 		this.spellHandler.addSpell(2, new EntityAIFangAttack(this, 400, 40));
@@ -77,12 +78,12 @@ public class EntityCQRLich extends AbstractEntityCQRMageBase implements ISummone
 	public void onDeath(DamageSource cause) {
 		// Kill minions
 		for (Entity e : this.summonedMinions) {
-			if (e != null && !e.isDead) {
+			if (e != null && e.isAlive()) {
 				if (e instanceof LivingEntity) {
 					((LivingEntity) e).onDeath(cause);
 				}
 				if (e != null) {
-					e.setDead();
+					e.remove();
 				}
 			}
 		}
@@ -131,24 +132,24 @@ public class EntityCQRLich extends AbstractEntityCQRMageBase implements ISummone
 	}
 
 	@Override
-	public void writeEntityToNBT(CompoundNBT compound) {
-		super.writeEntityToNBT(compound);
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
 		if (this.currentPhylacteryPosition != null) {
-			compound.setTag("currentPhylactery", NBTUtil.createPosTag(this.currentPhylacteryPosition));
+			compound.put("currentPhylactery", NBTUtil.writeBlockPos(this.currentPhylacteryPosition));
 		}
 	}
 
 	@Override
-	public void readEntityFromNBT(CompoundNBT compound) {
-		super.readEntityFromNBT(compound);
-		if (compound.hasKey("currentPhylactery")) {
-			this.currentPhylacteryPosition = NBTUtil.getPosFromTag(compound.getCompoundTag("currentPhylactery"));
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
+		if (compound.contains("currentPhylactery")) {
+			this.currentPhylacteryPosition = NBTUtil.readBlockPos(compound.getCompound("currentPhylactery"));
 		}
 	}
 
 	@Override
-	public EnumCreatureAttribute getCreatureAttribute() {
-		return EnumCreatureAttribute.UNDEAD;
+	public CreatureAttribute getCreatureAttribute() {
+		return CreatureAttribute.UNDEAD;
 	}
 	
 	public boolean hasPhylactery() {
