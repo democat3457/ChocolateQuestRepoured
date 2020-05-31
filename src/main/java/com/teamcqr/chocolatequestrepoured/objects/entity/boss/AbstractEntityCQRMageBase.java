@@ -3,7 +3,9 @@ package com.teamcqr.chocolatequestrepoured.objects.entity.boss;
 import com.teamcqr.chocolatequestrepoured.init.ModItems;
 import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQRBoss;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -13,21 +15,22 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.BossInfo.Color;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public abstract class AbstractEntityCQRMageBase extends AbstractEntityCQRBoss {
 
 	private static final DataParameter<Boolean> IDENTITY_HIDDEN = EntityDataManager.<Boolean>createKey(AbstractEntityCQRMageBase.class, DataSerializers.BOOLEAN);
 
-	public AbstractEntityCQRMageBase(World worldIn) {
-		super(worldIn);
+	public AbstractEntityCQRMageBase(World worldIn, EntityType<? extends AbstractEntityCQRMageBase> type) {
+		super(worldIn, type);
 
 		this.bossInfoServer.setColor(Color.RED);
 	}
 
 	@Override
-	protected void entityInit() {
-		super.entityInit();
+	protected void registerData() {
+		super.registerData();
 
 		this.dataManager.register(IDENTITY_HIDDEN, true);
 	}
@@ -50,20 +53,20 @@ public abstract class AbstractEntityCQRMageBase extends AbstractEntityCQRBoss {
 	}
 
 	@Override
-	public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata) {
+	public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, ILivingEntityData livingdata, CompoundNBT dataTag) {
 		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.STAFF_VAMPIRIC, 1));
-		return super.onInitialSpawn(difficulty, livingdata);
+		return super.onInitialSpawn(worldIn, difficultyIn, reason, livingdata, dataTag);
 	}
 
 	@Override
-	public void writeEntityToNBT(CompoundNBT compound) {
-		super.writeEntityToNBT(compound);
-		compound.setBoolean("identityHidden", this.isIdentityHidden());
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+		compound.putBoolean("identityHidden", this.isIdentityHidden());
 	}
 
 	@Override
-	public void readEntityFromNBT(CompoundNBT compound) {
-		super.readEntityFromNBT(compound);
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
 		if (!compound.getBoolean("identityHidden")) {
 			this.revealIdentity();
 		}
