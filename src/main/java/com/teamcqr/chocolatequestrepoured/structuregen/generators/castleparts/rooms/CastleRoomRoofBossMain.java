@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
 import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
+import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
 import com.teamcqr.chocolatequestrepoured.objects.factories.GearedMobFactory;
 import com.teamcqr.chocolatequestrepoured.objects.factories.SpawnerFactory;
 import com.teamcqr.chocolatequestrepoured.structuregen.dungeons.DungeonCastle;
@@ -19,16 +19,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -61,7 +60,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 	public void generateRoom(BlockStateGenArray genArray, DungeonCastle dungeon) {
 		BlockPos nwCorner = this.getBossRoomBuildStartPosition();
 		BlockPos pos;
-		BlockState blockToBuild;
+		IBlockState blockToBuild;
 		this.dungeon = dungeon;
 
 		for (int x = 0; x < BOSS_ROOM_STATIC_SIZE; x++) {
@@ -90,17 +89,16 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		BlockPos pos =  this.getBossRoomBuildStartPosition().add(BOSS_ROOM_STATIC_SIZE / 2, 1, BOSS_ROOM_STATIC_SIZE / 2);
 		if(bossResourceLocation == null) {
 			
-			ArmorStandEntity indicator = new ArmorStandEntity(world);
-			indicator.setCustomName("Oops! We haven't added this boss yet! Treat yourself to some free loot!");
+			EntityArmorStand indicator = new EntityArmorStand(world);
+			indicator.setCustomNameTag("Oops! We haven't added this boss yet! Treat yourself to some free loot!");
 			indicator.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-			indicator.setInvulnerable(true);
+			indicator.setEntityInvulnerable(true);
 			indicator.setInvisible(true);
-			indicator.setCustomNameVisible(true);
+			indicator.setAlwaysRenderNameTag(true);
 			indicator.setSilent(true);
 			indicator.setNoGravity(true);
-			CompoundNBT indicatorNbt = indicator.writeToNBT(new CompoundNBT());
-
-			genArray.addEntity(pos, EntityList.getKey(indicator), indicatorNbt);
+			
+			genArray.addEntity(BlockPos.ORIGIN, indicator);
 			
 			return;
 		}
@@ -111,11 +109,11 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 
 		if (mobEntity != null) {
 			Block spawnerBlock = ModBlocks.SPAWNER;
-			BlockState state = spawnerBlock.getDefaultState();
+			IBlockState state = spawnerBlock.getDefaultState();
 			TileEntitySpawner spawner = (TileEntitySpawner)spawnerBlock.createTileEntity(world, state);
 			if (spawner != null) {
 				spawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(mobEntity));
-				CompoundNBT spawnerCompound = spawner.writeToNBT(new CompoundNBT());
+				NBTTagCompound spawnerCompound = spawner.writeToNBT(new NBTTagCompound());
 				genArray.addBlockState(pos, state, spawnerCompound, BlockStateGenArray.GenerationPhase.POST);
 
 				bossUuids.add(mobEntity.getUniqueID().toString());
@@ -124,31 +122,31 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 	}
 
 	private void placeTorches(BlockPos nwCorner, BlockStateGenArray genArray) {
-		BlockState torchBase = Blocks.TORCH.getDefaultState();
-		genArray.addBlockState(nwCorner.add(10, 3, 2), torchBase.withProperty(BlockTorch.FACING, Direction.SOUTH), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(6, 3, 2), torchBase.withProperty(BlockTorch.FACING, Direction.SOUTH), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(6, 3, 14), torchBase.withProperty(BlockTorch.FACING, Direction.NORTH), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(10, 3, 14), torchBase.withProperty(BlockTorch.FACING, Direction.NORTH), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(2, 3, 6), torchBase.withProperty(BlockTorch.FACING, Direction.EAST), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(2, 3, 10), torchBase.withProperty(BlockTorch.FACING, Direction.EAST), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(14, 3, 6), torchBase.withProperty(BlockTorch.FACING, Direction.WEST), BlockStateGenArray.GenerationPhase.POST);
-		genArray.addBlockState(nwCorner.add(14, 3, 10), torchBase.withProperty(BlockTorch.FACING, Direction.WEST), BlockStateGenArray.GenerationPhase.POST);
+		IBlockState torchBase = Blocks.TORCH.getDefaultState();
+		genArray.addBlockState(nwCorner.add(10, 3, 2), torchBase.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(6, 3, 2), torchBase.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(6, 3, 14), torchBase.withProperty(BlockTorch.FACING, EnumFacing.NORTH), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(10, 3, 14), torchBase.withProperty(BlockTorch.FACING, EnumFacing.NORTH), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(2, 3, 6), torchBase.withProperty(BlockTorch.FACING, EnumFacing.EAST), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(2, 3, 10), torchBase.withProperty(BlockTorch.FACING, EnumFacing.EAST), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(14, 3, 6), torchBase.withProperty(BlockTorch.FACING, EnumFacing.WEST), BlockStateGenArray.GenerationPhase.POST);
+		genArray.addBlockState(nwCorner.add(14, 3, 10), torchBase.withProperty(BlockTorch.FACING, EnumFacing.WEST), BlockStateGenArray.GenerationPhase.POST);
 	}
 
 	private void placeChests(World world, BlockPos nwCorner, BlockStateGenArray genArray) {
 		int numChestsTotal = DungeonGenUtils.randomBetweenGaussian(this.random, 4, 8);
 		int numTreasureChests = DungeonGenUtils.randomBetween(this.random, 2, 4);
 		int treasureChestsPlaced = 0;
-		HashMap<BlockPos, Direction> possibleChestLocs = new HashMap<>();
-		possibleChestLocs.put(nwCorner.add(1, 5, 7), Direction.WEST);
-		possibleChestLocs.put(nwCorner.add(1, 5, 9), Direction.WEST);
-		possibleChestLocs.put(nwCorner.add(15, 5, 7), Direction.EAST);
-		possibleChestLocs.put(nwCorner.add(15, 5, 9), Direction.EAST);
-		possibleChestLocs.put(nwCorner.add(7, 5, 1), Direction.NORTH);
-		possibleChestLocs.put(nwCorner.add(9, 5, 1), Direction.NORTH);
-		possibleChestLocs.put(nwCorner.add(7, 5, 15), Direction.SOUTH);
-		possibleChestLocs.put(nwCorner.add(9, 5, 15), Direction.SOUTH);
-		List<Map.Entry<BlockPos, Direction>> locList = new ArrayList<>(possibleChestLocs.entrySet());
+		HashMap<BlockPos, EnumFacing> possibleChestLocs = new HashMap<>();
+		possibleChestLocs.put(nwCorner.add(1, 5, 7), EnumFacing.WEST);
+		possibleChestLocs.put(nwCorner.add(1, 5, 9), EnumFacing.WEST);
+		possibleChestLocs.put(nwCorner.add(15, 5, 7), EnumFacing.EAST);
+		possibleChestLocs.put(nwCorner.add(15, 5, 9), EnumFacing.EAST);
+		possibleChestLocs.put(nwCorner.add(7, 5, 1), EnumFacing.NORTH);
+		possibleChestLocs.put(nwCorner.add(9, 5, 1), EnumFacing.NORTH);
+		possibleChestLocs.put(nwCorner.add(7, 5, 15), EnumFacing.SOUTH);
+		possibleChestLocs.put(nwCorner.add(9, 5, 15), EnumFacing.SOUTH);
+		List<Map.Entry<BlockPos, EnumFacing>> locList = new ArrayList<>(possibleChestLocs.entrySet());
 		Collections.shuffle(locList, this.random);
 
 		for (int i = 0; i < numChestsTotal; i++) {
@@ -177,8 +175,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return this.getNonWallStartPos().add(this.bossBuildOffset);
 	}
 
-	private BlockState getBlockToBuild(int x, int y, int z) {
-		BlockState blockToBuild = Blocks.AIR.getDefaultState();
+	private IBlockState getBlockToBuild(int x, int y, int z) {
+		IBlockState blockToBuild = Blocks.AIR.getDefaultState();
 		if (y == 0 || y == 7) {
 			if (this.floorDesignBlock(x, z)) {
 				blockToBuild = Blocks.CONCRETE.getDefaultState();
@@ -229,7 +227,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		}
 	}
 
-	private BlockState getOuterEdgeBlock(int x, int y, int z) {
+	private IBlockState getOuterEdgeBlock(int x, int y, int z) {
 		if (x == 0 || x == 16) {
 			if (z == 0 || z == 3 || z == 6 || z == 10 || z == 13 || z == 16) {
 				return dungeon.getMainBlockState();
@@ -238,8 +236,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 					return Blocks.AIR.getDefaultState();
 				} else if (y == 4) {
 					if (z == 7 || z == 9) {
-						Direction doorFrameFacing = (z == 7) ? Direction.NORTH : Direction.SOUTH;
-						return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.Halfs.TOP).with(StairsBlock.FACING, doorFrameFacing);
+						EnumFacing doorFrameFacing = (z == 7) ? EnumFacing.NORTH : EnumFacing.SOUTH;
+						return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, doorFrameFacing);
 					} else {
 						return Blocks.AIR.getDefaultState();
 					}
@@ -248,13 +246,13 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				if (y == 6) {
 					return dungeon.getMainBlockState();
 				} else if (y == 2 || y == 3 || y == 4) {
-					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
+					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED);
 				} else if (y == 1) {
-					Direction windowBotFacing = (x == 0) ? Direction.WEST : Direction.EAST;
-					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.BOTTOM).with(StairsBlock.FACING, windowBotFacing);
+					EnumFacing windowBotFacing = (x == 0) ? EnumFacing.WEST : EnumFacing.EAST;
+					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);
 				} else if (y == 5) {
-					Direction windowTopFacing = (x == 0) ? Direction.EAST : Direction.WEST;
-					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, windowTopFacing);
+					EnumFacing windowTopFacing = (x == 0) ? EnumFacing.EAST : EnumFacing.WEST;
+					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, windowTopFacing);
 				}
 			}
 		} else if (z == 0 || z == 16) {
@@ -265,8 +263,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 					return Blocks.AIR.getDefaultState();
 				} else if (y == 4) {
 					if (x == 7 || x == 9) {
-						Direction doorFrameFacing = (x == 7) ? Direction.WEST : Direction.EAST;
-						return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, doorFrameFacing);
+						EnumFacing doorFrameFacing = (x == 7) ? EnumFacing.WEST : EnumFacing.EAST;
+						return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, doorFrameFacing);
 					} else {
 						return Blocks.AIR.getDefaultState();
 					}
@@ -275,13 +273,13 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				if (y == 6) {
 					return dungeon.getMainBlockState();
 				} else if (y == 2 || y == 3 || y == 4) {
-					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED);
+					return Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED);
 				} else if (y == 1) {
-					Direction windowBotFacing = (z == 0) ? Direction.NORTH : Direction.SOUTH;
-					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.BOTTOM).with(StairsBlock.FACING, windowBotFacing);
+					EnumFacing windowBotFacing = (z == 0) ? EnumFacing.NORTH : EnumFacing.SOUTH;
+					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, windowBotFacing);
 				} else if (y == 5) {
-					Direction windowTopFacing = (z == 0) ? Direction.SOUTH : Direction.NORTH;
-					return dungeon.getStairBlockState().with(StairsBlock.HALF, StairsBlock.EnumHalf.TOP).with(StairsBlock.FACING, windowTopFacing);
+					EnumFacing windowTopFacing = (z == 0) ? EnumFacing.SOUTH : EnumFacing.NORTH;
+					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, windowTopFacing);
 				}
 			}
 		}
@@ -289,8 +287,8 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return dungeon.getMainBlockState();
 	}
 
-	private BlockState getInnerRing1Block(int x, int y, int z) {
-		final BlockState detailBlock = dungeon.getFancyBlockState();
+	private IBlockState getInnerRing1Block(int x, int y, int z) {
+		final IBlockState detailBlock = dungeon.getFancyBlockState();
 
 		if (x == 1 || x == 15) {
 			if (z == 3 || z == 6 || z == 10 || z == 13) {
@@ -303,7 +301,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				} else if (y == 4) {
 					return detailBlock;
 				} else if (y == 5 && z == 8) {
-					Direction frameTopStairFacing = (x == 1) ? Direction.WEST : Direction.EAST;
+					EnumFacing frameTopStairFacing = (x == 1) ? EnumFacing.WEST : EnumFacing.EAST;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, frameTopStairFacing);
 				}
 			}
@@ -318,7 +316,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				} else if (y == 4) {
 					return detailBlock;
 				} else if (y == 5 && x == 8) {
-					Direction frameTopStairFacing = (z == 1) ? Direction.NORTH : Direction.SOUTH;
+					EnumFacing frameTopStairFacing = (z == 1) ? EnumFacing.NORTH : EnumFacing.SOUTH;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.BOTTOM).withProperty(BlockStairs.FACING, frameTopStairFacing);
 				}
 			}
@@ -327,13 +325,13 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return Blocks.AIR.getDefaultState();
 	}
 
-	private BlockState getInnerRing2Block(int x, int y, int z) {
+	private IBlockState getInnerRing2Block(int x, int y, int z) {
 		if (x == 2 || x == 14) {
 			if ((z == 2 || z == 14) && y == 1) {
 				return Blocks.LAVA.getDefaultState();
 			} else if (z == 3 || z == 13) {
 				if (y == 1 || y == 6) {
-					Direction stairFacing = (z == 3) ? Direction.NORTH : Direction.SOUTH;
+					EnumFacing stairFacing = (z == 3) ? EnumFacing.NORTH : EnumFacing.SOUTH;
 					BlockStairs.EnumHalf stairHalf = (y == 1) ? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing).withProperty(BlockStairs.HALF, stairHalf);
 				} else if (y >= 2 && y <= 5) {
@@ -345,7 +343,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 
 			if (x == 3 || x == 13) {
 				if (y == 1 || y == 6) {
-					Direction stairFacing = (x == 3) ? Direction.WEST : Direction.EAST;
+					EnumFacing stairFacing = (x == 3) ? EnumFacing.WEST : EnumFacing.EAST;
 					BlockStairs.EnumHalf stairHalf = (y == 1) ? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM;
 					return dungeon.getStairBlockState().withProperty(BlockStairs.FACING, stairFacing).withProperty(BlockStairs.HALF, stairHalf);
 				} else if (y >= 2 && y <= 5) {
@@ -357,13 +355,13 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 		return Blocks.AIR.getDefaultState();
 	}
 
-	private BlockState getInnerRing3Block(int x, int y, int z) {
+	private IBlockState getInnerRing3Block(int x, int y, int z) {
 		if ((x == 3 || x == 13) && z == 3) {
 			if (y >= 2 & y <= 5) {
 				return Blocks.IRON_BARS.getDefaultState();
 			} else if (y == 1 || y == 6) {
 				BlockStairs.EnumHalf stairHalf = (y == 1) ? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM;
-				Direction stairFacing = (x == 3) ? Direction.WEST : Direction.NORTH;
+				EnumFacing stairFacing = (x == 3) ? EnumFacing.WEST : EnumFacing.NORTH;
 				return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, stairHalf).withProperty(BlockStairs.FACING, stairFacing);
 			}
 		} else if ((x == 3 || x == 13) && z == 13) {
@@ -371,7 +369,7 @@ public class CastleRoomRoofBossMain extends CastleRoomBase {
 				return Blocks.IRON_BARS.getDefaultState();
 			} else if (y == 1 || y == 6) {
 				BlockStairs.EnumHalf stairHalf = (y == 1) ? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM;
-				Direction stairFacing = (x == 3) ? Direction.WEST : Direction.SOUTH;
+				EnumFacing stairFacing = (x == 3) ? EnumFacing.WEST : EnumFacing.SOUTH;
 				return dungeon.getStairBlockState().withProperty(BlockStairs.HALF, stairHalf).withProperty(BlockStairs.FACING, stairFacing);
 			}
 		}

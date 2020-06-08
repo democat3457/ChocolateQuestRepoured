@@ -5,17 +5,18 @@ import java.util.Properties;
 import java.util.Random;
 
 import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.GeneratorVegetatedCave;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.VineBlock;
+import net.minecraft.block.BlockVine;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTables;
+import net.minecraft.world.storage.loot.LootTableList;
 
 public class DungeonVegetatedCave extends DungeonBase {
 	
@@ -47,12 +48,12 @@ public class DungeonVegetatedCave extends DungeonBase {
 		super(name, prop);
 		this.vineBlock = PropertyFileHelper.getBlockProperty(prop, "vineBlock", Blocks.VINE);
 		//DONE: Add a non-cross-shape vine thing
-		this.crossVine = (this.vineBlock instanceof VineBlock);
+		this.crossVine = (this.vineBlock instanceof BlockVine);
 		this.airBlock = PropertyFileHelper.getBlockProperty(prop, "airBlock", Blocks.AIR);
-		this.pumpkinBlock = PropertyFileHelper.getBlockProperty(prop, "lanternBlock", Blocks.JACK_O_LANTERN);
+		this.pumpkinBlock = PropertyFileHelper.getBlockProperty(prop, "lanternBlock", Blocks.LIT_PUMPKIN);
 		this.flowerBlocks = PropertyFileHelper.getBlockArrayProperty(prop, "flowerBlocks", new Block[] {
-			Blocks.POPPY,
-			Blocks.DANDELION
+			Blocks.RED_FLOWER,
+			Blocks.YELLOW_FLOWER
 		});
 		this.mushrooms = PropertyFileHelper.getBlockArrayProperty(prop, "mushroomBlocks", new Block[] {
 			Blocks.BROWN_MUSHROOM,
@@ -78,17 +79,16 @@ public class DungeonVegetatedCave extends DungeonBase {
 		this.vineLatchBlock = PropertyFileHelper.getBlockProperty(prop, "vineLatchBlock", Blocks.COBBLESTONE);
 		this.tunnelStartSize = PropertyFileHelper.getIntProperty(prop, "tunnelStartSize", 10);
 		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTables.CHESTS_ABANDONED_MINESHAFT,
-				LootTables.CHESTS_NETHER_BRIDGE,
+				LootTableList.CHESTS_ABANDONED_MINESHAFT,
+				LootTableList.CHESTS_NETHER_BRIDGE,
 				ModLoottables.CHESTS_FOOD
 		});
 		this.skipCeilingFiltering = PropertyFileHelper.getBooleanProperty(prop, "skipCeilingFiltering", false);
 	}
 
 	@Override
-	public void generate(World world, int x, int y, int z) {
-		GeneratorVegetatedCave generator = new GeneratorVegetatedCave(this);
-		generator.generate(world, world.getChunkAt(new BlockPos(x,y,z)), x, posY, z);
+	public AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z) {
+		return new GeneratorVegetatedCave(world, new BlockPos(x, y, z), this);
 	}
 	
 	public File getRandomCentralBuilding() {

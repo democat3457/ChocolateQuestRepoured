@@ -3,13 +3,14 @@ package com.teamcqr.chocolatequestrepoured.structuregen.dungeons;
 import java.io.File;
 import java.util.Properties;
 
-import com.teamcqr.chocolatequestrepoured.structuregen.generators.IDungeonGenerator;
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.GeneratorStrongholdOpen;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -34,7 +35,7 @@ public class DungeonStrongholdOpen extends DungeonBase {
 	private int roomSizeY = 10;
 	private int roomSizeZ = 17;
 
-	private Block wallBlock = Blocks.STONE_BRICKS;
+	private Block wallBlock = Blocks.STONEBRICK;
 
 	// Important: All rooms must have the same dimensions!!!
 
@@ -58,13 +59,12 @@ public class DungeonStrongholdOpen extends DungeonBase {
 		this.roomSizeY = PropertyFileHelper.getIntProperty(prop, "roomSizeY", 10);
 		this.roomSizeZ = PropertyFileHelper.getIntProperty(prop, "roomSizeZ", 17);
 
-		this.wallBlock = PropertyFileHelper.getBlockProperty(prop, "wallBlock", Blocks.STONE_BRICKS);
+		this.wallBlock = PropertyFileHelper.getBlockProperty(prop, "wallBlock", Blocks.STONEBRICK);
 	}
 
 	@Override
-	public void generate(World world, int x, int y, int z) {
-		IDungeonGenerator generator = new GeneratorStrongholdOpen(this);
-		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
+	public AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z) {
+		return new GeneratorStrongholdOpen(world, new BlockPos(x, y, z), this);
 	}
 
 	public File getStairFolder() {

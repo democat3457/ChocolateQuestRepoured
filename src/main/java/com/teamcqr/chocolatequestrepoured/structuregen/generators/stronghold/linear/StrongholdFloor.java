@@ -1,20 +1,22 @@
 package com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.linear;
 
 import java.io.File;
-import java.util.List;
 
 import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
-import com.teamcqr.chocolatequestrepoured.structuregen.generation.IStructure;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonGenerator;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartBlock;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartBlockSpecial;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartEntity;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.EStrongholdRoomType;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.GeneratorStronghold;
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure;
-import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
+import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.ESkyDirection;
 
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
 
 public class StrongholdFloor {
 
@@ -55,7 +57,7 @@ public class StrongholdFloor {
 		
 		//System.out.println("Beginning gen...");
 		while(roomCount > 0) {
-			roomCoord = getNextRoomCoordinates(roomCoord.getA(), roomCoord.getB(), this.currentDirection);
+			roomCoord = getNextRoomCoordinates(roomCoord.getFirst(), roomCoord.getSecond(), this.currentDirection);
 			//System.out.println("X: " + roomCoord.getFirst() + "    Z: " + roomCoord.getSecond() + "        Room: " + ((this.sideLength * this.sideLength) - roomCount));
 			roomCount--;
 			slCounter--;
@@ -64,15 +66,15 @@ public class StrongholdFloor {
 			if(roomCount == 0) {
 				//DONE: Handle stair or boss room
 				if(lastFloor) {
-					setRoomType(roomCoord.getA(), roomCoord.getB(), EStrongholdRoomType.BOSS);
+					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), EStrongholdRoomType.BOSS);
 				} else {
 					//Handle stair
-					setRoomType(roomCoord.getA(), roomCoord.getB(), getStair(currentDirection));
+					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getStair(currentDirection));
 					this.currentDirection = getRoomExitDirection(getStair(currentDirection));
 				}
 				break;
 			}
-			if(slCounter <= 0 || (!reversed && slCounter > 1 && isCurveRoom(roomCoord.getA(), roomCoord.getB())) || ( reversed && slCounter > 1 && slCounter < ((sideLengthTemp * 4) -4 -2) && isCurveRoom(roomCoord.getA(), roomCoord.getB()))) {
+			if(slCounter <= 0 || (!reversed && slCounter > 1 && isCurveRoom(roomCoord.getFirst(), roomCoord.getSecond())) || ( reversed && slCounter > 1 && slCounter < ((sideLengthTemp * 4) -4 -2) && isCurveRoom(roomCoord.getFirst(), roomCoord.getSecond()))) {
 				if(slCounter <= 0) {
 					sideLengthTemp += reversed ? -2 : 2;
 					slCounter = (sideLengthTemp * 4) -4;
@@ -82,10 +84,10 @@ public class StrongholdFloor {
 					}
 				}
 				
-					setRoomType(roomCoord.getA(), roomCoord.getB(), getCurve(this.currentDirection, reversed));
+					setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getCurve(this.currentDirection, reversed));
 					this.currentDirection = getRoomExitDirection(getCurve(this.currentDirection, reversed));
 			} else {
-				setRoomType(roomCoord.getA(), roomCoord.getB(), getHallway(this.currentDirection));
+				setRoomType(roomCoord.getFirst(), roomCoord.getSecond(), getHallway(this.currentDirection));
 			}
 			
 		}
@@ -137,14 +139,14 @@ public class StrongholdFloor {
 		}
 	}
 	
-	public void generateRooms(int centerX, int centerZ, int y, PlacementSettings settings, List<List<? extends IStructure>> lists, World world, EDungeonMobType mobType) {
+	public void generateRooms(int centerX, int centerZ, int y, PlacementSettings settings, DungeonGenerator dungeonGenerator, World world, EDungeonMobType mobType) {
 		for(int iX = 0; iX < sideLength; iX++) {
 			for(int iZ = 0; iZ < sideLength; iZ++) {
 				EStrongholdRoomType room = roomPattern[iX][iZ];
 				if(room != null && room!=EStrongholdRoomType.NONE) {
 					Tuple<Integer,Integer> gridPos = arrayIndiciesToGridPos(new Tuple<>(iX, iZ));
-					int x = centerX + (gridPos.getA() * generator.getDungeon().getRoomSizeX());
-					int z = centerZ + (gridPos.getB() * generator.getDungeon().getRoomSizeZ());
+					int x = centerX + (gridPos.getFirst() * generator.getDungeon().getRoomSizeX());
+					int z = centerZ + (gridPos.getSecond() * generator.getDungeon().getRoomSizeZ());
 					int y1 = y;
 					if(room.toString().startsWith("STAIR_")) {
 						y1 -= generator.getDungeon().getRoomSizeY();
@@ -152,11 +154,11 @@ public class StrongholdFloor {
 					BlockPos pos = new BlockPos(x,y1,z);
 					File struct = generator.getDungeon().getRoom(room);
 					if(struct != null) {
-						CQStructure structure = new CQStructure(struct);
-						structure.setDungeonMob(mobType);
-						for (List<? extends IStructure> list : structure.addBlocksToWorld(world, pos, settings, EPosType.CENTER_XZ_LAYER, generator.getDungeon(), centerX, centerZ)) {
-							lists.add(list);
-						}
+						CQStructure structure = this.generator.loadStructureFromFile(struct);
+						BlockPos p = DungeonGenUtils.getCentralizedPosForStructure(pos, structure, settings);
+						dungeonGenerator.add(new DungeonPartBlock(world, dungeonGenerator, p, structure.getBlockInfoList(), settings, mobType));
+						dungeonGenerator.add(new DungeonPartEntity(world, dungeonGenerator, p, structure.getEntityInfoList(), settings, mobType));
+						dungeonGenerator.add(new DungeonPartBlockSpecial(world, dungeonGenerator, p, structure.getSpecialBlockInfoList(), settings, mobType));
 					}
 				}
 			}
@@ -183,12 +185,12 @@ public class StrongholdFloor {
 	
 	private Tuple<Integer, Integer> gridPosToArrayIndices(Tuple<Integer, Integer> gridPosIn) {
 		int x = (int) Math.floor(sideLength /2D);
-		return new Tuple<>(gridPosIn.getA() + x, gridPosIn.getB() + x);
+		return new Tuple<>(gridPosIn.getFirst() + x, gridPosIn.getSecond() + x);
 	}
 	
 	private Tuple<Integer, Integer> arrayIndiciesToGridPos(Tuple<Integer, Integer> arrayIndiciesIn) {
 		int x = (int) Math.floor(sideLength /2D);
-		return new Tuple<>(arrayIndiciesIn.getA() - x, arrayIndiciesIn.getB() - x);
+		return new Tuple<>(arrayIndiciesIn.getFirst() - x, arrayIndiciesIn.getSecond() - x);
 	}
 	
 	public ESkyDirection getExitDirection() {
@@ -205,7 +207,7 @@ public class StrongholdFloor {
 		lastX = gpX;
 		lastZ = gpZ;
 		//System.out.println("X: " + gpX + "    Z: " + gpZ + "        Room: " + type.toString());
-		this.roomPattern[coords.getA()][coords.getB()] = type;
+		this.roomPattern[coords.getFirst()][coords.getSecond()] = type;
 	}
 	
 	private ESkyDirection getRoomExitDirection(EStrongholdRoomType room) {

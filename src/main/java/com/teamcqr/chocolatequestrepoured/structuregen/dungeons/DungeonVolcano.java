@@ -6,7 +6,7 @@ import java.util.Random;
 
 import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
 import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
-import com.teamcqr.chocolatequestrepoured.structuregen.generators.IDungeonGenerator;
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.EStrongholdRoomType;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.volcano.GeneratorVolcano;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
@@ -14,10 +14,11 @@ import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTables;
+import net.minecraft.world.storage.loot.LootTableList;
 
 /**
  * Copyright (c) 29.04.2019
@@ -44,7 +45,7 @@ public class DungeonVolcano extends DungeonBase {
 	private String rampMobName = "minecraft:zombie";
 	private Block stoneBlock = Blocks.STONE;
 	private Block lavaBlock = Blocks.LAVA;
-	private Block magmaBlock = Blocks.MAGMA_BLOCK;
+	private Block magmaBlock = Blocks.MAGMA;
 	private Block rampBlock = Blocks.NETHERRACK;
 	private Block lowerStoneBlock = Blocks.COBBLESTONE;
 	private Block pillarBlock = ModBlocks.GRANITE_LARGE;
@@ -95,14 +96,14 @@ public class DungeonVolcano extends DungeonBase {
 		this.oreConcentration = Math.min(Math.max(1, Math.abs(PropertyFileHelper.getIntProperty(prop, "orechance", 5))), 100);
 		this.rampMobName = prop.getProperty("rampMob", "minecraft:zombie");
 		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTables.CHESTS_ABANDONED_MINESHAFT,
-				LootTables.CHESTS_NETHER_BRIDGE,
+				LootTableList.CHESTS_ABANDONED_MINESHAFT,
+				LootTableList.CHESTS_NETHER_BRIDGE,
 				ModLoottables.CHESTS_FOOD
 		});
 		this.stoneBlock = PropertyFileHelper.getBlockProperty(prop, "topBlock", Blocks.STONE);
 		this.lowerStoneBlock = PropertyFileHelper.getBlockProperty(prop, "lowerBlock", Blocks.COBBLESTONE);
 		this.lavaBlock = PropertyFileHelper.getBlockProperty(prop, "lavaBlock", Blocks.LAVA);
-		this.magmaBlock = PropertyFileHelper.getBlockProperty(prop, "magmaBlock", Blocks.MAGMA_BLOCK);
+		this.magmaBlock = PropertyFileHelper.getBlockProperty(prop, "magmaBlock", Blocks.MAGMA);
 		this.rampBlock = PropertyFileHelper.getBlockProperty(prop, "rampBlock", Blocks.NETHERRACK);
 		this.pillarBlock = PropertyFileHelper.getBlockProperty(prop, "pillarBlock", ModBlocks.GRANITE_LARGE);
 		this.oreBlocks = PropertyFileHelper.getBlockArrayProperty(prop, "oreBlocks", new Block[] {
@@ -145,9 +146,8 @@ public class DungeonVolcano extends DungeonBase {
 	}
 
 	@Override
-	public void generate(World world, int x, int y, int z) {
-		IDungeonGenerator generator = new GeneratorVolcano(this);
-		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
+	public AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z) {
+		return new GeneratorVolcano(world, new BlockPos(x, y, z), this);
 	}
 
 	public int getMinHeight() {

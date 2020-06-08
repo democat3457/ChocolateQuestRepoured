@@ -3,14 +3,14 @@ package com.teamcqr.chocolatequestrepoured.structuregen.dungeons;
 import java.io.File;
 import java.util.Properties;
 
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.GeneratorGridCity;
-import com.teamcqr.chocolatequestrepoured.structuregen.generators.IDungeonGenerator;
-import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -30,16 +30,12 @@ public class DungeonNetherCity extends DungeonBase {
 	// private boolean singleAirPocketsForHouses = false;
 	private boolean specialUseForCentralBuilding = false;
 	private boolean makeSpaceForBuildings = true;
-	private Block bridgeBlock = Blocks.NETHER_BRICKS;
+	private Block bridgeBlock = Blocks.NETHER_BRICK;
 	private Block floorBlock = Blocks.LAVA;
 	private Block airBlockForPocket = Blocks.AIR;
 
 	protected File buildingFolder;
 	protected File centralBuildingsFolder;
-
-	// Values for generator
-	private int longestSide = -1;
-	private int structCount = 0;
 
 	public DungeonNetherCity(String name, Properties prop) {
 		super(name, prop);
@@ -57,7 +53,7 @@ public class DungeonNetherCity extends DungeonBase {
 
 		this.bridgeSizeMultiplier = PropertyFileHelper.getDoubleProperty(prop, "bridgelengthmultiplier", 1.2D);
 
-		this.bridgeBlock = PropertyFileHelper.getBlockProperty(prop, "streetblock", Blocks.NETHER_BRICKS);
+		this.bridgeBlock = PropertyFileHelper.getBlockProperty(prop, "streetblock", Blocks.NETHER_BRICK);
 		this.floorBlock = PropertyFileHelper.getBlockProperty(prop, "floorblock", Blocks.LAVA);
 		this.airBlockForPocket = PropertyFileHelper.getBlockProperty(prop, "airPocketBlock", Blocks.AIR);
 
@@ -71,24 +67,8 @@ public class DungeonNetherCity extends DungeonBase {
 	}
 
 	@Override
-	public void generate(World world, int x, int y, int z) {
-		if (this.structCount != this.buildingFolder.listFiles().length) {
-			for (File f : this.buildingFolder.listFiles()) {
-				CQStructure cqs = new CQStructure(f);
-
-				if (cqs.getSize().getX() > this.longestSide) {
-					this.longestSide = cqs.getSize().getX();
-				}
-
-				if (cqs.getSize().getZ() > this.longestSide) {
-					this.longestSide = cqs.getSize().getZ();
-				}
-			}
-			this.structCount = this.buildingFolder.listFiles().length;
-		}
-
-		IDungeonGenerator generator = new GeneratorGridCity(this);
-		generator.generate(world, world.getChunk(x >> 4, z >> 4), x, y, z);
+	public AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z) {
+		return new GeneratorGridCity(world, new BlockPos(x, y, z), this);
 	}
 
 	public int getCaveHeight() {
@@ -115,20 +95,11 @@ public class DungeonNetherCity extends DungeonBase {
 		return DungeonGenUtils.getIntBetweenBorders(this.minRowsZ, this.maxRowsZ);
 	}
 
-	public int getLongestSide() {
-		return this.longestSide;
-	}
-
-	public int getDistanceBetweenBuildingCenters() {
-		return (new Double(this.longestSide * this.bridgeSizeMultiplier)).intValue();
-	}
-
 	/*
 	 * public boolean useSingleAirPocketsForHouses() {
 	 * return this.singleAirPocketsForHouses;
 	 * }
 	 */
-
 
 	public boolean centralBuildingIsSpecial() {
 		return this.specialUseForCentralBuilding;
@@ -138,7 +109,7 @@ public class DungeonNetherCity extends DungeonBase {
 		return this.makeSpaceForBuildings;
 	}
 
-	private File getBuildingFolder() {
+	public File getBuildingFolder() {
 		return this.buildingFolder;
 	}
 
@@ -146,12 +117,16 @@ public class DungeonNetherCity extends DungeonBase {
 		return this.getStructureFileFromDirectory(this.getBuildingFolder());
 	}
 
-	private File getCentralBuildingFolder() {
+	public File getCentralBuildingFolder() {
 		return this.centralBuildingsFolder;
 	}
 
 	public File getRandomCentralBuilding() {
 		return this.getStructureFileFromDirectory(this.getCentralBuildingFolder());
+	}
+
+	public double getBridgeSizeMultiplier() {
+		return bridgeSizeMultiplier;
 	}
 
 }

@@ -8,25 +8,26 @@ import com.teamcqr.chocolatequestrepoured.objects.entity.bases.AbstractEntityCQR
 import com.teamcqr.chocolatequestrepoured.objects.items.staves.ItemStaffHealing;
 import com.teamcqr.chocolatequestrepoured.util.CQRConfig;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Difficulty;
+import net.minecraft.world.EnumDifficulty;
 
 public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR> {
 
-	protected final Predicate<LivingEntity> predicateAlly = input -> {
+	protected final Predicate<EntityLiving> predicateAlly = input -> {
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(input)) {
 			return false;
 		}
-		if (!EntityPredicates.IS_ALIVE.test(input)) {
+		if (!EntitySelectors.IS_ALIVE.apply(input)) {
 			return false;
 		}
 		return EntityAIHurtByTarget.this.isSuitableAlly(input);
 	};
-	protected LivingEntity attackTarget;
+	protected EntityLivingBase attackTarget;
 	protected int prevRevengeTimer;
 
 	public EntityAIHurtByTarget(AbstractEntityCQR entity) {
@@ -35,20 +36,20 @@ public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	@Override
 	public boolean shouldExecute() {
-		if (this.entity.world.getDifficulty() == Difficulty.PEACEFUL) {
+		if (this.entity.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
 			return false;
 		}
 		if (this.entity.getRevengeTimer() == this.prevRevengeTimer) {
 			return false;
 		}
-		LivingEntity revengeTarget = this.entity.getRevengeTarget();
+		EntityLivingBase revengeTarget = this.entity.getRevengeTarget();
 		if (!TargetUtil.PREDICATE_ATTACK_TARGET.apply(revengeTarget)) {
 			return false;
 		}
-		if (!revengeTarget.isAlive()) {
+		if (!revengeTarget.isEntityAlive()) {
 			return false;
 		}
-		if (this.entity.getFaction().isAlly(revengeTarget)) {
+		if (this.entity.getFaction() != null && this.entity.getFaction().isAlly(revengeTarget)) {
 			return false;
 		}
 		if (!this.entity.isInSightRange(revengeTarget)) {
@@ -67,32 +68,32 @@ public class EntityAIHurtByTarget extends AbstractCQREntityAI<AbstractEntityCQR>
 
 	protected void callForHelp() {
 		double radius = CQRConfig.mobs.alertRadius;
-		Vec3d eyeVec = this.entity.getEyePosition(1.0F);
+		Vec3d eyeVec = this.entity.getPositionEyes(1.0F);
 		Vec3d vec1 = eyeVec.subtract(radius, radius * 0.5D, radius);
-		Vec3d vec2 = eyeVec.add(radius, radius * 0.5D, radius);
+		Vec3d vec2 = eyeVec.addVector(radius, radius * 0.5D, radius);
 		AxisAlignedBB aabb = new AxisAlignedBB(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
-		List<LivingEntity> allies = this.entity.world.getEntitiesWithinAABB(LivingEntity.class, aabb, this.predicateAlly);
-		for (LivingEntity ally : allies) {
+		List<EntityLiving> allies = this.entity.world.getEntitiesWithinAABB(EntityLiving.class, aabb, this.predicateAlly);
+		for (EntityLiving ally : allies) {
 			this.trySetAttackTarget(ally);
 		}
 	}
 
-	protected boolean isSuitableAlly(LivingEntity possibleAlly) {
+	protected boolean isSuitableAlly(EntityLiving possibleAlly) {
 		if (possibleAlly == this.entity) {
 			return false;
 		}
-		if (!this.entity.getFaction().isAlly(possibleAlly)) {
+		if (this.entity.getFaction() != null && !this.entity.getFaction().isAlly(possibleAlly)) {
 			return false;
 		}
-		Path path = possibleAlly.getNavigator().getPathToLivingEntity(this.entity);
+		Path path = possibleAlly.getNavigator().getPathToEntityLiving(this.entity);
 		return path != null && path.getCurrentPathLength() <= 20;
 	}
 
-	protected boolean trySetAttackTarget(LivingEntity entityLiving) {
+	protected boolean trySetAttackTarget(EntityLiving entityLiving) {
 		if (entityLiving.getHeldItemMainhand().getItem() instanceof ItemStaffHealing) {
 			return false;
 		}
-		LivingEntity oldAttackTarget = entityLiving.getAttackTarget();
+		EntityLivingBase oldAttackTarget = entityLiving.getAttackTarget();
 		if (oldAttackTarget != null && entityLiving.getEntitySenses().canSee(oldAttackTarget) && entityLiving.getDistance(oldAttackTarget) < entityLiving.getDistance(this.attackTarget)) {
 			return false;
 		}

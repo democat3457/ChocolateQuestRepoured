@@ -12,30 +12,31 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDungeonPlacer extends Item {
 
@@ -57,10 +58,10 @@ public class ItemDungeonPlacer extends Item {
 				if (iconID == this.iconID) {
 					ItemStack stack = new ItemStack(this);
 
-					CompoundNBT compound = new CompoundNBT();
+					NBTTagCompound compound = new NBTTagCompound();
 					compound.setString("dungeonName", fakeDungeon.getDungeonName());
 					compound.setInteger("iconID", iconID);
-					ListNBT dependencies = new ListNBT();
+					NBTTagList dependencies = new NBTTagList();
 					for (String dependency : fakeDungeon.getDependencies()) {
 						dependencies.appendTag(new NBTTagString(dependency));
 					}
@@ -74,12 +75,12 @@ public class ItemDungeonPlacer extends Item {
 	}
 
 	@Override
-	public EquipmentSlotType getEquipmentSlot(ItemStack stack) {
-		return EquipmentSlotType.HEAD;
+	public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
+		return EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
-	@OnlyIn(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("dependencies")) {
@@ -98,14 +99,14 @@ public class ItemDungeonPlacer extends Item {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		if (stack.hasTagCompound()) {
-			CompoundNBT compound = stack.getTagCompound();
+			NBTTagCompound compound = stack.getTagCompound();
 			return "Dungeon Placer - " + compound.getString("dungeonName");
 		}
 		return "Dungeon Placer";
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		if (!worldIn.isRemote) {
 			ItemStack stack = playerIn.getHeldItem(handIn);
 
@@ -117,7 +118,7 @@ public class ItemDungeonPlacer extends Item {
 					Vec3d vec = playerIn.getPositionEyes(1.0F);
 					Vec3d look = playerIn.getLookVec();
 
-					RayTraceResult result = worldIn.rayTraceBlocks(vec, vec.add(look.scale(128.0D)));
+					RayTraceResult result = worldIn.rayTraceBlocks(vec, vec.add(look.scale(256.0D)));
 
 					if (result != null) {
 						BlockPos pos = result.getBlockPos();
@@ -166,7 +167,7 @@ public class ItemDungeonPlacer extends Item {
 		@SubscribeEvent
 		public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
 			if (!event.player.world.isRemote) {
-				CQRMain.NETWORK.sendTo(new DungeonSyncPacket(DungeonRegistry.getInstance().getLoadedDungeons()), (ServerPlayerEntity) event.player);
+				CQRMain.NETWORK.sendTo(new DungeonSyncPacket(DungeonRegistry.getInstance().getLoadedDungeons()), (EntityPlayerMP) event.player);
 			}
 		}
 

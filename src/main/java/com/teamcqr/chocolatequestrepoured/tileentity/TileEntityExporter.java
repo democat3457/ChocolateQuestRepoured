@@ -1,5 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.tileentity;
 
+import java.io.File;
+
 import javax.annotation.Nullable;
 
 import com.teamcqr.chocolatequestrepoured.CQRMain;
@@ -9,13 +11,14 @@ import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class TileEntityExporter extends TileEntity {
@@ -27,16 +30,15 @@ public class TileEntityExporter extends TileEntity {
 	public int endY = 0;
 	public int endZ = 0;
 	public String structureName = "NoName";
-	public boolean partMode = true;
 	public boolean relativeMode = false;
 	public boolean ignoreEntities = true;
 
 	private BlockPos minPos = new BlockPos(0, 0, 0);
 	private BlockPos maxPos = new BlockPos(0, 0, 0);
 
-	private PlayerEntity user = null;
+	private EntityPlayer user = null;
 
-	public CompoundNBT getExporterData(CompoundNBT compound) {
+	public NBTTagCompound getExporterData(NBTTagCompound compound) {
 		compound.setInteger("StartX", this.startX);
 		compound.setInteger("StartY", this.startY);
 		compound.setInteger("StartZ", this.startZ);
@@ -44,13 +46,12 @@ public class TileEntityExporter extends TileEntity {
 		compound.setInteger("EndY", this.endY);
 		compound.setInteger("EndZ", this.endZ);
 		compound.setString("StructureName", this.structureName);
-		compound.setBoolean("PartMode", this.partMode);
 		compound.setBoolean("RelativeMode", this.relativeMode);
 		compound.setBoolean("IgnoreEntities", this.ignoreEntities);
 		return compound;
 	}
 
-	public void setExporterData(CompoundNBT compound) {
+	public void setExporterData(NBTTagCompound compound) {
 		this.startX = compound.getInteger("StartX");
 		this.startY = compound.getInteger("StartY");
 		this.startZ = compound.getInteger("StartZ");
@@ -58,7 +59,6 @@ public class TileEntityExporter extends TileEntity {
 		this.endY = compound.getInteger("EndY");
 		this.endZ = compound.getInteger("EndZ");
 		this.structureName = compound.getString("StructureName");
-		this.partMode = compound.getBoolean("PartMode");
 		this.relativeMode = compound.getBoolean("RelativeMode");
 		this.ignoreEntities = compound.getBoolean("IgnoreEntities");
 
@@ -66,23 +66,23 @@ public class TileEntityExporter extends TileEntity {
 	}
 
 	@Override
-	public CompoundNBT writeToNBT(CompoundNBT compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		this.getExporterData(compound);
 		return compound;
 	}
 
 	@Override
-	public void readFromNBT(CompoundNBT compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.setExporterData(compound);
 	}
 
-	public void setValues(BlockPos startPos, BlockPos endPos, String structName, boolean usePartMode, boolean useRelativeMode, boolean useSmartMode) {
-		this.setValues(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ(), structName, usePartMode, useRelativeMode, useSmartMode);
+	public void setValues(BlockPos startPos, BlockPos endPos, String structName, boolean useRelativeMode, boolean useSmartMode) {
+		this.setValues(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ(), structName, useRelativeMode, useSmartMode);
 	}
 
-	public void setValues(int sX, int sY, int sZ, int eX, int eY, int eZ, String structName, boolean usePartMode, boolean useRelativeMode, boolean useSmartMode) {
+	public void setValues(int sX, int sY, int sZ, int eX, int eY, int eZ, String structName, boolean useRelativeMode, boolean useSmartMode) {
 		this.startX = sX;
 		this.startY = sY;
 		this.startZ = sZ;
@@ -90,7 +90,6 @@ public class TileEntityExporter extends TileEntity {
 		this.endY = eY;
 		this.endZ = eZ;
 		this.structureName = structName;
-		this.partMode = usePartMode;
 		this.relativeMode = useRelativeMode;
 		this.ignoreEntities = useSmartMode;
 
@@ -102,7 +101,7 @@ public class TileEntityExporter extends TileEntity {
 	@Nullable
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(this.pos, 1, this.getExporterData(new CompoundNBT()));
+		return new SPacketUpdateTileEntity(this.pos, 1, this.getExporterData(new NBTTagCompound()));
 	}
 
 	@Override
@@ -116,37 +115,38 @@ public class TileEntityExporter extends TileEntity {
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag() {
-		CompoundNBT data = super.getUpdateTag();
-		data.setTag("data", this.getExporterData(new CompoundNBT()));
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound data = super.getUpdateTag();
+		data.setTag("data", this.getExporterData(new NBTTagCompound()));
 		return data;
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag) {
+	public void handleUpdateTag(NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
 		this.setExporterData(tag.getCompoundTag("data"));
 	}
 
-	public void setUser(PlayerEntity player) {
+	public void setUser(EntityPlayer player) {
 		this.user = player;
 	}
 
-	public void saveStructure(World world, BlockPos startPos, BlockPos endPos, PlayerEntity author) {
+	public void saveStructure(World world, BlockPos startPos, BlockPos endPos, EntityPlayer author) {
 		if (this.relativeMode) {
 			startPos = this.pos.add(startPos);
 			endPos = this.pos.add(endPos);
 		}
 		if (!world.isRemote) {
 			CQRMain.logger.info("Server is saving structure...");
-			CQStructure structure = new CQStructure(this.structureName);
-			structure.takeBlocksFromWorld(world, startPos, endPos, this.partMode, this.ignoreEntities);
-			structure.writeToFile(author);
-			CQRMain.logger.info("Done!");
+			CQStructure structure = CQStructure.createFromWorld(world, startPos, endPos, ignoreEntities, author.getName());
+			structure.writeToFile(new File(CQRMain.CQ_EXPORT_FILES_FOLDER, this.structureName + ".nbt"));
+			new Thread(() -> {
+				structure.writeToFile(new File(CQRMain.CQ_EXPORT_FILES_FOLDER, this.structureName + ".nbt"));
+				author.sendMessage(new TextComponentString("Successfully exported structure: " + this.structureName));
+			}).start();
 		} else {
 			CQRMain.logger.info("Sending structure save request packet...");
-			CQRMain.NETWORK.sendToServer(new SaveStructureRequestPacket(startPos, endPos, author.getName(), this.structureName, true, this.partMode, this.ignoreEntities));
-			CQRMain.logger.info("Packet sent!");
+			CQRMain.NETWORK.sendToServer(new SaveStructureRequestPacket(startPos, endPos, author.getName(), this.structureName, this.ignoreEntities));
 		}
 	}
 

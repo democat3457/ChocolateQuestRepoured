@@ -1,4 +1,4 @@
-package com.teamcqr.chocolatequestrepoured.structuregen.structurefile;
+package com.teamcqr.chocolatequestrepoured.structuregen;
 
 public enum EPosType {
 

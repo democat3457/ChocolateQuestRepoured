@@ -11,22 +11,22 @@ import com.teamcqr.chocolatequestrepoured.util.Reference;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ItemStructureSelector extends Item {
 
@@ -35,13 +35,13 @@ public class ItemStructureSelector extends Item {
 	}
 
 	@Override
-	public boolean canDestroyBlockInCreative(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
+	public boolean canDestroyBlockInCreative(World world, BlockPos pos, ItemStack stack, EntityPlayer player) {
 		Block block = world.getBlockState(pos).getBlock();
 		return block != ModBlocks.EXPORTER;
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand) {
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (world.getTileEntity(pos) instanceof TileEntityExporter) {
@@ -60,7 +60,7 @@ public class ItemStructureSelector extends Item {
 					pos2 = pos2.subtract(pos);
 				}
 
-				tileEntity.setValues(DungeonGenUtils.getMinPos(pos1, pos2), DungeonGenUtils.getMaxPos(pos1, pos2), tileEntity.structureName, tileEntity.partMode, tileEntity.relativeMode, tileEntity.ignoreEntities);
+				tileEntity.setValues(DungeonGenUtils.getMinPos(pos1, pos2), DungeonGenUtils.getMaxPos(pos1, pos2), tileEntity.structureName, tileEntity.relativeMode, tileEntity.ignoreEntities);
 			}
 		} else if (!world.isRemote) {
 			if (player.isSneaking()) {
@@ -77,7 +77,7 @@ public class ItemStructureSelector extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack stack = playerIn.getHeldItem(handIn);
 
 		if (!playerIn.world.isRemote && playerIn.isSneaking()) {
@@ -107,25 +107,25 @@ public class ItemStructureSelector extends Item {
 	}
 
 	public void setFirstPos(ItemStack stack, BlockPos pos) {
-		CompoundNBT compound = stack.getTagCompound();
+		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null) {
-			compound = new CompoundNBT();
+			compound = new NBTTagCompound();
 			stack.setTagCompound(compound);
 		}
 		compound.setTag("pos1", NBTUtil.createPosTag(pos));
 	}
 
 	public void setSecondPos(ItemStack stack, BlockPos pos) {
-		CompoundNBT compound = stack.getTagCompound();
+		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null) {
-			compound = new CompoundNBT();
+			compound = new NBTTagCompound();
 			stack.setTagCompound(compound);
 		}
 		compound.setTag("pos2", NBTUtil.createPosTag(pos));
 	}
 
 	public BlockPos getFirstPos(ItemStack stack) {
-		CompoundNBT compound = stack.getTagCompound();
+		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null || !compound.hasKey("pos1", Constants.NBT.TAG_COMPOUND)) {
 			return null;
 		}
@@ -133,7 +133,7 @@ public class ItemStructureSelector extends Item {
 	}
 
 	public BlockPos getSecondPos(ItemStack stack) {
-		CompoundNBT compound = stack.getTagCompound();
+		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null || !compound.hasKey("pos2", Constants.NBT.TAG_COMPOUND)) {
 			return null;
 		}
@@ -157,7 +157,7 @@ public class ItemStructureSelector extends Item {
 
 		@SubscribeEvent
 		public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event) {
-			PlayerEntity player = event.getPlayerEntity();
+			EntityPlayer player = event.getEntityPlayer();
 			ItemStack stack = player.getHeldItem(event.getHand());
 
 			if (stack.getItem() instanceof ItemStructureSelector) {
@@ -181,7 +181,7 @@ public class ItemStructureSelector extends Item {
 
 		@SubscribeEvent
 		public static void onLeftClickEmptyEvent(PlayerInteractEvent.LeftClickEmpty event) {
-			PlayerEntity player = event.getPlayerEntity();
+			EntityPlayer player = event.getEntityPlayer();
 			ItemStack stack = player.getHeldItem(event.getHand());
 
 			if (stack.getItem() instanceof ItemStructureSelector && player.isSneaking()) {

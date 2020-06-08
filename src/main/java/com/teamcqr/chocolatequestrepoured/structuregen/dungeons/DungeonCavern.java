@@ -10,26 +10,32 @@ import java.util.Random;
 import com.teamcqr.chocolatequestrepoured.init.ModBlocks;
 import com.teamcqr.chocolatequestrepoured.init.ModLoottables;
 import com.teamcqr.chocolatequestrepoured.objects.factories.SpawnerFactory;
-import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockStatePart;
-import com.teamcqr.chocolatequestrepoured.structuregen.generation.IStructure;
+import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonGenerationManager;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonGenerator;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartBlock;
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.GeneratorCavern;
+import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.AbstractBlockInfo;
+import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.BlockInfo;
 import com.teamcqr.chocolatequestrepoured.tileentity.TileEntitySpawner;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.VectorUtil;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.storage.loot.LootTables;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
+import net.minecraft.world.storage.loot.LootTableList;
 
 /**
  * Copyright (c) 29.04.2019
@@ -93,11 +99,12 @@ public class DungeonCavern extends DungeonBase {
 		this.floorMaterial = PropertyFileHelper.getBlockProperty(prop, "floorblock", Blocks.STONE);
 
 		this.airBlock = PropertyFileHelper.getBlockProperty(prop, "airblock", Blocks.AIR);
-		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] {
-				LootTables.CHESTS_ABANDONED_MINESHAFT,
-				LootTables.CHESTS_NETHER_BRIDGE,
-				ModLoottables.CHESTS_FOOD
-		});
+		this.chestIDs = PropertyFileHelper.getResourceLocationArrayProperty(prop, "chestIDs", new ResourceLocation[] { LootTableList.CHESTS_ABANDONED_MINESHAFT, LootTableList.CHESTS_NETHER_BRIDGE, ModLoottables.CHESTS_FOOD });
+	}
+
+	@Override
+	public AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z) {
+		return null;
 	}
 
 	@Override
@@ -107,16 +114,16 @@ public class DungeonCavern extends DungeonBase {
 
 	@Override
 	public void generate(World world, int x, int y, int z) {
-		List<List<? extends IStructure>> lists = new ArrayList<>();
 		List<GeneratorCavern> caves = new ArrayList<>();
 		Map<GeneratorCavern, Integer> xMap = new HashMap<>();
 		Map<GeneratorCavern, Integer> zMap = new HashMap<>();
 
-		Chunk chunk = world.getChunk(x >> 4, z >> 4);
+		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
 		int rooms = DungeonGenUtils.getIntBetweenBorders(this.minRooms, this.maxRooms, this.random);
 		int roomIndex = 1;
 
 		BlockPos centerLoc = new BlockPos(x, y, z);
+		DungeonGenerator dungeonGenerator = new DungeonGenerator(world, centerLoc, this.name);
 
 		// int OrigX = new Integer(x);
 		// int OrigZ = new Integer(z);
@@ -127,11 +134,10 @@ public class DungeonCavern extends DungeonBase {
 			x += distance.getX();
 			z += distance.getZ();
 
-			GeneratorCavern cave = new GeneratorCavern(this);
+			GeneratorCavern cave = new GeneratorCavern(world, centerLoc.add(distance.getX(), 0, distance.getZ()), this, dungeonGenerator);
 			// Let the cave calculate its air blocks...
-			cave.setSizeAndHeight(DungeonGenUtils.getIntBetweenBorders(this.minCaveSize, this.maxCaveSize, this.random), DungeonGenUtils.getIntBetweenBorders(this.minCaveSize, this.maxCaveSize, this.random),
-					DungeonGenUtils.getIntBetweenBorders(this.minHeight, this.maxHeight, this.random));
-			cave.preProcess(world, chunk, x + distance.getX(), y, z + distance.getZ(), lists);
+			cave.setSizeAndHeight(DungeonGenUtils.getIntBetweenBorders(this.minCaveSize, this.maxCaveSize, this.random), DungeonGenUtils.getIntBetweenBorders(this.minCaveSize, this.maxCaveSize, this.random), DungeonGenUtils.getIntBetweenBorders(this.minHeight, this.maxHeight, this.random));
+			cave.preProcess();
 
 			int vLength = DungeonGenUtils.getIntBetweenBorders(this.minRoomDistance, this.maxRoomDistance, this.random);
 			distance = new Vec3i(vLength, 0, 0);
@@ -148,47 +154,53 @@ public class DungeonCavern extends DungeonBase {
 		for (int i = 0; i < caves.size(); i++) {
 			GeneratorCavern cave = caves.get(i);
 			// Dig out the cave...
-			cave.buildStructure(world, chunk, xMap.get(cave), y - 1, zMap.get(cave), lists);
+			cave.buildStructure();
 
 			// connect the tunnels
-			Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
+			Map<BlockPos, IBlockState> stateMap = new HashMap<>();
 			cave.generateTunnel(centerLoc.add(0, 1, 0), cave.getCenter(), world, stateMap);
-			lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
+
+			List<AbstractBlockInfo> blockInfoList = new ArrayList<>();
+			for (Map.Entry<BlockPos, IBlockState> entry : stateMap.entrySet()) {
+				blockInfoList.add(new BlockInfo(entry.getKey().subtract(cave.getCenter()), entry.getValue(), null));
+			}
+			dungeonGenerator.add(new DungeonPartBlock(world, dungeonGenerator, cave.getCenter(), blockInfoList, new PlacementSettings(), EDungeonMobType.ZOMBIE));
 		}
 		for (int i = 0; i < caves.size(); i++) {
 			GeneratorCavern cave = caves.get(i);
 
 			// Place a loot chest....
 			if (this.lootChests && DungeonGenUtils.PercentageRandom(this.chestChancePerRoom, world.getSeed())) {
-				cave.fillChests(world, chunk, cave.getCenter().getX(), y -1, cave.getCenter().getZ(), lists);
+				cave.fillChests();
 			}
 
 			// Place a spawner...
 			if (this.placeSpawners) {
-				cave.placeSpawners(world, chunk, cave.getCenter().getX(), y, cave.getCenter().getZ(), lists);
+				cave.placeSpawners();
 			}
 		}
 		int bossCaveIndx = this.random.nextInt(caves.size());
 		if (this.placeBoss) {
-			Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
-			
+			List<AbstractBlockInfo> blockInfoList = new ArrayList<>();
+
 			BlockPos bossPos = new BlockPos(xMap.get(caves.get(bossCaveIndx)), y + 1, zMap.get(caves.get(bossCaveIndx)));
 
 			// BOSS CHEST
-			BlockState state = Blocks.CHEST.getDefaultState();
-			ChestTileEntity bossChest = (ChestTileEntity) Blocks.CHEST.createTileEntity(state, world);
-			bossChest.setLootTable(LootTables.CHESTS_END_CITY_TREASURE, world.getSeed());
-			stateMap.put(bossPos.down(), new ExtendedBlockStatePart.ExtendedBlockState(state, bossChest.write(new CompoundNBT())));
+			IBlockState state = Blocks.CHEST.getDefaultState();
+			TileEntityChest bossChest = (TileEntityChest) Blocks.CHEST.createTileEntity(world, state);
+			bossChest.setLootTable(LootTableList.CHESTS_END_CITY_TREASURE, world.getSeed());
+			blockInfoList.add(new BlockInfo(BlockPos.ORIGIN.down(), state, bossChest.writeToNBT(new NBTTagCompound())));
 
 			// BOSS SPAWNER
 			// DONE: spawn the boss
-			BlockState state2 = ModBlocks.SPAWNER.getDefaultState();
+			IBlockState state2 = ModBlocks.SPAWNER.getDefaultState();
 			TileEntitySpawner tileSpawner = (TileEntitySpawner) ModBlocks.SPAWNER.createTileEntity(world, state2);
 			tileSpawner.inventory.setStackInSlot(0, SpawnerFactory.getSoulBottleItemStackForEntity(EntityList.createEntityByIDFromName(this.getBossMob(), world)));
-			stateMap.put(bossPos, new ExtendedBlockStatePart.ExtendedBlockState(state2, tileSpawner.write(new CompoundNBT())));
-			
-			lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
+			blockInfoList.add(new BlockInfo(BlockPos.ORIGIN, state, tileSpawner.writeToNBT(new NBTTagCompound())));
+
+			dungeonGenerator.add(new DungeonPartBlock(world, dungeonGenerator, bossPos, blockInfoList, new PlacementSettings(), EDungeonMobType.ZOMBIE));
 		}
+		DungeonGenerationManager.addStructure(world, dungeonGenerator, this);
 	}
 
 	int getMinCaveHeight() {

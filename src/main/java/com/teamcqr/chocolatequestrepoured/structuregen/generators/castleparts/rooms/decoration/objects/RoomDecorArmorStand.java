@@ -1,11 +1,10 @@
 package com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.rooms.decoration.objects;
 
 import com.teamcqr.chocolatequestrepoured.util.BlockStateGenArray;
-
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -18,12 +17,11 @@ public class RoomDecorArmorStand extends RoomDecorEntityBase {
 	}
 
 	@Override
-	protected void createEntityDecoration(World world, BlockPos pos, BlockStateGenArray genArray, Direction side) {
+	protected void createEntityDecoration(World world, BlockPos pos, BlockStateGenArray genArray, EnumFacing side) {
 		// Need to add 0.5 to each position amount so it spawns in the middle of the tile
 		EntityArmorStand stand = new EntityArmorStand(world);
 		float rotation = side.getHorizontalAngle();
 		stand.setPositionAndRotation((pos.getX() + 0.5), (pos.getY() + 0.5), (pos.getZ() + 0.5), rotation, 0f);
-		CompoundNBT nbt = stand.writeToNBT(new CompoundNBT());
-		genArray.addEntity(pos, EntityList.getKey(stand), nbt);
+		genArray.addEntity(BlockPos.ORIGIN, stand);
 	}
 }

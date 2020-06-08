@@ -591,7 +591,7 @@ entity.cqr_lich.name=Lich
 entity.cqr_necromancer.name=Necromancer
 entity.cqr_boar_mage.name=Boarmage
 entity.cqr_walker_king.name=Abyss Walker King
-entity.cqr_pirate_captain.name=Der Piratenkapitän
+entity.cqr_pirate_captain.name=Pirate Captain
 
 #Misc Entities
 entity.cqr_summoning_circle.name=<TECHNICAL_ENTITY>summoning pentagram
@@ -626,3 +626,7 @@ advancements.cqrepoured.kill_nether_dragon.title=It wasn't godzilla
 advancements.cqrepoured.kill_nether_dragon.description=Defeat a nether dragon
 advancements.cqrepoured.kill_giant_tortoise.title=You spin me right round...
 advancements.cqrepoured.kill_giant_tortoise.description=Defeat a giant tortoise
+advancements.cqrepoured.kill_pirate_captain.title=Arrr!
+advancements.cqrepoured.kill_pirate_captain.description=Defeat the pirate captain
+advancements.cqrepoured.new_captain.title=Who's the captain now?
+advancements.cqrepoured.new_captain.description=Acquire the pirate captain's weapons

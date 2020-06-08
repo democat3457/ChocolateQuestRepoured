@@ -1,17 +1,15 @@
 package com.teamcqr.chocolatequestrepoured.structuregen.generators.castleparts.rooms;
 
+import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
+import net.minecraft.util.EnumFacing;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
-
-import net.minecraft.util.Direction;
 
 public class RoomGrid {
 	public static class Area2D {
@@ -32,7 +30,7 @@ public class RoomGrid {
 		}
 
 		public Area2D addFloors(int numFloors) {
-			return new Area2D(this.start.move(Direction.UP, numFloors), this.sizeX, this.sizeZ);
+			return new Area2D(this.start.move(EnumFacing.UP, numFloors), this.sizeX, this.sizeZ);
 		}
 
 		public int getStartX() {
@@ -52,11 +50,11 @@ public class RoomGrid {
 		}
 
 		public RoomGridPosition getTopRight() {
-			return this.start.move(Direction.EAST, this.sizeX - 1);
+			return this.start.move(EnumFacing.EAST, this.sizeX - 1);
 		}
 
 		public RoomGridPosition getBottomLeft() {
-			return this.start.move(Direction.SOUTH, this.sizeZ - 1);
+			return this.start.move(EnumFacing.SOUTH, this.sizeZ - 1);
 		}
 
 		public boolean dimensionsAre(int dim1, int dim2) {
@@ -82,7 +80,7 @@ public class RoomGrid {
 
 			for (int x = 0; x < this.sizeX; x++) {
 				for (int z = 0; z < this.sizeZ; z++) {
-					positions.add(this.start.move(Direction.EAST, x).move(Direction.SOUTH, z));
+					positions.add(this.start.move(EnumFacing.EAST, x).move(EnumFacing.SOUTH, z));
 				}
 			}
 
@@ -168,31 +166,31 @@ public class RoomGrid {
 			int maxMoveX = this.sizeX - resultX;
 			int maxMoveZ = this.sizeZ - resultZ;
 			if (maxMoveX > 0) {
-				subStart = subStart.move(Direction.EAST, random.nextInt(this.sizeX - resultX));
+				subStart = subStart.move(EnumFacing.EAST, random.nextInt(this.sizeX - resultX));
 			}
 			if (maxMoveZ > 0) {
-				subStart = subStart.move(Direction.SOUTH, random.nextInt(this.sizeZ - resultZ));
+				subStart = subStart.move(EnumFacing.SOUTH, random.nextInt(this.sizeZ - resultZ));
 			}
 
 			return new Area2D(subStart, resultX, resultZ);
 		}
 
 		@Nullable
-		public Area2D sliceToSideOfArea(Area2D mask, Direction side) {
+		public Area2D sliceToSideOfArea(Area2D mask, EnumFacing side) {
 			if (mask != null) {
 				RoomGridPosition resultStart;
 				int resultSizeX;
 				int resultSizeZ;
 
-				if (side == Direction.NORTH) {
+				if (side == EnumFacing.NORTH) {
 					resultStart = this.start;
 					resultSizeX = this.sizeX;
 					resultSizeZ = mask.getStartZ() - this.getStartZ();
-				} else if (side == Direction.SOUTH) {
+				} else if (side == EnumFacing.SOUTH) {
 					resultStart = new RoomGridPosition(this.start.getFloor(), this.start.getX(), mask.getEndZ() + 1);
 					resultSizeX = this.sizeX;
 					resultSizeZ = this.getEndZ() - mask.getEndZ();
-				} else if (side == Direction.WEST) {
+				} else if (side == EnumFacing.WEST) {
 					resultStart = this.start;
 					resultSizeX = mask.getStartX() - this.getStartX();
 					resultSizeZ = this.sizeZ;
@@ -214,7 +212,7 @@ public class RoomGrid {
 			return null;
 		}
 
-		public void alignToSide(Random random, Area2D targetArea, Direction side, Area2D boundary) {
+		public void alignToSide(Random random, Area2D targetArea, EnumFacing side, Area2D boundary) {
 			int distance; // distance to move toward target area so we are adjacent
 
 			// slide position is position perpendicular to the side to are least 1 square is touching
@@ -222,7 +220,7 @@ public class RoomGrid {
 			int maxSlide;
 			int slideDest;
 
-			if (side == Direction.NORTH) {
+			if (side == EnumFacing.NORTH) {
 				this.start.setZ(targetArea.getStartZ() - this.sizeZ);
 
 				minSlide = Math.max((targetArea.getStartX() - (this.sizeX - 1)), boundary.start.getX());
@@ -230,7 +228,7 @@ public class RoomGrid {
 				slideDest = DungeonGenUtils.randomBetweenGaussian(random, minSlide, maxSlide);
 
 				this.start.setX(slideDest);
-			} else if (side == Direction.SOUTH) {
+			} else if (side == EnumFacing.SOUTH) {
 				this.start.setZ(targetArea.getEndZ() + 1);
 
 				minSlide = Math.max((targetArea.getStartX() - (this.sizeX - 1)), boundary.start.getX());
@@ -238,7 +236,7 @@ public class RoomGrid {
 				slideDest = DungeonGenUtils.randomBetweenGaussian(random, minSlide, maxSlide);
 
 				this.start.setX(slideDest);
-			} else if (side == Direction.WEST) {
+			} else if (side == EnumFacing.WEST) {
 				this.start.setX(targetArea.getStartX() - this.sizeX);
 
 				minSlide = Math.max((targetArea.getStartZ() - (this.sizeZ - 1)), boundary.start.getZ());
@@ -375,7 +373,7 @@ public class RoomGrid {
 				++x;
 			}
 			for (int i = 0; i < z; i++) {
-				RoomGridPosition checkPos = rootPosition.move(Direction.EAST, (x - 1)).move(Direction.SOUTH, i);
+				RoomGridPosition checkPos = rootPosition.move(EnumFacing.EAST, (x - 1)).move(EnumFacing.SOUTH, i);
 				if ((getCellAt(checkPos) == null) || (!getCellAt(checkPos).needsRoomType())) {
 					incX = false;
 					--x;
@@ -387,7 +385,7 @@ public class RoomGrid {
 				++z;
 			}
 			for (int i = 0; i < x; i++) {
-				RoomGridPosition checkPos = rootPosition.move(Direction.EAST, i).move(Direction.SOUTH, (z - 1));
+				RoomGridPosition checkPos = rootPosition.move(EnumFacing.EAST, i).move(EnumFacing.SOUTH, (z - 1));
 				if ((getCellAt(checkPos) == null) || (!getCellAt(checkPos).needsRoomType())) {
 					incZ = false;
 					--z;
@@ -418,7 +416,7 @@ public class RoomGrid {
 						++x;
 					}
 					for (int i = 0; i < z; i++) {
-						RoomGridPosition checkPos = startPos.move(Direction.EAST, (x - 1)).move(Direction.SOUTH, i);
+						RoomGridPosition checkPos = startPos.move(EnumFacing.EAST, (x - 1)).move(EnumFacing.SOUTH, i);
 						if (!floorPositions.contains(checkPos) || !this.withinGridBounds(checkPos) || !condition.test(this.getCellAt(checkPos))) {
 							incX = false;
 							--x;
@@ -430,7 +428,7 @@ public class RoomGrid {
 						++z;
 					}
 					for (int i = 0; i < x; i++) {
-						RoomGridPosition checkPos = startPos.move(Direction.EAST, i).move(Direction.SOUTH, (z - 1));
+						RoomGridPosition checkPos = startPos.move(EnumFacing.EAST, i).move(EnumFacing.SOUTH, (z - 1));
 						if (!floorPositions.contains(checkPos) || !this.withinGridBounds(checkPos) || !condition.test(this.getCellAt(checkPos))) {
 							incZ = false;
 							--z;
@@ -463,7 +461,7 @@ public class RoomGrid {
 
 		while (cell != null && cell.needsRoomType()) {
 			++result;
-			pos = pos.move(Direction.EAST);
+			pos = pos.move(EnumFacing.EAST);
 			cell = this.getCellAt(pos);
 		}
 
@@ -477,7 +475,7 @@ public class RoomGrid {
 
 		while (cell != null && cell.needsRoomType()) {
 			++result;
-			pos = pos.move(Direction.SOUTH);
+			pos = pos.move(EnumFacing.SOUTH);
 			cell = this.getCellAt(pos);
 		}
 
@@ -510,7 +508,7 @@ public class RoomGrid {
 
 			// First go through each floor and select the cells for building
 			for (; floor < numFloors; floor++) {
-				gridPos = areaPos.move(Direction.UP, floor);
+				gridPos = areaPos.move(EnumFacing.UP, floor);
 				cell = this.getCellAt(gridPos);
 				if (cell != null) {
 					cell.selectForBuilding();
@@ -518,7 +516,7 @@ public class RoomGrid {
 			}
 
 			// Then set the one cell above floors to buildable to begin the next layer
-			gridPos = areaPos.move(Direction.UP, floor);
+			gridPos = areaPos.move(EnumFacing.UP, floor);
 			cell = this.getCellAt(gridPos);
 			if (cell != null) {
 				cell.setBuildable();
@@ -567,8 +565,8 @@ public class RoomGrid {
 		for (RoomGridCell cell : cellsInArea) {
             masterPathList.add(cell); //make sure to include this cell in pathing
 
-			// Check each horizontal (Direction order is S W N E)
-			for (Direction direction : Direction.HORIZONTALS) {
+			// Check each horizontal (EnumFacing order is S W N E)
+			for (EnumFacing direction : EnumFacing.HORIZONTALS) {
 				// If adjacent cell isn't part of my area and is selected
 				RoomGridCell adjacent = this.getAdjacentCell(cell, direction);
 				if (adjacent != null && // adjacent cell exists
@@ -589,28 +587,28 @@ public class RoomGrid {
         }
 	}
 
-	public boolean adjacentCellIsPopulated(RoomGridCell startCell, Direction direction) {
+	public boolean adjacentCellIsPopulated(RoomGridCell startCell, EnumFacing direction) {
 		RoomGridCell adjacent = this.getAdjacentCell(startCell, direction);
 		return (adjacent != null && adjacent.isPopulated());
 	}
 
-	public boolean adjacentCellIsFullRoom(RoomGridCell startCell, Direction direction) {
+	public boolean adjacentCellIsFullRoom(RoomGridCell startCell, EnumFacing direction) {
 		RoomGridCell adjacent = this.getAdjacentCell(startCell, direction);
 		return (adjacent != null && adjacent.isPopulated() && !(adjacent.getRoom() instanceof CastleRoomWalkableRoof));
 	}
 
-	public boolean adjacentCellIsSelected(RoomGridCell startCell, Direction direction) {
+	public boolean adjacentCellIsSelected(RoomGridCell startCell, EnumFacing direction) {
 		RoomGridCell adjacent = this.getAdjacentCell(startCell, direction);
 		return (adjacent != null && adjacent.isSelectedForBuilding());
 	}
 
-	public boolean adjacentCellIsWalkableRoof(RoomGridCell startCell, Direction direction) {
+	public boolean adjacentCellIsWalkableRoof(RoomGridCell startCell, EnumFacing direction) {
 		RoomGridCell adjacent = this.getAdjacentCell(startCell, direction);
 		return (adjacent != null && adjacent.isPopulated() && adjacent.getRoom() instanceof CastleRoomWalkableRoof);
 	}
 
 	public boolean cellIsValidForRoof(RoomGridCell cell) {
-		RoomGridCell below = this.getAdjacentCell(cell, Direction.DOWN);
+		RoomGridCell below = this.getAdjacentCell(cell, EnumFacing.DOWN);
 
 		return (below != null &&
 				!cell.isSelectedForBuilding() &&
@@ -618,7 +616,7 @@ public class RoomGrid {
 				!(below.getFloor() == bossArea.start.getFloor())); //Don't want to build roofs over the boss floor rooms
 	}
 
-	public boolean cellIsOuterEdge(RoomGridCell cell, Direction direction) {
+	public boolean cellIsOuterEdge(RoomGridCell cell, EnumFacing direction) {
 		RoomGridPosition coords = cell.getGridPosition();
 
 		coords = coords.move(direction);
@@ -632,11 +630,11 @@ public class RoomGrid {
 		return true;
 	}
 
-	public ArrayList<Direction> getPotentialBridgeDirections(RoomGridCell cell) {
-		ArrayList<Direction> result = new ArrayList<>();
+	public ArrayList<EnumFacing> getPotentialBridgeDirections(RoomGridCell cell) {
+		ArrayList<EnumFacing> result = new ArrayList<>();
 
 		if (cell.isPopulated()) {
-			for (Direction side : Direction.HORIZONTALS) {
+			for (EnumFacing side : EnumFacing.HORIZONTALS) {
 				if (cellIsValidForBridge(getAdjacentCell(cell, side))) {
 					result.add(side);
 				}
@@ -646,7 +644,7 @@ public class RoomGrid {
 		return result;
 	}
 
-	public ArrayList<RoomGridCell> getBridgeCells(RoomGridCell cell, Direction direction) {
+	public ArrayList<RoomGridCell> getBridgeCells(RoomGridCell cell, EnumFacing direction) {
 		ArrayList<RoomGridCell> result = new ArrayList<>();
 
 		RoomGridCell next = getAdjacentCell(cell, direction);
@@ -655,14 +653,26 @@ public class RoomGrid {
 			next = getAdjacentCell(next, direction);
 		}
 
+		if (next == null) {
+			//If we hit a null that means we hit the edge of the castle grid
+			result.clear(); //Clear the bridge cell array - can't build a bridge here
+		} else if (!next.isPopulated()) {
+			//Have to end on a populated room, otherwise it's a bridge to nowhere
+			result.clear();
+		}
+		else if (next.isPopulated() && !next.reachableFromSide(direction.getOpposite())) {
+			//If we hit another room, make sure that room can exit to the bridge
+			result.clear();
+		}
+
 		return result;
 	}
 
 	private boolean cellIsValidForBridge(@Nullable RoomGridCell cell) {
-		if (cell != null && cell.isBuildableExactly()) {
-			RoomGridCell below = getAdjacentCell(cell, Direction.DOWN);
+		if (cell != null && cell.isNotSelected()) {
+			RoomGridCell below = getAdjacentCell(cell, EnumFacing.DOWN);
 			//Cell below it has to satisfy the same
-			return (below != null && cell.isBuildableExactly());
+			return (below != null && below.isNotSelected());
 		}
 
 		return false;
@@ -671,14 +681,14 @@ public class RoomGrid {
 	public ArrayList<RoomGridCell> getAdjacentSelectedCellsInRow(RoomGridPosition position) {
 		ArrayList<RoomGridCell> result = new ArrayList<>();
 
-		while (this.getCellAt(position.move(Direction.WEST)) != null && this.getCellAt(position.move(Direction.WEST)).isSelectedForBuilding()) {
-			position = position.move(Direction.WEST);
+		while (this.getCellAt(position.move(EnumFacing.WEST)) != null && this.getCellAt(position.move(EnumFacing.WEST)).isSelectedForBuilding()) {
+			position = position.move(EnumFacing.WEST);
 		}
 
 		result.add(this.getCellAt(position));
 
-		while (this.getCellAt(position.move(Direction.EAST)) != null && this.getCellAt(position.move(Direction.EAST)).isSelectedForBuilding()) {
-			position = position.move(Direction.EAST);
+		while (this.getCellAt(position.move(EnumFacing.EAST)) != null && this.getCellAt(position.move(EnumFacing.EAST)).isSelectedForBuilding()) {
+			position = position.move(EnumFacing.EAST);
 			result.add(this.getCellAt(position));
 		}
 
@@ -688,14 +698,14 @@ public class RoomGrid {
 	public ArrayList<RoomGridCell> getAdjacentSelectedCellsInColumn(RoomGridPosition position) {
 		ArrayList<RoomGridCell> result = new ArrayList<>();
 
-		while (this.getCellAt(position.move(Direction.NORTH)) != null && this.getCellAt(position.move(Direction.NORTH)).isSelectedForBuilding()) {
-			position = position.move(Direction.NORTH);
+		while (this.getCellAt(position.move(EnumFacing.NORTH)) != null && this.getCellAt(position.move(EnumFacing.NORTH)).isSelectedForBuilding()) {
+			position = position.move(EnumFacing.NORTH);
 		}
 
 		result.add(this.getCellAt(position));
 
-		while (this.getCellAt(position.move(Direction.SOUTH)) != null && this.getCellAt(position.move(Direction.SOUTH)).isSelectedForBuilding()) {
-			position = position.move(Direction.SOUTH);
+		while (this.getCellAt(position.move(EnumFacing.SOUTH)) != null && this.getCellAt(position.move(EnumFacing.SOUTH)).isSelectedForBuilding()) {
+			position = position.move(EnumFacing.SOUTH);
 			result.add(this.getCellAt(position));
 		}
 
@@ -705,7 +715,7 @@ public class RoomGrid {
 	/*
 	 * Determine if a tower can be attached next to the given cell
 	 */
-	public boolean canAttachTower(RoomGridCell cell, Direction side) {
+	public boolean canAttachTower(RoomGridCell cell, EnumFacing side) {
 		RoomGridCell adjacent = this.getAdjacentCell(cell, side);
 
 		return (!cell.getRoom().isTower() &&
@@ -721,7 +731,7 @@ public class RoomGrid {
 	}
 
 	public boolean cellBordersRoomType(RoomGridCell cell, EnumRoomType type) {
-		for (Direction side : Direction.HORIZONTALS) {
+		for (EnumFacing side : EnumFacing.HORIZONTALS) {
 			RoomGridCell adjacent = this.getAdjacentCell(cell, side);
 			if (adjacent != null && adjacent.isPopulated() && adjacent.getRoom().getRoomType() == type) {
 				return true;
@@ -732,7 +742,7 @@ public class RoomGrid {
 	}
 
 	@Nullable
-	public RoomGridCell getAdjacentCell(RoomGridCell startCell, Direction direction) {
+	public RoomGridCell getAdjacentCell(RoomGridCell startCell, EnumFacing direction) {
 		RoomGridPosition startPosition = startCell.getGridPosition();
 		int floor = startPosition.getFloor();
 		int x = startPosition.getX();

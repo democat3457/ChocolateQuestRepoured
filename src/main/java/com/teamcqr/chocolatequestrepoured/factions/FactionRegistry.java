@@ -27,29 +27,29 @@ import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 import com.teamcqr.chocolatequestrepoured.util.data.FileIOUtil;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MultiPartEntityPart;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.AbstractIllagerEntity;
-import net.minecraft.entity.monster.EndermanEntity;
-import net.minecraft.entity.monster.EndermiteEntity;
-import net.minecraft.entity.monster.VexEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.AbstractIllager;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityEndermite;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityVex;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.EntityWaterMob;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.Difficulty;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class FactionRegistry {
 
@@ -206,14 +206,19 @@ public class FactionRegistry {
 		if(entity == null) {
 			return null;
 		}
+		
+		if(entity instanceof EntityPlayer) {
+			return this.factions.get(EDefaultFaction.PLAYERS.name());
+		}
+		
 		if (entity instanceof MultiPartEntityPart) {
 			return this.getFactionOf((Entity) ((MultiPartEntityPart)entity).parent);
 		}
 		if (entity.getControllingPassenger() != null) {
 			return this.getFactionOf(entity.getControllingPassenger());
 		}
-		if (entity instanceof TameableEntity && ((TameableEntity) entity).getOwner() != null) {
-			return this.getFactionOf(((TameableEntity) entity).getOwner());
+		if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() != null) {
+			return this.getFactionOf(((EntityTameable) entity).getOwner());
 		} 
 		
 		if (entity instanceof AbstractEntityCQR) {
@@ -221,36 +226,36 @@ public class FactionRegistry {
 		}
 		
 		//Faction overriding
-		if(ForgeRegistries.ENTITIES.containsValue(entity.getType()) && entityFactionMap.containsKey(ForgeRegistries.ENTITIES.getKey(entity.getType()))) {
-			return entityFactionMap.get(ForgeRegistries.ENTITIES.getKey(entity.getType()));
+		if(EntityList.getKey(entity) != null && entityFactionMap.containsKey(EntityList.getKey(entity))) {
+			return entityFactionMap.get(EntityList.getKey(entity));
 		}
 		//Overriding end
 		
-		if (entity instanceof ArmorStandEntity) {
+		if (entity instanceof EntityArmorStand) {
 			return this.factions.get(EDefaultFaction.ALL_ALLY.name());
 		}
 
-		if (entity instanceof VillagerEntity || entity instanceof GolemEntity) {
+		if (entity instanceof EntityVillager || entity instanceof EntityGolem || entity instanceof EntityCQRNPC) {
 			return this.factions.get(EDefaultFaction.VILLAGERS.name());
 		}
 
-		if (entity instanceof AbstractIllagerEntity || entity instanceof VexEntity) {
+		if (entity instanceof AbstractIllager || entity instanceof EntityVex) {
 			return this.factions.get(EDefaultFaction.ILLAGERS.name());
 		}
 
-		if (entity instanceof EndermanEntity || entity instanceof EndermiteEntity || entity instanceof EnderDragonEntity) {
+		if (entity instanceof EntityEnderman || entity instanceof EntityEndermite || entity instanceof EntityDragon) {
 			return this.factions.get(EDefaultFaction.ENDERMEN.name());
 		}
 
-		if (entity instanceof AnimalEntity) {
+		if (entity instanceof EntityAnimal) {
 			return this.factions.get(EDefaultFaction.NEUTRAL.name());
 		}
 
-		if (entity instanceof MobEntity) {
+		if (entity instanceof EntityMob) {
 			return this.factions.get(EDefaultFaction.UNDEAD.name());
 		}
 
-		if (entity instanceof WaterMobEntity) {
+		if (entity instanceof EntityWaterMob) {
 			return this.factions.get(EDefaultFaction.TRITONS.name());
 		}
 
@@ -287,15 +292,15 @@ public class FactionRegistry {
 		return faction.getDefaultReputation().getValue();
 	}
 
-	public void incrementRepuOf(PlayerEntity player, String faction, int score) {
+	public void incrementRepuOf(EntityPlayer player, String faction, int score) {
 		this.changeRepuOf(player, faction, Math.abs(score));
 	}
 
-	public void decrementRepuOf(PlayerEntity player, String faction, int score) {
+	public void decrementRepuOf(EntityPlayer player, String faction, int score) {
 		this.changeRepuOf(player, faction, -Math.abs(score));
 	}
 
-	public void changeRepuOf(PlayerEntity player, String faction, int score) {
+	public void changeRepuOf(EntityPlayer player, String faction, int score) {
 		boolean flag = false;
 		if (this.canRepuChange(player)) {
 			if (score < 0) {
@@ -305,17 +310,17 @@ public class FactionRegistry {
 			}
 		}
 		if (flag) {
-			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getUniqueID(), new ConcurrentHashMap<>());
+			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getPersistentID(), new ConcurrentHashMap<>());
 			int oldScore = factionsOfPlayer.getOrDefault(faction, this.factions.get(faction).getDefaultReputation().getValue());
 			factionsOfPlayer.put(faction, oldScore + score);
-			this.playerFactionRepuMap.put(player.getUniqueID(), factionsOfPlayer);
+			this.playerFactionRepuMap.put(player.getPersistentID(), factionsOfPlayer);
 			CQRMain.logger.info("Repu changed!");
 		}
 	}
 
-	public boolean canDecrementRepu(PlayerEntity player, String faction) {
+	public boolean canDecrementRepu(EntityPlayer player, String faction) {
 		if (this.canRepuChange(player)) {
-			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getUniqueID(), new ConcurrentHashMap<>());
+			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getPersistentID(), new ConcurrentHashMap<>());
 			if (factionsOfPlayer != null) {
 				if (factionsOfPlayer.containsKey(faction)) {
 					return factionsOfPlayer.get(faction) >= LOWEST_REPU;
@@ -329,9 +334,9 @@ public class FactionRegistry {
 		return false;
 	}
 
-	public boolean canIncrementRepu(PlayerEntity player, String faction) {
+	public boolean canIncrementRepu(EntityPlayer player, String faction) {
 		if (this.canRepuChange(player)) {
-			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getUniqueID(), new ConcurrentHashMap<>());
+			Map<String, Integer> factionsOfPlayer = this.playerFactionRepuMap.getOrDefault(player.getPersistentID(), new ConcurrentHashMap<>());
 			if (factionsOfPlayer != null) {
 				if (factionsOfPlayer.containsKey(faction)) {
 					return factionsOfPlayer.get(faction) <= HIGHEST_REPU;
@@ -345,37 +350,37 @@ public class FactionRegistry {
 		return false;
 	}
 
-	private boolean canRepuChange(PlayerEntity player) {
-		return !(player.getEntityWorld().getDifficulty().equals(Difficulty.PEACEFUL) || player.isCreative() || player.isSpectator() || this.uuidsBeingLoaded.contains(player.getUniqueID()));
+	private boolean canRepuChange(EntityPlayer player) {
+		return !(player.getEntityWorld().getDifficulty().equals(EnumDifficulty.PEACEFUL) || player.isCreative() || player.isSpectator() || this.uuidsBeingLoaded.contains(player.getPersistentID()));
 	}
 
 	public void handlePlayerLogin(PlayerLoggedInEvent event) {
 		String path = FileIOUtil.getAbsoluteWorldPath() + "/data/CQR/reputation/";
-		File f = new File(path, event.getPlayer().getUniqueID() + ".nbt");
+		File f = new File(path, event.player.getPersistentID() + ".nbt");
 		if (f.exists()) {
 			CQRMain.logger.info("Loading player reputation...");
 			Thread t = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					final UUID uuid = event.getPlayer().getUniqueID();
-					CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
-					ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
-					if (!repuDataList.isEmpty()) {
+					final UUID uuid = event.player.getPersistentID();
+					NBTTagCompound root = FileIOUtil.getRootNBTTagOfFile(f);
+					NBTTagList repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
+					if (!repuDataList.hasNoTags()) {
 						while(FactionRegistry.this.uuidsBeingLoaded.contains(uuid)) {
 							//Wait until the uuid isnt active	
 						}
 						FactionRegistry.this.uuidsBeingLoaded.add(uuid);
 						try {
-							Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.getPlayer().getUniqueID());
-							repuDataList.forEach(new Consumer<INBT>() {
+							Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.player.getPersistentID());
+							repuDataList.forEach(new Consumer<NBTBase>() {
 
 								@Override
-								public void accept(INBT t) {
-									CompoundNBT tag = (CompoundNBT) t;
+								public void accept(NBTBase t) {
+									NBTTagCompound tag = (NBTTagCompound) t;
 									String fac = tag.getString("factionName");
 									if (FactionRegistry.this.factions.containsKey(fac)) {
-										int reputation = tag.getInt("reputation");
+										int reputation = tag.getInteger("reputation");
 										mapping.put(fac, reputation);
 									}
 								}
@@ -392,15 +397,15 @@ public class FactionRegistry {
 	}
 
 	public void handlePlayerLogout(PlayerLoggedOutEvent event) {
-		if (this.playerFactionRepuMap.containsKey(event.getPlayer().getUniqueID())) {
+		if (this.playerFactionRepuMap.containsKey(event.player.getPersistentID())) {
 			CQRMain.logger.info("Saving player reputation...");
 			Thread t = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.getPlayer().getUniqueID());
+					Map<String, Integer> mapping = FactionRegistry.this.playerFactionRepuMap.get(event.player.getPersistentID());
 					Map<String, Integer> entryMapping = new HashMap<>();
-					final UUID uuid = event.getPlayer().getUniqueID();
+					final UUID uuid = event.player.getPersistentID();
 					String path = FileIOUtil.getAbsoluteWorldPath() + "/data/CQR/reputation/";
 					File f = FileIOUtil.getOrCreateFile(path, uuid + ".nbt");
 					if (f != null) {
@@ -409,25 +414,25 @@ public class FactionRegistry {
 						}
 						FactionRegistry.this.uuidsBeingLoaded.add(uuid);
 						try {
-							CompoundNBT root = FileIOUtil.getRootNBTTagOfFile(f);
-							ListNBT repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
-							for (int i = 0; i < repuDataList.size(); i++) {
-								CompoundNBT tag = repuDataList.getCompound(i);
+							NBTTagCompound root = FileIOUtil.getRootNBTTagOfFile(f);
+							NBTTagList repuDataList = FileIOUtil.getOrCreateTagList(root, "reputationdata", Constants.NBT.TAG_COMPOUND);
+							for (int i = 0; i < repuDataList.tagCount(); i++) {
+								NBTTagCompound tag = repuDataList.getCompoundTagAt(i);
 								if (mapping.containsKey(tag.getString("factionName"))) {
 									entryMapping.put(tag.getString("factionName"), i);
 								}
 							}
 							for (Map.Entry<String, Integer> entry : mapping.entrySet()) {
 								if (entryMapping.containsKey(entry.getKey())) {
-									repuDataList.remove(entryMapping.get(entry.getKey()));
+									repuDataList.removeTag(entryMapping.get(entry.getKey()));
 								}
-								CompoundNBT tag = new CompoundNBT();
-								tag.putString("factionName", entry.getKey());
-								tag.putInt("reputation", entry.getValue());
-								repuDataList.add(tag);
+								NBTTagCompound tag = new NBTTagCompound();
+								tag.setString("factionName", entry.getKey());
+								tag.setInteger("reputation", entry.getValue());
+								repuDataList.appendTag(tag);
 							}
-							root.remove("reputationdata");
-							root.put("reputationdata", repuDataList);
+							root.removeTag("reputationdata");
+							root.setTag("reputationdata", repuDataList);
 
 							FileIOUtil.saveNBTCompoundToFile(root, f);
 						} finally {

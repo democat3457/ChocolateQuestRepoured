@@ -10,11 +10,12 @@ import org.apache.commons.io.FileUtils;
 
 import com.teamcqr.chocolatequestrepoured.CQRMain;
 import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
+import com.teamcqr.chocolatequestrepoured.structuregen.generators.AbstractDungeonGenerator;
 import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 import com.teamcqr.chocolatequestrepoured.util.PropertyFileHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -36,7 +37,7 @@ public abstract class DungeonBase {
 	protected int[] allowedDims;
 	protected int weight;
 	protected int chance;
-	protected int spawnLimit; 
+	protected int spawnLimit;
 	protected String[] biomes;
 	protected String[] blacklistedBiomes;
 	protected boolean rotateDungeon;
@@ -131,21 +132,25 @@ public abstract class DungeonBase {
 		return true;
 	}
 
+	public abstract AbstractDungeonGenerator createDungeonGenerator(World world, int x, int y, int z);
+
 	public void generate(World world, int x, int z) {
-		Chunk chunk = world.getChunk(x >> 4, z >> 4);
+		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
 		int y = 0;
 		for (int ix = 0; ix < 16; ix++) {
 			for (int iz = 0; iz < 16; iz++) {
-				y += DungeonGenUtils.getYForPos(world, chunk.getPos().x * 16 + ix, chunk.getPos().z * 16 + iz, false);
+				y += DungeonGenUtils.getYForPos(world, chunk.x * 16 + ix, chunk.z * 16 + iz, false);
 			}
 		}
-		y /= 256;
+		y >>= 8;
 		y -= this.getUnderGroundOffset();
 		y += this.getYOffset();
 		this.generate(world, x, y, z);
 	}
 
-	public abstract void generate(World world, int x, int y, int z);
+	public void generate(World world, int x, int y, int z) {
+		this.createDungeonGenerator(world, x, y, z).generate();
+	}
 
 	public void generateWithOffsets(World world, int x, int y, int z) {
 		y -= this.getUnderGroundOffset();

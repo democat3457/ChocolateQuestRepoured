@@ -1,6 +1,7 @@
 package com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.open;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,17 +10,22 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 
 import com.teamcqr.chocolatequestrepoured.structuregen.EDungeonMobType;
-import com.teamcqr.chocolatequestrepoured.structuregen.generation.ExtendedBlockStatePart;
-import com.teamcqr.chocolatequestrepoured.structuregen.generation.IStructure;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonGenerator;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartBlock;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartBlockSpecial;
+import com.teamcqr.chocolatequestrepoured.structuregen.generation.DungeonPartEntity;
 import com.teamcqr.chocolatequestrepoured.structuregen.generators.stronghold.GeneratorStrongholdOpen;
+import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.AbstractBlockInfo;
+import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.BlockInfo;
 import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.CQStructure;
-import com.teamcqr.chocolatequestrepoured.structuregen.structurefile.EPosType;
+import com.teamcqr.chocolatequestrepoured.util.DungeonGenUtils;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
 
 public class StrongholdFloorOpen {
 
@@ -68,7 +74,7 @@ public class StrongholdFloorOpen {
 		this.entranceStair = entranceStair;
 		this.yPos = y;
 		this.entranceStairBlockPosition = new Tuple<Integer, Integer>(x, z);
-		this.roomGrid[this.entranceStairIndex.getA()][this.entranceStairIndex.getB()] = new BlockPos(x, y, z);
+		this.roomGrid[this.entranceStairIndex.getFirst()][this.entranceStairIndex.getSecond()] = new BlockPos(x, y, z);
 	}
 
 	public void setIsFirstFloor(boolean val) {
@@ -90,68 +96,68 @@ public class StrongholdFloorOpen {
 		Vec3i v = new Vec3i(this.generator.getDungeon().getRoomSizeX() / 2, 0, this.generator.getDungeon().getRoomSizeZ() / 2);
 		for (int iX = 0; iX < this.sideLength; iX++) {
 			for (int iZ = 0; iZ < this.sideLength; iZ++) {
-				if (!(iX == this.entranceStairIndex.getA() && iZ == this.entranceStairIndex.getB())) {
-					int multiplierX = iX - this.entranceStairIndex.getA();
-					int multiplierZ = iZ - this.entranceStairIndex.getB();
+				if (!(iX == this.entranceStairIndex.getFirst() && iZ == this.entranceStairIndex.getSecond())) {
+					int multiplierX = iX - this.entranceStairIndex.getFirst();
+					int multiplierZ = iZ - this.entranceStairIndex.getSecond();
 
-					BlockPos pos = new BlockPos(this.entranceStairBlockPosition.getA() + (multiplierX * this.generator.getDungeon().getRoomSizeX()), this.yPos,
-							this.entranceStairBlockPosition.getB() + (multiplierZ * this.generator.getDungeon().getRoomSizeZ()));
+					BlockPos pos = new BlockPos(this.entranceStairBlockPosition.getFirst() + (multiplierX * this.generator.getDungeon().getRoomSizeX()), this.yPos,
+							this.entranceStairBlockPosition.getSecond() + (multiplierZ * this.generator.getDungeon().getRoomSizeZ()));
 
 					this.roomGrid[iX][iZ] = pos;
-					if (iX == this.exitStairIndex.getA() && iZ == this.exitStairIndex.getB()) {
+					if (iX == this.exitStairIndex.getFirst() && iZ == this.exitStairIndex.getSecond()) {
 						BlockPos p1 = pos.subtract(v);
 						BlockPos p2 = pos.add(v);
 						this.exitStairCorners = new Tuple<>(p1, p2);
 						this.exitStairBlockPosition = new Tuple<>(pos.getX(), pos.getZ());
 					}
 				} else {
-					BlockPos p = new BlockPos(this.entranceStairBlockPosition.getA(), this.yPos, this.entranceStairBlockPosition.getB());
+					BlockPos p = new BlockPos(this.entranceStairBlockPosition.getFirst(), this.yPos, this.entranceStairBlockPosition.getSecond());
 					this.entranceStairCorners = new Tuple<>(p.subtract(v), p.add(v));
 				}
 			}
 		}
-		BlockPos exitPos = this.roomGrid[this.exitStairIndex.getA()][this.exitStairIndex.getB()];
+		BlockPos exitPos = this.roomGrid[this.exitStairIndex.getFirst()][this.exitStairIndex.getSecond()];
 		this.entranceStairBlockPosition = new Tuple<>(exitPos.getX(), exitPos.getZ());
 	}
 
-	public void generateRooms(World world, List<List<? extends IStructure>> lists, EDungeonMobType mobType) {
+	public void generateRooms(World world, DungeonGenerator dungeonGenerator, EDungeonMobType mobType) {
 		for (int x = 0; x < this.sideLength; x++) {
 			for (int z = 0; z < this.sideLength; z++) {
-				BlockPos p = this.roomGrid[x][z];
-				File structure = null;
-				if (!(x == this.exitStairIndex.getA() && z == this.exitStairIndex.getB())) {
-					if (x == this.entranceStairIndex.getA() && z == this.entranceStairIndex.getB()) {
+				BlockPos pos = this.roomGrid[x][z];
+				File file = null;
+				if (!(x == this.exitStairIndex.getFirst() && z == this.exitStairIndex.getSecond())) {
+					if (x == this.entranceStairIndex.getFirst() && z == this.entranceStairIndex.getSecond()) {
 						if (this.entranceStair != null) {
-							structure = this.entranceStair;
+							file = this.entranceStair;
 						} else if (this.isFirstFloor) {
-							structure = this.generator.getDungeon().getEntranceStair();
+							file = this.generator.getDungeon().getEntranceStair();
 						} else {
-							structure = this.generator.getDungeon().getStairRoom();
+							file = this.generator.getDungeon().getStairRoom();
 						}
 					} else {
-						structure = this.generator.getDungeon().getRoom();
+						file = this.generator.getDungeon().getRoom();
 					}
 				} else if (this.exitStairIsBossRoom) {
-					structure = this.generator.getDungeon().getBossRoom();
+					file = this.generator.getDungeon().getBossRoom();
 					this.exitStairIsBossRoom = false;
 				}
 
-				if (p != null && structure != null) {
-					CQStructure struct = new CQStructure(structure);
-					struct.setDungeonMob(mobType);
-					for (List<? extends IStructure> list : struct.addBlocksToWorld(world, p, this.generator.getPlacementSettings(), EPosType.CENTER_XZ_LAYER, this.generator.getDungeon(), this.generator.getDunX(), this.generator.getDunZ())) {
-						lists.add(list);
-					}
+				if (pos != null && file != null) {
+					CQStructure structure = this.generator.loadStructureFromFile(file);
+					BlockPos p = DungeonGenUtils.getCentralizedPosForStructure(pos, structure, this.generator.getPlacementSettings());
+					dungeonGenerator.add(new DungeonPartBlock(world, dungeonGenerator, p, structure.getBlockInfoList(), this.generator.getPlacementSettings(), mobType));
+					dungeonGenerator.add(new DungeonPartEntity(world, dungeonGenerator, p, structure.getEntityInfoList(), this.generator.getPlacementSettings(), mobType));
+					dungeonGenerator.add(new DungeonPartBlockSpecial(world, dungeonGenerator, p, structure.getSpecialBlockInfoList(), this.generator.getPlacementSettings(), mobType));
 				}
 			}
 		}
 	}
 
-	public void buildWalls(World world, List<List<? extends IStructure>> lists) {
+	public void buildWalls(World world, DungeonGenerator dungeonGenerator) {
 		if (this.generator.getDungeon().getWallBlock() == null) {
 			return;
 		}
-		Map<BlockPos, ExtendedBlockStatePart.ExtendedBlockState> stateMap = new HashMap<>();
+		Map<BlockPos, IBlockState> stateMap = new HashMap<>();
 		int dimX = this.generator.getDungeon().getRoomSizeX() / 2;
 		int dimZ = this.generator.getDungeon().getRoomSizeZ() / 2;
 		BlockPos p1 = this.roomGrid[this.sideLength - 1][this.sideLength - 1].add(1, 0, 1).add(dimX, -1, dimZ);
@@ -159,8 +165,7 @@ public class StrongholdFloorOpen {
 		BlockPos p3 = this.roomGrid[0][this.sideLength - 1].add(-1, 0, 1).add(-dimX, -1, dimZ);
 		BlockPos p4 = this.roomGrid[0][0].add(-1, 0, -1).add(-dimX, -1, -dimZ);
 
-		BlockState block = this.generator.getDungeon().getWallBlock().getDefaultState();
-		ExtendedBlockStatePart.ExtendedBlockState state = new ExtendedBlockStatePart.ExtendedBlockState(block, null);
+		IBlockState state = this.generator.getDungeon().getWallBlock().getDefaultState();
 		int addY = 2 + this.generator.getDungeon().getRoomSizeY();
 
 		// 1-2
@@ -185,21 +190,25 @@ public class StrongholdFloorOpen {
 		}
 		// Top
 		for (BlockPos pT : BlockPos.getAllInBoxMutable(p1.add(0, 2 + this.generator.getDungeon().getRoomSizeY(), 0), p4.add(0, addY, 0))) {
-			if (!(pT.getX() >= this.entranceStairCorners.getA().getX() && pT.getX() <= this.entranceStairCorners.getB().getX() && pT.getZ() >= this.entranceStairCorners.getA().getZ()
-					&& pT.getZ() <= this.entranceStairCorners.getB().getZ())) {
+			if (!(pT.getX() >= this.entranceStairCorners.getFirst().getX() && pT.getX() <= this.entranceStairCorners.getSecond().getX() && pT.getZ() >= this.entranceStairCorners.getFirst().getZ()
+					&& pT.getZ() <= this.entranceStairCorners.getSecond().getZ())) {
 				//world.setBlockState(pT, block);
 				stateMap.put(pT, state);
 			}
 		}
 		// Bottom
 		for (BlockPos pB : BlockPos.getAllInBoxMutable(p1, p4)) {
-			if (this.exitStairIsBossRoom || (pB != null && this.exitStairCorners != null && !(pB.getX() >= this.exitStairCorners.getA().getX() && pB.getX() <= this.exitStairCorners.getB().getX()
-					&& pB.getZ() >= this.exitStairCorners.getA().getZ() && pB.getZ() <= this.exitStairCorners.getB().getZ()))) {
+			if (this.exitStairIsBossRoom || (pB != null && this.exitStairCorners != null && !(pB.getX() >= this.exitStairCorners.getFirst().getX() && pB.getX() <= this.exitStairCorners.getSecond().getX()
+					&& pB.getZ() >= this.exitStairCorners.getFirst().getZ() && pB.getZ() <= this.exitStairCorners.getSecond().getZ()))) {
 				//world.setBlockState(pB, block);
 				stateMap.put(pB, state);
 			}
 		}
-		lists.add(ExtendedBlockStatePart.splitExtendedBlockStateMap(stateMap));
+		List<AbstractBlockInfo> blockInfoList = new ArrayList<>();
+		for (Map.Entry<BlockPos, IBlockState> entry : stateMap.entrySet()) {
+			blockInfoList.add(new BlockInfo(entry.getKey().subtract(this.generator.getPos()), entry.getValue(), null));
+		}
+		dungeonGenerator.add(new DungeonPartBlock(world, dungeonGenerator, this.generator.getPos(), blockInfoList, new PlacementSettings(), EDungeonMobType.ZOMBIE));
 	}
 
 }
